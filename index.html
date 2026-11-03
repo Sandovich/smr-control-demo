@@ -1,0 +1,441 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>СМР-Контроль Публицист 11</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky top bar with 5 views (hash-routed); each view = summary strip, then detail tables. Ledger feel: mono digits, hairline rules, semantic stripes. */
+:root{
+  --bg:#f5f6f8; --panel:#ffffff; --fg:#1b2430; --muted:#5c6b7a; --line:#d9dee5; --soft:#eef1f5;
+  --accent:#2b5f9e; --accent-ink:#ffffff;
+  --ok:#2e8b57; --ok-bg:#e6f4ec; --warn:#c77d0a; --warn-bg:#fdf1dc; --bad:#c43d3d; --bad-bg:#fbe7e7;
+  --client:#2b5f9e; --sub:#8a5cc7;
+  --sans:"IBM Plex Sans",system-ui,"Segoe UI",Arial,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#12161c;--panel:#1a2029;--fg:#e8ecf1;--muted:#98a4b3;--line:#2c3542;--soft:#222a35;--accent:#6ea2e3;--accent-ink:#0f1620;--ok:#5fc48a;--ok-bg:#16301f;--warn:#e6a53a;--warn-bg:#3a2a0f;--bad:#ef6b6b;--bad-bg:#3d1a1a;--client:#6ea2e3;--sub:#b08ae8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12161c;--panel:#1a2029;--fg:#e8ecf1;--muted:#98a4b3;--line:#2c3542;--soft:#222a35;--accent:#6ea2e3;--accent-ink:#0f1620;--ok:#5fc48a;--ok-bg:#16301f;--warn:#e6a53a;--warn-bg:#3a2a0f;--bad:#ef6b6b;--bad-bg:#3d1a1a;--client:#6ea2e3;--sub:#b08ae8;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.45;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--panel);border-bottom:1px solid var(--line);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+.brand{font-weight:700;letter-spacing:.2px}
+.brand small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+nav{display:flex;flex-wrap:wrap;gap:4px}
+nav a{padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;font-weight:500}
+nav a.on{background:var(--accent);color:var(--accent-ink)}
+.period{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted)}
+main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px;max-width:1240px;margin:0 auto}
+.view[hidden]{display:none}
+h1{font-size:20px;margin:0 0 4px;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:18px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
+.tile .l{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.tile .v{font-family:var(--mono);font-size:22px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
+.tile .d{font-size:12px;color:var(--muted);margin-top:2px}
+.tile.bad{border-left:4px solid var(--bad)} .tile.warn{border-left:4px solid var(--warn)} .tile.ok{border-left:4px solid var(--ok)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0}
+.panel h2{font-size:14px;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.panel h2 span{font-weight:400;color:var(--muted);font-size:12px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.tot td{font-weight:600;border-top:2px solid var(--fg)}
+.wrap{overflow-x:auto}
+#jTable{min-width:980px}
+#jTable td:nth-child(2){min-width:300px}
+.bar{height:8px;background:var(--soft);border-radius:4px;position:relative;overflow:hidden;min-width:120px}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.bar .c{background:var(--client)} .bar .s{background:var(--sub);opacity:.55}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)} .pill.mut{background:var(--soft);color:var(--muted)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:6px 0 2px}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.alerts{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.alerts li{border-left:4px solid var(--warn);background:var(--warn-bg);padding:8px 10px;border-radius:0 6px 6px 0;font-size:13px}
+.alerts li.bad{border-color:var(--bad);background:var(--bad-bg)}
+.alerts li.ok{border-color:var(--ok);background:var(--ok-bg)}
+.alerts li b{font-family:var(--mono)}
+svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+select,input,button{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:7px 10px}
+button.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.jgrid{display:grid;grid-template-columns:1fr 340px;gap:14px}
+@media (max-width:960px){.jgrid{grid-template-columns:1fr}}
+.phone{border:1px solid var(--line);border-radius:22px;background:var(--panel);padding:14px;max-width:340px;margin:0 auto}
+.phone .hd{font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between}
+.phone label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 4px}
+.phone input,.phone select{width:100%}
+.phone .hint{font-size:12px;color:var(--muted);margin-top:4px}
+.phone .warnbox{margin-top:10px;background:var(--bad-bg);color:var(--bad);border-radius:6px;padding:8px 10px;font-size:12px}
+.phone .ok{margin-top:10px;background:var(--ok-bg);color:var(--ok);border-radius:6px;padding:8px 10px;font-size:12px}
+.phone button.pri{width:100%;margin-top:12px;padding:10px}
+.kan{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.col h3{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 8px;display:flex;justify-content:space-between}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px}
+.card .m{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:4px}
+.card.bad{border-left:4px solid var(--bad)} .card.warn{border-left:4px solid var(--warn)} .card.ok{border-left:4px solid var(--ok)}
+.act{background:var(--panel);border:1px solid var(--line);padding:26px 30px;max-width:900px;margin:0 auto;font-family:"Times New Roman",serif;color:var(--fg)}
+.act h2{text-align:center;font-size:16px;margin:0 0 4px}
+.act .meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;font-size:13px;margin:12px 0}
+.act table{font-family:"Times New Roman",serif;font-size:12.5px}
+.act th,.act td{border:1px solid var(--fg);padding:4px 6px}
+.act th{text-transform:none;letter-spacing:0;color:var(--fg);font-size:12px;text-align:center}
+.act .sig{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px;font-size:13px}
+.act .sig div{border-top:1px solid var(--fg);padding-top:6px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+.stamp{display:inline-block;border:1px dashed var(--line);border-radius:6px;padding:2px 8px;font-size:11px;color:var(--muted);margin-left:8px;vertical-align:middle}
+
+/* ── мобильная версия ── */
+@media (max-width:700px){
+  body{font-size:13px}
+  .top{gap:6px 12px;padding-block:8px}
+  .brand{font-size:14px} .brand small{font-size:11px} .stamp{display:none}
+  nav{width:100%;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+  nav::-webkit-scrollbar{display:none}
+  nav a{padding:6px 10px;white-space:nowrap;font-size:13px}
+  .period{display:none}
+  main{padding-block:14px 32px}
+  h1{font-size:17px} .sub{font-size:12.5px;margin-bottom:12px}
+  .tiles{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+  .tile{padding:10px 11px} .tile .v{font-size:18px} .tile .l{font-size:10px} .tile .d{font-size:11px}
+  .grid2{gap:10px;margin-bottom:10px} .panel{padding:12px}
+  .panel h2{flex-wrap:wrap} .panel h2 span{flex-basis:100%}
+  table{font-size:12px} th,td{padding:5px 5px}
+  #sysTable .bar{min-width:64px}
+  #sysTable th:nth-child(2),#sysTable td:nth-child(2){display:none}
+  #sysTable .pill{font-size:10px;padding:1px 6px}
+  .alerts li{font-size:12px}
+  .jgrid{grid-template-columns:1fr} .phone{max-width:none;border-radius:14px}
+  .toolbar{gap:6px} .toolbar select,.toolbar input{flex:1 1 140px;min-width:0}
+  #jTable{min-width:720px}
+  #cTable{min-width:760px}
+  .kan{grid-template-columns:1fr}
+  .act{padding:14px 12px} .act .meta{grid-template-columns:1fr} .act h2{font-size:14px}
+  .act table{font-size:11px;min-width:560px} .act .sig{grid-template-columns:1fr}
+  .legend{flex-wrap:wrap;gap:6px 12px}
+}
+@media (max-width:420px){.tiles{grid-template-columns:1fr 1fr} .tile .v{font-size:16px}}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .4s ease}}
+</style></head><body>
+
+<header class="top">
+  <div class="brand">СМР-Контроль <span class="stamp">демо на цифрах сметы «Публицист 11»</span><small>АСТЭКС · заказчик Монолит · договор 269 997 162 ₽ с НДС</small></div>
+  <nav id="nav">
+    <a href="#dashboard">Сводка</a><a href="#journal">Журнал КС</a><a href="#contractors">Субподрядчики</a><a href="#extra">Допработы</a><a href="#acts">Акты</a>
+  </nav>
+  <div class="period">период: май – октябрь 2026 · нарастающим итогом · суммы без НДС</div>
+</header>
+
+<main>
+<!-- ───────── СВОДКА ───────── -->
+<section class="view" id="v-dashboard">
+  <h1>Сводная панель руководителя</h1>
+  <p class="sub">Договор по СМР против того, что сдано заказчику и закрыто субподрядчикам. Красное — деньги ушли подрядчику раньше, чем пришли от заказчика.</p>
+  <div class="tiles" id="tiles"></div>
+  <div class="grid2">
+    <div class="panel">
+      <h2>Выполнение по системам <span>% от договора СМР</span></h2>
+      <div class="legend"><span><b style="background:var(--client)"></b>сдано заказчику (КС-2)</span><span><b style="background:var(--sub);opacity:.55"></b>закрыто субподрядчикам</span></div>
+      <div class="wrap"><table id="sysTable"></table></div>
+    </div>
+    <div>
+      <div class="panel" style="margin-bottom:14px">
+        <h2>Баланс закрытия по субподрядчикам <span>₽ без НДС</span></h2>
+        <div id="balChart"></div>
+      </div>
+      <div class="panel">
+        <h2>Требует решения <span>на понедельник 2 ноября</span></h2>
+        <ul class="alerts" id="alerts"></ul>
+      </div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h2>Динамика по месяцам <span>сдано заказчику / закрыто подрядчикам, млн ₽</span></h2>
+      <div id="monthChart"></div>
+    </div>
+    <div class="panel">
+      <h2>Прогноз <span>по темпу последних 4 недель</span></h2>
+      <div class="wrap"><table id="forecast"></table></div>
+      <p class="note">Прогноз пересчитывается каждый понедельник и уходит руководителю в Telegram одной картинкой.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── ЖУРНАЛ ───────── -->
+<section class="view" id="v-journal" hidden>
+  <h1>Журнал выполнения по позициям сметы</h1>
+  <p class="sub">Одна строка сметы — четыре цифры. Нельзя закрыть субподрядчику больше остатка без флага «допработа».</p>
+  <div class="jgrid">
+    <div class="panel">
+      <div class="toolbar">
+        <select id="fSys"><option value="">Все системы</option></select>
+        <select id="fState"><option value="">Любой статус</option><option value="bad">Перекос</option><option value="done">Закрыто полностью</option><option value="open">В работе</option></select>
+        <input id="fQ" placeholder="поиск по названию или шифру" style="flex:1;min-width:160px">
+      </div>
+      <div class="wrap"><table id="jTable"></table></div>
+    </div>
+    <div>
+      <div class="phone" id="phone">
+        <div class="hd"><span>Внести выполнение</span><span style="color:var(--muted);font-weight:400">прораб · Иванов</span></div>
+        <label for="pPos">Позиция сметы</label>
+        <select id="pPos"></select>
+        <div class="hint" id="pRest"></div>
+        <label for="pWho">Исполнитель</label>
+        <select id="pWho"></select>
+        <label for="pQty">Объём</label>
+        <input id="pQty" type="number" inputmode="decimal" value="0">
+        <div class="hint" id="pMoney"></div>
+        <label for="pDate">Дата</label>
+        <input id="pDate" type="date" value="2026-11-02">
+        <div id="pWarn" class="warnbox" hidden></div>
+        <div id="pOk" class="ok" hidden>Записано. Запись #1 842 · в акт за ноябрь.</div>
+        <button class="pri" id="pSave">Записать</button>
+        <p class="hint">Так это выглядит у прораба на телефоне. Фото-подтверждение — по желанию.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── СУБПОДРЯДЧИКИ ───────── -->
+<section class="view" id="v-contractors" hidden>
+  <h1>Карточка субподрядчика</h1>
+  <p class="sub">Один клик по фамилии — всё, что он сделал: в метрах и штуках, в деньгах по его расценке и по сметной, что заактировано и что должны.</p>
+  <div class="toolbar"><label for="cSel">Исполнитель</label><select id="cSel"></select></div>
+  <div class="tiles" id="cTiles"></div>
+  <div class="panel"><h2 id="cTitle">Позиции</h2><div class="wrap"><table id="cTable"></table></div></div>
+</section>
+
+<!-- ───────── ДОПРАБОТЫ ───────── -->
+<section class="view" id="v-extra" hidden>
+  <h1>Допработы: вне утверждённой сметы</h1>
+  <p class="sub">Всё, что подрядчик сделал сверх сметы, лежит здесь, а не в журнале КС. Пока не принято решение, оно не попадает в акт.</p>
+  <div class="tiles" id="xTiles"></div>
+  <div class="kan" id="kan"></div>
+</section>
+
+<!-- ───────── АКТЫ ───────── -->
+<section class="view" id="v-acts" hidden>
+  <h1>Акты для субподрядчиков</h1>
+  <p class="sub">Акт собирается из принятых объёмов за период по кнопке. Номер пишется обратно в журнал, второй раз те же объёмы не заактировать.</p>
+  <div class="toolbar">
+    <select id="aWho"></select>
+    <select id="aMon"><option>октябрь 2026</option><option>сентябрь 2026</option></select>
+    <button class="pri" id="aMake">Сформировать акт</button>
+    <span class="note" style="margin:0">→ PDF в папку «Акты/2026-10», строка в реестре, уведомление субподрядчику</span>
+  </div>
+  <div class="panel" style="margin-bottom:14px"><h2>Реестр актов</h2><div class="wrap"><table id="aReg"></table></div></div>
+  <div class="act" id="act"></div>
+</section>
+</main>
+
+<script>const POS=[["АСУД", "Приборы", "1.1", "Концентратор 7.2/485 Тип. ЛНГС.465213.270-03 ООО 'Лифт-Комплекс ДС'", 2, "шт", 18410, 1200], ["АСУД", "Приборы", "1.3", "Переговорное устройство АПУ-2Н Тип ЛНГС.465213.300.200 ООО 'Лифт-Комплекс ДС'", 168, "шт", 4750, 800], ["АСУД", "Приборы", "1.4", "Адаптер сухих контактов АСК-16 Тип ЛНГС.468223.121 ООО 'Лифт-Комплекс ДС'", 10, "шт", 4440, 1200], ["АСУД", "Приборы", "1.5", "Адаптер лампы индикаторной АЛИ-3П Тип. ЛНГС.263050.300.350-03 ООО 'Лифт-Комплекс ДС'", 138, "шт", 4460, 1200], ["АСУД", "Приборы", "1.6", "Ретранслятор шины CAN П Тип. ЛНГС.263050.270.040-01 ООО 'Лифт-Комплекс ДС'", 12, "шт", 4110, 300], ["АСУД", "Приборы", "1.7", "Адаптер ModBUS Тип. ЛНГС.465213.271 ООО 'Лифт-Комплекс ДС'", 2, "шт", 5230, 1200], ["АСКУЭ", "Шкафы/Щиты", "4.1", "Щит с монтажной панелью ЩМП 800x600x300мм IP66 серия ST RSST0863 DKC", 2, "компл", 18261.5, 2800], ["АСКУЭ", "Материалы", "4.2", "Кабельный короб 25x60, с промежуточным расстоянием 8/12 мм Тип 05 063 ABB", 4.04, "мп", 573.59, 300], ["АСКУЭ", "Материалы", "4.3", "Кабельный короб 40x60, с промежуточным расстоянием 8/12 мм Тип 05 065 ABB", 2.02, "мп", 716.19, 300], ["АСКУЭ", "Материалы", "4.15", "S201-C 4. Автоматический выключатель 1-полюсный серии S200, характеристика С Тип 2CDS25100", 10, "шт", 921, 150], ["АСКУЭ", "Материалы", "4.16", "S201-C 20. Автоматический выключатель 1-полюсный серии S200, характеристика С Тип. 2CDS251", 2, "шт", 607, 150], ["АСКУЭ", "Материалы", "4.17", "DIN рейка металлическая, 35x15 мм,перфорированная Тип ED6 ABB\n", 6, "шт", 1490, 300], ["АСКУВТ", "Материалы", "7.1", "Щит с монтажной панелью ЩМП 800x600x300мм IP66 серия ST. Тип R5ST0863 DKC, в том числе:", 2, "шт", 18262, 2800], ["АСКУВТ", "Материалы", "7.2", "Кабельный короб 25x60, с промежуточным расстоянием 8/12 мм Тип. 05 063 ABB", 4.04, "мп", 573.59, 300], ["АСКУВТ", "Материалы", "7.3", "Кабельный короб 40x60, с промежуточным расстоянием 8/12 мм Тип 05 065 ABB", 2.02, "мп", 716.19, 300], ["АСКУВТ", "Материалы", "7.15", "S201-C 4. Автоматический выключатель 1-полюсный серии S200, характеристика С Тип. 2CDS2510", 26, "шт", 921, 150], ["АСКУВТ", "Материалы", "7.16", "S201-C 20. Автоматический выключатель 1-полюсный серии S200, характеристика С Тип. 2CDS251", 2, "шт", 607, 150], ["АСКУВТ", "Материалы", "7.17", "DIN рейка металлическая, 35x15 мм,перфорированная Тип. ED6 \n", 6, "шт", 1490, 300], ["СДЛ", "Приборы", "10.1", "Лифтовой блок 7.2 в комплекте ЛНГС.465213.270-ххх, ООО 'Лифт-Комплекс ДС'", 19, "шт", 18410, 1200], ["СДЛ", "Приборы", "10.3", "Устройство переговорное 7.2 в комплекте ЛНГС.465213.270.500-02, ООО 'Лифт-Комплекс ДС'", 38, "шт", 2460, 800], ["СДЛ", "Приборы", "10.4", "Переговорное устройство накладное для режима 'ППП' ПУЭП-Н ЛНГС.465213.300.300, ООО 'Лифт-К", 11, "шт", 2460, 800], ["СДЛ", "Приборы", "10.5", "Выносной модуль управления ЛНГС.465213.270.800, ООО 'Лифт-Комплекс ДС'", 19, "шт", 5650, 600], ["СДЛ", "Материалы", "10.7", "Модем USB 3G/4G WiFi, ООО 'Лифт-Комплекс ДС'", 6, "шт", 7500, 600], ["СДЛ", "гофра", "11.1", "Труба ПВХ гибкая гофрированная с протяжным зондом, D=20 мм. Тип 91920  DKC", 2373.5, "мп", 25.55, 40], ["АДСП", "Шкафы/Щиты", "12.1", "Шкаф управления задвижкой до 1,5 кВт ШУЗ-1,5-00-R3 НПК 'Рубеж'", 1, "шт", 60000, 2800], ["АДСП", "Приборы", "12.2", "Адресная метка, 4 шлейфа АМ-4 прот.R3 НПК 'Рубеж'", 7, "шт", 1684, 600], ["АДСП", "Кабель", "13.1", "Кабель силовой ВВГнг(А)-FRLS 5х1,5", 20.2, "мп", 143.59, 70], ["АДСП", "Кабель", "13.2", "Кабель контрольный КПСнг(А)-FRLS 1x2x0,5", 707, "мп", 20, 70], ["АДСП", "кабель", "13.3", "Провод установочный ПуГПнг(A)-LS 1х1,5", 20.2, "мп", 21, 70], ["АДСП", "гофра", "13.4", "Металлорукав гофрированный Ду=32мм в ПВХ изоляции, с протяжкой ", 30.3, "мп", 249, 70], ["АОВ", "Приборы", "14.1", "Прибор управления одним дренажным насосом, 2,2кВт, 220В ШАУ-Д-220-11-010-54 МЕГАТРОН", 33, "шт", 140000, 4200], ["АОВ", "Приборы", "14.2", "Прибор управления двумя дренажными насосами, 1,5кВт, 380В ШАУ-Д-380-22-004-54П МЕГАТРОН", 2, "шт", 220000, 4200], ["АОВ", "Приборы", "14.3", "Прибор управления двумя дренажными насосами, 2,2кВт, 380В ШАУ-Д-380-22-006-54П МЕГАТРОН", 11, "шт", 220000, 4200], ["АОВ", "Приборы", "14.4", "Прибор управления одним дренажным насосом  МЕГАТРОН", 8, "шт", 140000, 4200], ["АОВ", "Приборы", "14.5", "Подвесной сигнализаторы уровня для КНС и сточных вод ПСУ-1/10 Овен", 151, "шт", 4971.5, 300], ["АОВ", "Приборы", "14.7", "Система ротации и резервирования кондиционеров, в комплекте: БУРР-1М Климат24", 1, "компл", 12000, 300], ["Радио", "Оборудование", "17.1", "Телекоммуникационный шкаф настенный 19', Racknet S3000 22U 600x600 60F-22-66-30BL Eurolan", 1, "шт", 42000, 2100], ["Радио", "Приборы", "17.2", "Вентиляционная панель с термостатом 19', 1U, 3 вентилятора, с контроллером 60A-91-11-30BL ", 1, "шт", 24518, 600], ["Радио", "Оборудование", "17.3", "Источник бесперебойного питания 19', 2U SKAT-UPS 3000-RACK-ON-6X9 Бастион", 1, "шт", 77326, 600], ["Радио", "Оборудование", "17.4", "Батарейный блок 19', 2U SKAT BC 72/18S3 RACK Бастион", 1, "шт", 103000, 600], ["Радио", "Приборы", "17.5", "Устройство сопряжения с РСО г. Москвы УС-2 (БУУ-БСМС) Информтелесеть", 1, "шт", 110000, 7800], ["Радио", "Оборудование", "17.6", "Конвертер IP/СПВ Блок на 25Вт БПР2-BF3/50 (или аналог) НТК «Темас» ", 3, "шт", 139800, 600], ["Т", "Шкафы/Щиты", "20.1", "Шкаф телемонтажный 1200х800х300 ПФ 'АКТ'", 4, "шт", 63637.5, 2800], ["Т", "Материалы", "20.3", "Светильник светодиодный линейный ДБО 3002 LDBO0-3002-7-4000-K01 IEK", 4, "шт", 592.92, 600], ["Т", "Приборы", "20.6", "Усилитель субмагистральный VX26 WISI", 28, "шт", 32000, 1200], ["Т", "Материалы", "20.8", "Делитель магистральный на 2 ДТМ2 diSat", 6, "шт", 813, 150], ["Т", "Материалы", "21.1", "Ответвитель абонентский на 4 отвода FA 4-24 DL Transmedia (Telco Group)", 28, "шт", 281, 150], ["Т", "Материалы", "21.2", "Ответвитель абонентский на 4 отвода FA 4-20 DL Transmedia (Telco Group)", 48, "шт", 186, 150], ["АПС", "Приборы", "23.1", "Прибор приемно-контрольный и управления охранно-пожарный адреcный R3-РУБЕЖ-2ОП ООО 'Рубеж'", 26, "шт", 42981, 3200], ["АПС", "Приборы", "23.2", "Источник вторичного электропитания резервированный ИВЭПР 12/3,5 RS-R3 исп. 2×12 БР ООО ООО", 26, "шт", 9128, 1200], ["АПС", "АКБ", "23.3", "Аккумулятор 12В, 7А/ч ", 72, "шт", 1317.71, 300], ["АПС", "Приборы", "23.4", "Источник вторичного электропитания резервированный ИВЭПР 12/3,5 RS-R3 исп. 2×12 БР ООО 'Ру", 31, "шт", 9128, 1200], ["АПС", "АКБ", "23.5", "Аккумулятор 12В, 17А/ч", 74, "шт", 3374, 300], ["АПС", "Приборы", "23.6", "Бокс резервного электропитания БР 24 2х40 ООО 'Рубеж'", 16, "шт", 7346, 600], ["АПВ", "Оборудование", "26.1", "Автоматизированное рабочее место ЦПИУ 'Рубеж' исп. 2 ООО «Рубеж»", 1, "шт", 581381, 2800], ["АПВ", "Приборы", "26.2", "Прибор приемно-контрольный и управления охранно-пожарный адреcный R3-РУБЕЖ-2ОП ООО «Рубеж»", 11, "шт", 42981, 3200], ["АПВ", "Приборы", "26.3", "Источник вторичного электропитания резервированный ИВЭПР 12/3,5 RS-R3 исп. 2×17 БР ООО «Ру", 11, "шт", 9128, 1200], ["АПВ", "АКБ", "26.4", "Аккумулятор 12В, 17А/ч", 22, "шт", 3374, 300], ["АПВ", "Приборы", "26.5", "Изолятор шлейфа ИЗ-1-R3 ООО «Рубеж»", 215, "шт", 682, 300], ["АПВ", "Приборы", "26.6", "Модуль управления клапаном МДУ-1С-R3 ООО «Рубеж»", 1034, "шт", 4150, 1200], ["СОУЭ", "стойки", "29.1", "Cтойка СОУЭ в сборе SONAR RACK SPM 16U Ш-31-0126", 1, "шт", 1300000, 8500], ["СОУЭ", "стойки", "29.2", "Cтойка СОУЭ в сборе SONAR RACK SPM 16U Ш-32-0126", 1, "шт", 1300000, 8500], ["СОУЭ", "стойки", "29.3", "Cтойка СОУЭ в сборе  SONAR RACK SPM 16U Ш-33-0126 ", 1, "шт", 1300000, 8500], ["СОУЭ", "стойки", "29.4", "Cтойка СОУЭ в сборе SONAR RACK SPM 16U Ш-34-0126", 1, "шт", 1300000, 8500], ["СОУЭ", "стойки", "29.5", "Cтойка СОУЭ в сборе SONAR RACK SPM 16U Ш-35-0126", 1, "шт", 1300000, 8500], ["СОУЭ", "стойки", "29.6", "Cтойка СОУЭ в сборе  SONAR RACK SPM 16U Ш-36-0126 ", 1, "шт", 1300000, 8500], ["ККСС", "Лоток", "32.1", "Металлический лоток перфорированный 300х50 ДКС", 651.45, "мп", 757, 300], ["ККСС", "Лоток", "32.2", "Крышка к лотку 300  ДКС", 651.45, "мп", 518, 150], ["ККСС", "лоток", "32.3", "Угол плоский 90 град. к лотку 300х50 ДКС", 52, "шт", 3621.57, 300], ["ККСС", "Лоток", "32.4", "Крышка к Углу плоскому 90 град. к лотку 300 ДКС", 52, "шт", 2156, 150], ["ККСС", "лоток", "32.5", "Угол плоский плавный 90 град. к лотку 300х50 ДКС", 2, "шт", 3621.57, 300], ["ККСС", "Лоток", "32.6", "Крышка к Углу плоскому плавному 90 град. к лотку 300 ДКС", 2, "шт", 2246, 150], ["СОВ", "Приборы", "35.1", "Панель вызова многоабонентская (к-т: кронштейн врезной, к-ты проводов, заглушек, винтов) с", 22, "шт", 99550, 2800], ["СОВ", "Оборудование", "35.2", "Монитор консьержа (к-т: кронштейн для настольной установки, к-т проводов,трубка) AМ-02 BAS", 11, "шт", 78400, 600], ["СОВ", "Приборы", "35.4", "Считыватель со встроенным контроллером ProxWay CR-02TD BAS-IP", 22, "шт", 33720, 900], ["СОВ", "Приборы", "35.5", "Источник вторичного электропитания резервированный ИВЭПР 12/2 1х7-Р ООО 'КБ Пожарной автом", 44, "шт", 3817, 1200], ["СОВ", "АКБ", "35.6", "Аккумулятор 12В, 7А/ч", 88, "шт", 1317.71, 300], ["СОВ", "Материалы", "35.7", "Замок электромагнитный ST-EL250ML Smartec", 22, "шт", 2978, 1600], ["СКЗ", "Оборудование", "37.1", "Блок питания и сигнализации стационарный БПС-3И ИБЯЛ.426479.046-01 Аналитприбор ", 2, "шт", 44380, 1200], ["СКЗ", "Приборы", "37.2", "Сигнализатор загазованности шлейфовый  СТГ-3-И-СО ИБЯЛ.413411.051-20 Аналитприбор ", 47, "шт", 22000, 900], ["СКЗ", "коробки", "37.3", "Коробка соединительная для СТГ-3-И-СО КСИ ИБЯЛ.426479.045-02 Аналитприбор ", 47, "шт", 2880, 600], ["СКЗ", "Приборы", "37.4", "Блок питания стабилизированный 12В, ток 3А БП-3А-Г Телеинформсвязь", 2, "шт", 1915, 300], ["СКЗ", "Кабель", "37.5", "Кабель монтажный парной скрутки, с низким дымо - и газовыделением пониженной пожароопаснос", 808, "мп", 194, 70], ["СКЗ", "Кабель", "37.6", "Кабель монтажные парной скрутки, с низким дымо – и газовыделением пониженной пожароопаснос", 80.8, "мп", 30, 70], ["СВН", "Шкафы/Щиты", "38.1", "Шкаф напольный, 600х800х1632, со стеклянной дверцей 33U NetLink 00930 КДДС", 1, "шт", 34000, 4500], ["СВН", "Приборы", "38.2", "Вентиляционная панель на 2 вентилятора 19', 1U КДДС арт. 008778 КДДС", 1, "шт", 6426, 600], ["СВН", "Материалы", "38.3", "Кросс оптический стоечный 19' ШКОС-М-1U/2-16SC/APC ЗАО «Связьстройдеталь»", 1, "шт", 5377, 5100], ["СВН", "Кабель", "38.4", "Кабель электропитания 3х1,5 3м с разъёмами С13 121203-00258 ЗАО «Связьстройдеталь»", 1, "шт", 853, 70], ["СВН", "Оборудование", "38.5", "Видеосервер VIDEOMAX-IP-Ntr-71-36000R5HS-19' VIDEOMAX-IP-Ntr-71-36000R5HS-19' VIDEOMAX", 1, "шт", 1100000, 7200], ["СВН", "Приборы", "38.6", "Маршрутизатор Mikrotik RB3011UiAS-RM RB3011UiAS-RM Mikrotik", 1, "шт", 24000, 3400]];
+</script>
+<script>
+// ───────── данные ─────────
+const SYS_BUDGET = { // из листа «Сводный расчет»: СМР предбюджет по системам, ₽ без НДС
+ "АСУД":1360980,"АСКУЭ":1125178,"АСКУВТ":2573767,"СДЛ":360285,"АДСП":94127,"АОВ":1300199,"Радио":1904371,"Т":686089,
+ "АПС":7450684,"АПВ":5222271,"СОУЭ":2506036,"ККСС":5278931,"СОВ":3515240,"СКЗ":158987,"СВН":674960 };
+const SUBS = ["ИП Азизов","ИП Повх","ИП Мисриев","СЗ Цымбалев","ИБ констракшн","ИП Зудов","ИП Сиркели","Штатные сотрудники"];
+const SYS_SUB = {"АСУД":"ИП Азизов","АСКУЭ":"ИП Азизов","АСКУВТ":"ИП Мисриев","СДЛ":"Штатные сотрудники","АДСП":"Штатные сотрудники","АОВ":"СЗ Цымбалев","Радио":"ИП Зудов","Т":"ИП Зудов","АПС":"ИП Повх","АПВ":"ИП Повх","СОУЭ":"ИБ констракшн","ККСС":"ИП Повх","СОВ":"ИП Сиркели","СКЗ":"ИП Сиркели","СВН":"ИП Мисриев"};
+const SUB_RATE = {"ИП Азизов":.82,"ИП Повх":.90,"ИП Мисриев":.80,"СЗ Цымбалев":.78,"ИБ констракшн":.85,"ИП Зудов":.83,"ИП Сиркели":.79,"Штатные сотрудники":.70};
+// доля выполнения по системам: [сдано заказчику, закрыто подрядчику] — условные демо-цифры
+const SYS_PROG = {"АСУД":[.62,.64],"АСКУЭ":[.55,.55],"АСКУВТ":[.48,.50],"СДЛ":[.70,.70],"АДСП":[.80,.80],"АОВ":[.35,.36],"Радио":[.58,.60],"Т":[.66,.66],
+ "АПС":[.41,.52],"АПВ":[.38,.47],"СОУЭ":[.30,.31],"ККСС":[.52,.71],"СОВ":[.45,.46],"СКЗ":[.90,.90],"СВН":[.20,.20]};
+const MONTHS = ["май","июн","июл","авг","сен","окт"];
+const MONTH_W = [.05,.10,.17,.21,.24,.23]; // доля накопленного выполнения по месяцам
+
+function seed(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return ()=>{h+=0x6D2B79F5;let t=Math.imul(h^h>>>15,1|h);t^=t+Math.imul(t^t>>>7,61|t);return((t^t>>>14)>>>0)/4294967296}}
+const rows = POS.map(p=>{
+  const [sys,grp,code,name,qty,unit,pm,ps]=p; const r=seed(code+name)();
+  const [pc,psub]=SYS_PROG[sys]; const jit=(r-.5)*.2;
+  let client=Math.round(qty*Math.min(1,Math.max(0,pc+jit))*100)/100;
+  let sub=Math.round(qty*Math.min(1.08,Math.max(0,psub+jit+(psub>pc?r*.1:0)))*100)/100;
+  if(unit==="шт"||unit==="компл"){client=Math.round(client);sub=Math.round(sub)}
+  const who=SYS_SUB[sys];
+  return {sys,grp,code,name,qty,unit,pm,ps,client,sub,who,rate:Math.round(ps*SUB_RATE[who])};
+});
+const fmt=n=>new Intl.NumberFormat("ru-RU",{maximumFractionDigits:0}).format(Math.round(n));
+const fmtM=n=>(n/1e6).toLocaleString("ru-RU",{minimumFractionDigits:1,maximumFractionDigits:1})+" млн";
+const pct=n=>Math.round(n*100)+" %";
+const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
+
+// агрегаты по системам: доли из SYS_PROG × бюджет системы (демо), по позициям — реальные расценки
+const SYS = Object.keys(SYS_BUDGET).map(s=>{const b=SYS_BUDGET[s],[c,p]=SYS_PROG[s];return {s,b,client:b*c,sub:b*p,subPay:b*p*SUB_RATE[SYS_SUB[s]],who:SYS_SUB[s]}});
+const T_CONTRACT=sum(SYS,x=>x.b), T_CLIENT=sum(SYS,x=>x.client), T_SUB=sum(SYS,x=>x.sub), T_SUBPAY=sum(SYS,x=>x.subPay);
+const T_SKEW=sum(SYS,x=>Math.max(0,x.sub-x.client));
+const planMargin=.18 /* плановая маржинальность СМР из бюджета */, factMargin=1-T_SUBPAY/T_SUB;
+const EXTRA=[
+ {t:"Перенос 14 оповещателей СОУЭ из-за изменения планировки 7–9 эт.",who:"ИБ констракшн",sys:"СОУЭ",sum:184000,st:0,d:"28.10"},
+ {t:"Штробление под кабель АПС по монолиту, 212 м.п. (не было в ВОР)",who:"ИП Повх",sys:"АПС",sum:127200,st:0,d:"24.10"},
+ {t:"Доп. лоток 300×50 на паркинге, 86 м.п.",who:"ИП Повх",sys:"ККСС",sum:64500,st:1,d:"17.10"},
+ {t:"Замена короба 25×60 на 40×60 по требованию заказчика, 120 м.п.",who:"ИП Азизов",sys:"АСКУЭ",sum:38400,st:2,d:"09.10"},
+ {t:"Демонтаж/монтаж датчиков после отделки, 44 шт.",who:"ИП Мисриев",sys:"АСКУВТ",sum:52800,st:3,d:"02.10"},
+ {t:"Прокладка радиофидера по кровле, 140 м.п.",who:"ИП Зудов",sys:"Радио",sum:91000,st:2,d:"29.09"},
+];
+const EX_ST=["Выявлено","Согласовано внутри","Выставлено заказчику","Принято заказчиком (ДС)"];
+const ACTS=[
+ ["А-2026-10-07","ИП Повх","октябрь 2026","АПС, АПВ, ККСС",1261400,"подписан"],
+ ["А-2026-10-06","ИП Азизов","октябрь 2026","АСУД, АСКУЭ",318900,"подписан"],
+ ["А-2026-10-05","ИБ констракшн","октябрь 2026","СОУЭ",201300,"на подписи"],
+ ["А-2026-10-04","ИП Мисриев","октябрь 2026","АСКУВТ, СВН",402700,"подписан"],
+ ["А-2026-09-03","ИП Повх","сентябрь 2026","АПС, АПВ, ККСС",1398200,"подписан, оплачен"],
+];
+
+// ───────── сводка ─────────
+function tiles(){
+  const t=[
+   ["Договор СМР",fmtM(T_CONTRACT),"15 систем, без НДС",""],
+   ["Сдано заказчику",fmtM(T_CLIENT),pct(T_CLIENT/T_CONTRACT)+" договора",""],
+   ["Закрыто подрядчикам",fmtM(T_SUB),"по сметным расценкам",""],
+   ["Перекос закрытия",fmtM(T_SKEW),"закрыто, но не сдано заказчику","bad"],
+   ["Маржа СМР план / факт",pct(planMargin)+" / "+pct(factMargin),factMargin<planMargin?"ниже плана на "+pct(planMargin-factMargin):"в плане",factMargin<planMargin?"warn":"ok"],
+   ["Допработы без решения",fmtM(sum(EXTRA.filter(x=>x.st<2),x=>x.sum)),EXTRA.filter(x=>x.st<2).length+" позиции","warn"],
+  ];
+  document.getElementById("tiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+}
+function sysTable(){
+  const h=`<tr><th>Система</th><th class="n">Договор</th><th>Прогресс</th><th class="n">Сдано</th><th class="n">Закрыто</th><th>Статус</th></tr>`;
+  const b=SYS.map(x=>{const skew=x.sub-x.client;const st=skew>x.b*.05?`<span class="pill bad">перекос ${fmt(skew)}</span>`:skew>x.b*.01?`<span class="pill warn">+${fmt(skew)}</span>`:`<span class="pill ok">в балансе</span>`;
+   return `<tr><td><b>${x.s}</b><br><span style="color:var(--muted);font-size:11px">${x.who}</span></td><td class="n">${fmt(x.b)}</td><td><div class="bar"><i class="s" style="width:${x.sub/x.b*100}%"></i><i class="c" style="width:${x.client/x.b*100}%"></i></div></td><td class="n">${pct(x.client/x.b)}</td><td class="n">${pct(x.sub/x.b)}</td><td>${st}</td></tr>`}).join("");
+  document.getElementById("sysTable").innerHTML=h+b+`<tr class="tot"><td>Итого</td><td class="n">${fmt(T_CONTRACT)}</td><td></td><td class="n">${pct(T_CLIENT/T_CONTRACT)}</td><td class="n">${pct(T_SUB/T_CONTRACT)}</td><td></td></tr>`;
+}
+function balChart(){
+  const by={};SYS.forEach(x=>{by[x.who]=by[x.who]||{c:0,s:0};by[x.who].c+=x.client;by[x.who].s+=x.sub});
+  const list=Object.entries(by).sort((a,b)=>b[1].s-a[1].s);
+  const W=520,rowH=30,L=135,R=70,max=Math.max(...list.map(x=>x[1].s));
+  const sc=v=>L+(W-L-R)*v/max;
+  let g=`<svg viewBox="0 0 ${W} ${list.length*rowH+24}" width="100%" role="img" aria-label="Баланс закрытия по субподрядчикам">`;
+  [0,.25,.5,.75,1].forEach(f=>{g+=`<line x1="${sc(max*f)}" y1="0" x2="${sc(max*f)}" y2="${list.length*rowH}" stroke="var(--line)" stroke-width="1"/><text x="${sc(max*f)}" y="${list.length*rowH+16}" text-anchor="middle">${(max*f/1e6).toFixed(1)}</text>`});
+  list.forEach(([w,v],i)=>{const y=i*rowH;const skew=v.s-v.c;
+    g+=`<text x="${L-8}" y="${y+18}" text-anchor="end" style="fill:var(--fg)">${w}</text>`;
+    g+=`<rect x="${L}" y="${y+5}" width="${sc(v.s)-L}" height="9" fill="var(--sub)" opacity=".55"/>`;
+    g+=`<rect x="${L}" y="${y+15}" width="${sc(v.c)-L}" height="9" fill="var(--client)"/>`;
+    if(skew>v.s*.08) g+=`<text x="${sc(v.s)+6}" y="${y+13}" style="fill:var(--bad);font-weight:600">+${fmt(skew)}</text>`;
+  });
+  g+=`</svg><div class="legend"><span><b style="background:var(--sub);opacity:.55"></b>закрыто подрядчику</span><span><b style="background:var(--client)"></b>сдано заказчику</span><span style="color:var(--bad)">красным — разница, ₽</span></div>`;
+  document.getElementById("balChart").innerHTML=g;
+}
+function alerts(){
+  const a=[
+   ["bad",`<b>ИП Повх · ККСС</b>: закрыто ${pct(SYS_PROG["ККСС"][1])} при сданных заказчику ${pct(SYS_PROG["ККСС"][0])}. Перекос ${fmt(SYS.find(x=>x.s==="ККСС").sub-SYS.find(x=>x.s==="ККСС").client)} ₽. Акт за ноябрь — только после КС-2 по лоткам.`],
+   ["bad",`<b>ИП Повх · АПС, АПВ</b>: расценка подрядчика 90 % от сметной, маржа по системам ${pct(1-SUB_RATE["ИП Повх"])} при плане ${pct(planMargin)}. Пересмотреть расценку или ДС с заказчиком.`],
+   ["warn",`<b>Допработы 311 200 ₽</b> без решения больше 5 дней (СОУЭ, АПС). Перевыставить заказчику или отказать.`],
+   ["warn",`<b>СВН</b>: выполнено 20 % при плане 45 % на 1 ноября. Отставание 7 недель, ИП Мисриев.`],
+   ["ok",`<b>СКЗ, АДСП</b>: сданы заказчику на 80–90 %, баланс сходится, можно закрывать гарантийные удержания по графику.`],
+  ];
+  document.getElementById("alerts").innerHTML=a.map(([c,t])=>`<li class="${c}">${t}</li>`).join("");
+}
+function monthChart(){
+  const W=520,H=190,L=46,B=28,T=12,R=12;
+  let cc=0,cs=0;const pts=MONTH_W.map(w=>{cc+=T_CLIENT*w;cs+=T_SUB*w;return [cc,cs]});
+  const max=Math.max(T_SUB,T_CLIENT)*1.05;
+  const x=i=>L+(W-L-R)*i/(MONTHS.length-1), y=v=>T+(H-T-B)*(1-v/max);
+  let g=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Динамика по месяцам">`;
+  [0,.25,.5,.75,1].forEach(f=>{g+=`<line x1="${L}" x2="${W-R}" y1="${y(max*f)}" y2="${y(max*f)}" stroke="var(--line)"/><text x="${L-6}" y="${y(max*f)+4}" text-anchor="end">${(max*f/1e6).toFixed(0)}</text>`});
+  MONTHS.forEach((m,i)=>g+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${m}</text>`);
+  const path=(k)=>pts.map((p,i)=>(i?"L":"M")+x(i)+" "+y(p[k])).join(" ");
+  g+=`<path d="${path(1)} L${x(5)} ${y(0)} L${x(0)} ${y(0)} Z" fill="var(--sub)" opacity=".12"/>`;
+  g+=`<path d="${path(1)}" fill="none" stroke="var(--sub)" stroke-width="2"/><path d="${path(0)}" fill="none" stroke="var(--client)" stroke-width="2.5"/>`;
+  pts.forEach((p,i)=>{g+=`<circle cx="${x(i)}" cy="${y(p[0])}" r="3" fill="var(--client)"/><circle cx="${x(i)}" cy="${y(p[1])}" r="3" fill="var(--sub)"/>`});
+  g+=`<text x="${x(5)-4}" y="${y(pts[5][1])-8}" text-anchor="end" style="fill:var(--sub);font-weight:600">${fmtM(T_SUB)}</text><text x="${x(5)-4}" y="${y(pts[5][0])+14}" text-anchor="end" style="fill:var(--client);font-weight:600">${fmtM(T_CLIENT)}</text></svg>`;
+  g+=`<div class="legend"><span><b style="background:var(--client)"></b>сдано заказчику, нарастающим</span><span><b style="background:var(--sub)"></b>закрыто подрядчикам</span></div>`;
+  document.getElementById("monthChart").innerHTML=g;
+}
+function forecast(){
+  const weekRate=T_CLIENT*0.24/4.3; const left=T_CONTRACT-T_CLIENT; const weeks=left/weekRate;
+  const end=new Date(2026,10,2); end.setDate(end.getDate()+Math.round(weeks*7));
+  const plan=new Date(2027,4,31);
+  const rows=[
+   ["Темп сдачи заказчику, в неделю",fmt(weekRate)+" ₽"],
+   ["Осталось сдать по договору",fmt(left)+" ₽"],
+   ["Окончание при текущем темпе",end.toLocaleDateString("ru-RU")+` <span class="pill ${end>plan?"bad":"ok"}">${end>plan?"позже плана на "+Math.round((end-plan)/864e5/7)+" нед.":"в срок"}</span>`],
+   ["Срок по договору","31.05.2027"],
+   ["Нужный темп, чтобы успеть",fmt(left/((plan-new Date(2026,10,2))/6048e5))+" ₽ / нед."],
+   ["Прогноз маржи СМР по объекту",fmt(T_CONTRACT*factMargin)+" ₽ ("+pct(factMargin)+") при плане "+fmt(T_CONTRACT*planMargin)+" ₽"],
+  ];
+  document.getElementById("forecast").innerHTML=rows.map(([a,b])=>`<tr><td>${a}</td><td class="n" style="white-space:normal">${b}</td></tr>`).join("");
+}
+
+// ───────── журнал ─────────
+function jTable(){
+  const sys=document.getElementById("fSys").value,st=document.getElementById("fState").value,q=document.getElementById("fQ").value.toLowerCase();
+  const h=`<tr><th>Шифр</th><th>Позиция</th><th class="n">По смете</th><th class="n">Сдано заказчику</th><th class="n">Закрыто подрядчику</th><th class="n">Остаток</th><th>Исполнитель</th><th></th></tr>`;
+  const b=rows.filter(r=>(!sys||r.sys===sys)&&(!q||(r.name+r.code).toLowerCase().includes(q))).map(r=>{
+    const rest=r.qty-Math.max(r.client,r.sub);const skew=r.sub>r.client*1.02&&r.sub-r.client>0.5;const done=rest<=0;
+    const s=skew?"bad":done?"done":"open"; if(st&&st!==s)return"";
+    const pill=skew?`<span class="pill bad">перекос +${r.sub-r.client>=1?fmt(r.sub-r.client):(r.sub-r.client).toFixed(1)}</span>`:done?`<span class="pill ok">закрыто</span>`:`<span class="pill mut">в работе</span>`;
+    return `<tr><td class="n" style="text-align:left">${r.code}</td><td><b>${r.sys}</b> · ${r.name}</td><td class="n">${r.qty} ${r.unit}</td><td class="n">${r.client}</td><td class="n">${r.sub}</td><td class="n">${Math.max(0,rest).toFixed(rest%1?1:0)}</td><td>${r.who}</td><td>${pill}</td></tr>`}).join("");
+  document.getElementById("jTable").innerHTML=h+b;
+}
+function phone(){
+  const sel=document.getElementById("pPos");sel.innerHTML=rows.map((r,i)=>`<option value="${i}">${r.code} · ${r.sys} · ${r.name.slice(0,48)}</option>`).join("");
+  sel.value=rows.findIndex(r=>r.sys==="ККСС");
+  document.getElementById("pWho").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");
+  const upd=()=>{const r=rows[+sel.value];document.getElementById("pWho").value=r.who;
+    const rest=r.qty-r.sub;document.getElementById("pRest").textContent=`По смете ${r.qty} ${r.unit} · закрыто ${r.sub} · остаток ${Math.max(0,rest).toFixed(rest%1?1:0)} ${r.unit}`;
+    const q=+document.getElementById("pQty").value||0;document.getElementById("pMoney").textContent=`× ${fmt(r.rate)} ₽ (расценка исполнителя) = ${fmt(q*r.rate)} ₽ · по смете ${fmt(q*r.ps)} ₽`;
+    const w=document.getElementById("pWarn");if(q>rest){w.hidden=false;w.textContent=`Больше остатка по смете на ${(q-rest).toFixed(1)} ${r.unit}. Запись уйдёт в «Допработы» на согласование, в акт не попадёт.`}else w.hidden=true;
+    document.getElementById("pOk").hidden=true};
+  sel.addEventListener("change",upd);document.getElementById("pQty").addEventListener("input",upd);
+  document.getElementById("pSave").addEventListener("click",()=>{document.getElementById("pOk").hidden=false});
+  document.getElementById("pQty").value=40;upd();
+}
+
+// ───────── субподрядчики ─────────
+function contractor(){
+  const who=document.getElementById("cSel").value;
+  const rs=rows.filter(r=>r.who===who);const ss=SYS.filter(x=>x.who===who);
+  const closed=sum(ss,x=>x.sub),pay=sum(ss,x=>x.subPay),client=sum(ss,x=>x.client);
+  const acted=ACTS.filter(a=>a[1]===who).reduce((s,a)=>s+a[4],0);const hold=pay*.05;
+  const t=[["Закрыто по сметным расценкам",fmtM(closed),ss.map(x=>x.s).join(", "),""],["К оплате по его расценке",fmtM(pay),"средняя "+pct(SUB_RATE[who])+" от сметной",""],
+   ["Сдано заказчику по его системам",fmtM(client),closed>client*1.05?"закрыто больше, чем сдано":"в балансе",closed>client*1.05?"bad":"ok"],
+   ["Заактировано",fmtM(acted),ACTS.filter(a=>a[1]===who).length+" акта",""],["Гарантийное удержание 5 %",fmtM(hold),"возврат по сдаче заказчику",""],["Маржа по подрядчику",pct(1-SUB_RATE[who]),(1-SUB_RATE[who])<planMargin?"ниже плана":"в плане",(1-SUB_RATE[who])<planMargin?"warn":"ok"]];
+  document.getElementById("cTiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  document.getElementById("cTitle").innerHTML=`${who} · позиции <span>физобъёмы и деньги</span>`;
+  const h=`<tr><th>Система</th><th>Позиция</th><th class="n">По смете</th><th class="n">Выполнил</th><th class="n">Расценка его / сметная</th><th class="n">К оплате</th><th class="n">По смете</th><th>Статус</th></tr>`;
+  const b=rs.map(r=>`<tr><td>${r.sys}</td><td>${r.code} · ${r.name}</td><td class="n">${r.qty} ${r.unit}</td><td class="n">${r.sub} ${r.unit}</td><td class="n">${fmt(r.rate)} / ${fmt(r.ps)}</td><td class="n">${fmt(r.sub*r.rate)}</td><td class="n">${fmt(r.sub*r.ps)}</td><td>${r.sub>r.client*1.02&&r.sub-r.client>.5?'<span class="pill bad">не сдано заказчику</span>':r.sub>=r.qty?'<span class="pill ok">закрыто</span>':'<span class="pill mut">в работе</span>'}</td></tr>`).join("");
+  document.getElementById("cTable").innerHTML=h+b+`<tr class="tot"><td colspan="5">Итого по показанным позициям</td><td class="n">${fmt(sum(rs,r=>r.sub*r.rate))}</td><td class="n">${fmt(sum(rs,r=>r.sub*r.ps))}</td><td></td></tr>`;
+}
+
+// ───────── допработы ─────────
+function extra(){
+  const open=EXTRA.filter(x=>x.st<2),out=EXTRA.filter(x=>x.st===2),ok=EXTRA.filter(x=>x.st===3);
+  document.getElementById("xTiles").innerHTML=[["Без решения",fmt(sum(open,x=>x.sum))+" ₽",open.length+" поз. · старше 5 дней: 2","bad"],["Выставлено заказчику",fmt(sum(out,x=>x.sum))+" ₽",out.length+" поз. · ждём ответа","warn"],["Принято заказчиком (ДС)",fmt(sum(ok,x=>x.sum))+" ₽","ушло в версию сметы","ok"],["Всего допработ за объект",fmt(sum(EXTRA,x=>x.sum))+" ₽",pct(sum(EXTRA,x=>x.sum)/T_CONTRACT)+" от договора СМР",""]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  document.getElementById("kan").innerHTML=EX_ST.map((s,i)=>{const list=EXTRA.filter(x=>x.st===i);return `<div class="col"><h3>${s}<span>${fmt(sum(list,x=>x.sum))} ₽</span></h3>${list.map(x=>`<div class="card ${i<2?"bad":i===2?"warn":"ok"}">${x.t}<div class="m">${x.sys} · ${x.who} · ${fmt(x.sum)} ₽ · ${x.d}</div></div>`).join("")||'<div class="card" style="color:var(--muted)">пусто</div>'}</div>`}).join("");
+}
+
+// ───────── акты ─────────
+function acts(){
+  document.getElementById("aWho").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("aWho").value="ИП Повх";
+  document.getElementById("aReg").innerHTML=`<tr><th>№ акта</th><th>Субподрядчик</th><th>Период</th><th>Системы</th><th class="n">Сумма без НДС</th><th>Статус</th></tr>`+ACTS.map(a=>`<tr><td class="n" style="text-align:left">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")?"ok":"warn"}">${a[5]}</span></td></tr>`).join("");
+  const who="ИП Повх";const rs=rows.filter(r=>r.who===who&&r.sub>0).slice(0,9);
+  const tot=sum(rs,r=>r.sub*r.rate*.23);
+  document.getElementById("act").innerHTML=`<h2>АКТ № А-2026-10-07 о приёмке выполненных работ</h2><div style="text-align:center;font-size:13px">за период с 01.10.2026 по 31.10.2026</div>
+  <div class="meta"><div><b>Заказчик (Генподрядчик):</b> ООО «АСТЭКС»</div><div><b>Подрядчик:</b> ${who}</div><div><b>Объект:</b> ЖК «Публицист 11»</div><div><b>Договор субподряда:</b> № СП-07/2026 от 14.05.2026</div></div>
+  <div class="wrap"><table><tr><th>№</th><th>Шифр сметы</th><th>Наименование работ</th><th>Ед.</th><th>Кол-во</th><th>Цена, ₽</th><th>Сумма, ₽</th></tr>
+  ${rs.map((r,i)=>{const q=(r.unit==="шт"||r.unit==="компл")?Math.max(1,Math.round(r.sub*.23)):Math.round(r.sub*.23*100)/100;return `<tr><td style="text-align:center">${i+1}</td><td style="text-align:center">${r.code}</td><td>${r.name}</td><td style="text-align:center">${r.unit}</td><td class="n">${q}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(q*r.rate)}</td></tr>`}).join("")}
+  <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmt(tot)}</b></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 %</td><td class="n">−${fmt(tot*.05)}</td></tr><tr><td colspan="6" style="text-align:right"><b>К оплате без НДС</b></td><td class="n"><b>${fmt(tot*.95)}</b></td></tr></table></div>
+  <p style="font-size:12.5px;margin:10px 0 0">В демо показаны первые 9 позиций акта из 212. Объёмы приняты по журналу выполнения, записи № 1 702–1 798, подтверждены прорабом 31.10.2026. Позиции, не сданные Заказчику по КС-2, в акт не включены (ККСС, лоток 300×50 — 86 м.п., см. «Допработы»).</p>
+  <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», прораб ______________</div></div>`;
+  document.getElementById("aMake").addEventListener("click",()=>{document.getElementById("act").scrollIntoView({behavior:"smooth"})});
+}
+
+// ───────── роутинг ─────────
+const VIEWS=["dashboard","journal","contractors","extra","acts"];
+function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h))h="dashboard";
+  VIEWS.forEach(v=>{document.getElementById("v-"+v).hidden=v!==h});
+  document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+h))}
+window.addEventListener("hashchange",route);
+// init
+tiles();sysTable();balChart();alerts();monthChart();forecast();
+document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<option>${s}</option>`).join("");
+["fSys","fState","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",jTable));jTable();phone();
+document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="ИП Повх";
+document.getElementById("cSel").addEventListener("change",contractor);contractor();
+extra();acts();route();
+</script>
+</body></html>
