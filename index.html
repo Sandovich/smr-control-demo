@@ -189,7 +189,7 @@ body::before{background:hsl(200,8%,12%)}
 .top .brand{font-weight:800;letter-spacing:1.2px;font-size:13px;padding:0 16px;color:#fff;white-space:nowrap}
 .top .dd{height:48px;padding:0 12px;display:flex;align-items:center;gap:6px;border-left:1px solid rgba(255,255,255,.15);font-size:13px;color:#fff;white-space:nowrap}
 .top .dd i{font-style:normal;color:rgba(255,255,255,.55);font-size:11px}
-.top nav{flex-direction:row;height:48px;margin-left:8px;overflow-x:auto;scrollbar-width:none;border-left:1px solid rgba(255,255,255,.15)}
+.top nav{flex:1 1 auto;min-width:0;flex-direction:row;height:48px;margin-left:8px;overflow-x:auto;scrollbar-width:none;border-left:1px solid rgba(255,255,255,.15)}
 .top nav::-webkit-scrollbar{display:none}
 .top nav a{color:rgba(255,255,255,.85);padding:0 12px;height:48px;font-size:13px;gap:7px;white-space:nowrap}
 .top nav a svg{color:rgba(255,255,255,.6)}
@@ -198,6 +198,9 @@ body::before{background:hsl(200,8%,12%)}
 .top nav a.on::before{left:0;right:0;top:auto;bottom:0;height:3px;width:auto;background:var(--accent)}
 .top nav a.on svg{color:var(--accent)}
 .top .sp{margin-left:auto;display:flex;align-items:center;gap:14px;padding:0 16px;color:rgba(255,255,255,.8);flex:none}
+@media (max-width:1750px){.top .sp .period{display:none}}
+@media (max-width:1450px){.top .stamp{display:none}}
+@media (max-width:1250px){.top .dd{display:none}}
 .top .sp svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .top .av{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3)}
 .period{color:rgba(255,255,255,.6);margin-left:0}
@@ -245,7 +248,7 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
 <header class="top">
   <a class="home" href="#dashboard" aria-label="Сводка"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a>
   <span class="brand">СМР·КОНТРОЛЬ</span>
-  <span class="dd">АСТЭКС <i>▾</i></span><span class="dd">Публицист 11 <i>▾</i></span>
+  <span class="dd">АСТЭКС</span><span class="dd">Публицист 11</span>
   <nav id="nav">
     <a href="#dashboard"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Сводка</a>
     <a href="#journal"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Журнал КС</a>
