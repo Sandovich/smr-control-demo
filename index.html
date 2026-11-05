@@ -9,7 +9,7 @@
   --line:hsl(200,8%,85%); --line2:hsl(200,8%,90%); --soft:hsl(200,8%,94%); --soft2:hsl(200,8%,98%);
   --accent:hsl(19,100%,50%); --accent-hover:hsl(19,100%,45%); --accent-ink:#ffffff;
   --ok:hsl(125,50%,30%); --ok-bg:hsl(125,50%,94%); --ok-line:hsl(125,50%,90%);
-  --warn:hsl(22,95%,34%); --warn-bg:hsl(45,85%,94%); --warn-line:hsl(45,85%,88%);
+  --warn:hsl(218,75%,40%); --warn-bg:hsl(218,75%,96%); --warn-line:hsl(218,75%,90%);
   --bad:hsl(360,70%,50%); --bad-bg:hsl(360,70%,94%); --bad-line:hsl(360,70%,90%);
   --blue:hsl(218,75%,50%); --blue-bg:hsl(218,75%,94%); --focus:hsl(218,75%,40%);
   --client:hsl(218,75%,50%); --sub:hsl(19,100%,50%);
@@ -106,7 +106,8 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
 @media (min-width:1500px){.jgrid{grid-template-columns:1fr 280px}}
 @media (max-width:1499px){.jgrid>div:last-child{order:-1}}
 .phone{border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:14px 16px;max-width:300px;margin:0;width:100%}
-.phone .hd{font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between}
+.phone .hd{font-weight:600;margin-bottom:6px;display:block}
+.phone .hd span:last-child{display:block;font-weight:400;font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted)}
 .phone label{display:block;font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted);font-weight:600;margin:10px 0 4px}
 .phone input,.phone select{width:100%}
 .phone .hint{font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted);margin-top:4px}
