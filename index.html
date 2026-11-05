@@ -26,7 +26,7 @@ main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px
 .view[hidden]{display:none}
 h1{font-size:20px;margin:0 0 4px;text-wrap:balance}
 .sub{color:var(--muted);margin:0 0 16px}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:18px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:18px}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;min-width:0}
 .tile .l{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
 .tile .v{font-family:var(--mono);font-size:22px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
@@ -112,6 +112,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
   .toolbar{gap:6px} .toolbar select,.toolbar input{flex:1 1 140px;min-width:0}
   #jTable{min-width:720px}
   #cTable{min-width:760px}
+  #sTable{min-width:900px} #sSys{font-size:12px}
   .kan{grid-template-columns:1fr}
   .act{padding:14px 12px} .act .meta{grid-template-columns:1fr} .act h2{font-size:14px}
   .act table{font-size:11px;min-width:560px} .act .sig{grid-template-columns:1fr}
@@ -124,7 +125,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
 <header class="top">
   <div class="brand">СМР-Контроль <span class="stamp">демо на цифрах сметы «Публицист 11»</span><small>АСТЭКС · заказчик Монолит · договор 269 997 162 ₽ с НДС</small></div>
   <nav id="nav">
-    <a href="#dashboard">Сводка</a><a href="#journal">Журнал КС</a><a href="#contractors">Субподрядчики</a><a href="#extra">Допработы</a><a href="#acts">Акты</a>
+    <a href="#dashboard">Сводка</a><a href="#journal">Журнал КС</a><a href="#contractors">Субподрядчики</a><a href="#staff">Свой персонал</a><a href="#extra">Допработы</a><a href="#acts">Акты</a>
   </nav>
   <div class="period">период: май – октябрь 2026 · нарастающим итогом · суммы без НДС</div>
 </header>
@@ -209,6 +210,29 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
   <div class="panel"><h2 id="cTitle">Позиции</h2><div class="wrap"><table id="cTable"></table></div></div>
 </section>
 
+<!-- ───────── СВОЙ ПЕРСОНАЛ ───────── -->
+<section class="view" id="v-staff" hidden>
+  <h1>Свой персонал на объекте</h1>
+  <p class="sub">Табель за октябрь 2026 как он есть: люди обезличены, часы и деньги настоящие. Прораб вносит часы с телефона с указанием системы — тогда ФОТ ложится в себестоимость системы, а не висит на объекте.</p>
+  <div class="tiles" id="sTiles"></div>
+  <div class="grid2">
+    <div class="panel">
+      <h2>ФОТ своих по месяцам <span>зарплата и премии, млн ₽ · август и октябрь по табелю, остальное — оценка</span></h2>
+      <div id="sChart"></div>
+    </div>
+    <div class="panel">
+      <h2>Разнесение ФОТ октября по системам <span>условно: пропорционально сданному заказчику</span></h2>
+      <div class="wrap"><table id="sSys"></table></div>
+      <p class="note">Точный вариант — отметка системы прорабом при вводе часов. Пока её нет, строка «без системы» на сводной горит красным.</p>
+    </div>
+  </div>
+  <div class="panel" style="margin-bottom:14px">
+    <h2>Проверки табеля <span>инструмент делает их сам при каждом вводе</span></h2>
+    <ul class="alerts" id="sAlerts"></ul>
+  </div>
+  <div class="panel"><h2>Люди на объекте <span>октябрь 2026 · 21 человек</span></h2><div class="wrap"><table id="sTable"></table></div></div>
+</section>
+
 <!-- ───────── ДОПРАБОТЫ ───────── -->
 <section class="view" id="v-extra" hidden>
   <h1>Допработы: вне утверждённой сметы</h1>
@@ -277,6 +301,37 @@ const EXTRA=[
  {t:"Прокладка радиофидера по кровле, 140 м.п.",who:"Подрядчик Е",sys:"Радио",sum:91000,st:2,d:"29.09"},
 ];
 const EX_ST=["Выявлено","Согласовано внутри","Выставлено заказчику","Принято заказчиком (ДС)"];
+// ───────── свой персонал: табель «Публицист 11», октябрь 2026 (обезличено; часы и деньги настоящие) ─────────
+// [роль, форма оплаты, ставка ₽/ч, часы, дни, зарплата, премия, тип премии, наличные, часы на других объектах]
+const STAFF=[
+ ["Директор проектов","без ставки",0,0,0,0,0,"",0,8],
+ ["Менеджер проекта","оклад",0,192,24,100000,0,"",115500,0],
+ ["Прораб 1","оклад",0,176,22,135000,25000,"премия",0,0],
+ ["Прораб 2","оклад",0,223,23,135000,55000,"премия",0,0],
+ ["Кладовщик","без ставки",0,176,22,0,0,"",0,0],
+ ["Монтажник 01","часы",720,176,22,126720,0,"",0,0],
+ ["Монтажник 02","часы",800,168,21,134400,0,"",0,27],
+ ["Монтажник 03","часы",650,176,22,114400,54600,"добивка",0,0],
+ ["Монтажник 04","часы",800,176,22,140800,58200,"добивка",0,0],
+ ["Монтажник 05","часы",650,176,22,114400,84600,"добивка",0,0],
+ ["Монтажник 06","часы",650,128,16,83200,85800,"добивка",255512,0],
+ ["Монтажник 07","часы",650,152,19,98800,100200,"добивка",0,0],
+ ["Монтажник 08","часы",800,136,17,108800,41385,"добивка",0,0],
+ ["Монтажник 09","часы",650,176,22,114400,0,"",256972,0],
+ ["Монтажник 10","часы",800,176,22,140800,96181,"добивка",37981,0],
+ ["Монтажник 11","часы",650,176,22,114400,165442,"добивка",80842,0],
+ ["Монтажник 12","часы",650,88,11,57200,0,"",0,126],
+ ["Монтажник 13","часы",800,88,11,70400,0,"",0,75],
+ ["Монтажник 14","часы",720,88,11,63360,0,"",0,126],
+ ["Монтажник 15","часы",720,8,1,5760,0,"",0,80],
+ ["Монтажник 16","часы",720,0,0,0,0,"",0,154],
+];
+const FOT_MONTHS=[[1.2e6,false],[1.5e6,false],[1.8e6,false],[1948362,true],[2.3e6,false],[2624248,true]]; // [сумма, по табелю?]
+const NDFL=.87, VZNOSY=.30; // ÷0,87 — как в СВОДНОЙ АСТЭКС; 30 % — страховые из листа «Константы»
+const S_H=sum(STAFF,s=>s[3]), S_ZP=sum(STAFF,s=>s[5]), S_PR=sum(STAFF,s=>s[6]), S_CASH=sum(STAFF,s=>s[8]), S_FOT=S_ZP+S_PR;
+const MONT=STAFF.filter(s=>s[2]>0), M_H=sum(MONT,s=>s[3]), M_FOT=sum(MONT,s=>s[5]+s[6]);
+const HOUR=M_FOT/M_H, HOUR_FULL=HOUR/NDFL*(1+VZNOSY);
+const FOT_TOTAL=sum(FOT_MONTHS,m=>m[0]);
 const ACTS=[
  ["А-2026-10-07","Подрядчик Б","октябрь 2026","АПС, АПВ, ККСС",1261400,"подписан"],
  ["А-2026-10-06","Подрядчик А","октябрь 2026","АСУД, АСКУЭ",318900,"подписан"],
@@ -292,8 +347,9 @@ function tiles(){
    ["Сдано заказчику",fmtM(T_CLIENT),pct(T_CLIENT/T_CONTRACT)+" договора",""],
    ["Закрыто подрядчикам",fmtM(T_SUB),"по сметным расценкам",""],
    ["Перекос закрытия",fmtM(T_SKEW),"закрыто, но не сдано заказчику","bad"],
-   ["Маржа СМР план / факт",pct(planMargin)+" / "+pct(factMargin),factMargin<planMargin?"ниже плана на "+pct(planMargin-factMargin):"в плане",factMargin<planMargin?"warn":"ok"],
+   ["Маржа СМР план / факт",Math.round(planMargin*100)+" / "+pct(factMargin),factMargin<planMargin?"ниже плана на "+pct(planMargin-factMargin):"в плане",factMargin<planMargin?"warn":"ok"],
    ["Допработы без решения",fmtM(sum(EXTRA.filter(x=>x.st<2),x=>x.sum)),EXTRA.filter(x=>x.st<2).length+" позиции","warn"],
+   ["ФОТ своих, октябрь",fmtM(S_FOT),"+"+fmtM(S_CASH)+" наличных · без привязки к системам","bad"],
   ];
   document.getElementById("tiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
 }
@@ -325,6 +381,7 @@ function alerts(){
    ["bad",`<b>Подрядчик Б · АПС, АПВ</b>: расценка подрядчика 90 % от сметной, маржа по системам ${pct(1-SUB_RATE["Подрядчик Б"])} при плане ${pct(planMargin)}. Пересмотреть расценку или ДС с заказчиком.`],
    ["warn",`<b>Допработы 311 200 ₽</b> без решения больше 5 дней (СОУЭ, АПС). Перевыставить заказчику или отказать.`],
    ["warn",`<b>СВН</b>: выполнено 20 % при плане 45 % на 1 ноября. Отставание 7 недель, Подрядчик В.`],
+   ["bad",`<b>Свои монтажники · ${fmtM(S_FOT)} ₽ за октябрь</b> (${STAFF.length} человек, ${fmt(S_H)} ч) без привязки к системам. По файлу штатным записаны только СДЛ и АДСП — себестоимость АПС, ККСС, СОВ занижена. Нужна отметка системы в табеле.`],
    ["ok",`<b>СКЗ, АДСП</b>: сданы заказчику на 80–90 %, баланс сходится, можно закрывать гарантийные удержания по графику.`],
   ];
   document.getElementById("alerts").innerHTML=a.map(([c,t])=>`<li class="${c}">${t}</li>`).join("");
@@ -424,8 +481,55 @@ function acts(){
   document.getElementById("aMake").addEventListener("click",()=>{document.getElementById("act").scrollIntoView({behavior:"smooth"})});
 }
 
+// ───────── свой персонал ─────────
+function staff(){
+  const multi=STAFF.filter(s=>s[9]>0).length;
+  const t=[
+   ["ФОТ за октябрь",fmtM(S_FOT),`зарплата ${fmtM(S_ZP)} + премии ${fmtM(S_PR)} · ${STAFF.length} чел. · ${fmt(S_H)} ч`,""],
+   ["Наличные мимо сводной",fmt(S_CASH)+" ₽",`«плюс 10 %» в табеле: ${fmt(S_CASH/0.9)} ₽ (посчитано как ÷ 0,9)`,"warn"],
+   ["Час монтажника",fmt(HOUR)+" ₽",`полный ${fmt(HOUR_FULL)} ₽ с НДФЛ и взносами ${Math.round(VZNOSY*100)} %`,""],
+   ["ФОТ май – октябрь",fmtM(FOT_TOTAL),"август и октябрь по табелю, остальное оценка",""],
+   ["Часы без системы",pct(1),"весь табель — по объекту целиком","bad"],
+   ["На нескольких объектах",multi+" чел.","часы в том же месяце на других листах","warn"],
+  ];
+  document.getElementById("sTiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  // график по месяцам
+  const W=520,H=190,L=46,B=28,T=14,R=12,max=3e6,n=FOT_MONTHS.length,bw=(W-L-R)/n;
+  const y=v=>T+(H-T-B)*(1-v/max);
+  let g=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="ФОТ своих по месяцам"><defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="var(--client)" stroke-width="2"/></pattern></defs>`;
+  [0,1e6,2e6,3e6].forEach(v=>{g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${(v/1e6).toFixed(0)}</text>`});
+  FOT_MONTHS.forEach(([v,real],i)=>{const x=L+bw*i+bw*.18,w=bw*.64;
+    g+=`<rect x="${x}" y="${y(v)}" width="${w}" height="${y(0)-y(v)}" fill="${real?"var(--client)":"url(#hatch)"}" opacity="${real?1:.6}"/>`;
+    g+=`<text x="${x+w/2}" y="${y(v)-5}" text-anchor="middle" style="fill:var(--fg);font-weight:${real?600:400}">${(v/1e6).toFixed(2)}</text>`;
+    g+=`<text x="${x+w/2}" y="${H-8}" text-anchor="middle">${MONTHS[i]}</text>`});
+  g+=`</svg><div class="legend"><span><b style="background:var(--client)"></b>по табелю</span><span><b style="background:repeating-linear-gradient(45deg,var(--client) 0 2px,transparent 2px 5px)"></b>оценка</span><span>наличные не включены</span></div>`;
+  document.getElementById("sChart").innerHTML=g;
+  // разнесение по системам: доля сданного заказчику в октябре
+  const tot=sum(SYS,x=>x.client);
+  const list=SYS.map(x=>({s:x.s,share:x.client/tot})).sort((a,b)=>b.share-a.share);
+  document.getElementById("sSys").innerHTML=`<tr><th>Система</th><th class="n">Доля</th><th class="n">ФОТ, ₽</th><th class="n">С налогами</th></tr>`+
+   list.map(x=>`<tr><td>${x.s}</td><td class="n">${pct(x.share)}</td><td class="n">${fmt(S_FOT*x.share)}</td><td class="n">${fmt(S_FOT*x.share/NDFL*(1+VZNOSY))}</td></tr>`).join("")+
+   `<tr class="tot"><td>Итого</td><td class="n">100 %</td><td class="n">${fmt(S_FOT)}</td><td class="n">${fmt(S_FOT/NDFL*(1+VZNOSY))}</td></tr>`;
+  // проверки табеля
+  const a=[
+   ["bad",`<b>${fmt(S_H)} ч без системы.</b> Весь табель внесён по объекту целиком — ни один час нельзя отнести к АПС, ККСС или СОВ.`],
+   ["bad",`<b>Наличные ${fmt(S_CASH)} ₽</b> у 5 человек в столбце без заголовка; в СВОДНУЮ не попадают. «Плюс 10 %» посчитано как ÷ 0,9 — это +11,1 %, разница ${fmt(S_CASH/0.9-S_CASH*1.1)} ₽.`],
+   ["warn",`<b>Формула часов SUM(H:AK)</b> у 20 строк из 21 — 31-е число не входит. В октябре 31-е суббота, в декабре часы за 31-е пропадут.`],
+   ["warn",`<b>${multi} человек на нескольких объектах.</b> У троих сумма часов за день по объектам больше 8 (10, 11 и 13 ч) — переработка или дубль.`],
+   ["warn",`<b>Премия-добивка у 9 монтажников:</b> формула «фиксированная сумма − зарплата». Договорённость на сумму в месяц, часы и ставка условны — для стоимости часа это надо знать.`],
+   ["warn",`<b>Директор проектов и кладовщик без ставки:</b> 176 ч и 0 ₽. Оклады ИТР объекта в себестоимости не видны.`],
+   ["ok",`<b>Зарплата и премии в СВОДНОЙ</b> сходятся с листами до рубля: ${fmt(S_FOT)} ₽.`],
+  ];
+  document.getElementById("sAlerts").innerHTML=a.map(([c,t])=>`<li class="${c}">${t}</li>`).join("");
+  // таблица людей
+  const h=`<tr><th>№</th><th>Роль</th><th>Оплата</th><th class="n">Ставка</th><th class="n">Часы</th><th class="n">Дни</th><th class="n">Зарплата</th><th class="n">Премия</th><th class="n">Наличные</th><th class="n">Итого</th><th class="n">÷ 0,87</th><th class="n">Другие объекты</th></tr>`;
+  const b=STAFF.map((s,i)=>{const tot=s[5]+s[6]+s[8];
+   return `<tr><td class="n" style="text-align:left">${i+1}</td><td><b>${s[0]}</b></td><td>${s[1]}${s[7]?` <span class="pill ${s[7]==="добивка"?"warn":"mut"}">${s[7]}</span>`:""}</td><td class="n">${s[2]?fmt(s[2]):"—"}</td><td class="n">${s[3]}</td><td class="n">${s[4]}</td><td class="n">${fmt(s[5])}</td><td class="n">${s[6]?fmt(s[6]):""}</td><td class="n">${s[8]?`<span style="color:var(--warn);font-weight:600">${fmt(s[8])}</span>`:""}</td><td class="n">${fmt(tot)}</td><td class="n">${fmt((s[5]+s[6])/NDFL)}</td><td class="n">${s[9]?`<span class="pill warn">+${s[9]} ч</span>`:""}</td></tr>`}).join("");
+  document.getElementById("sTable").innerHTML=h+b+`<tr class="tot"><td colspan="4">Итого</td><td class="n">${S_H}</td><td></td><td class="n">${fmt(S_ZP)}</td><td class="n">${fmt(S_PR)}</td><td class="n">${fmt(S_CASH)}</td><td class="n">${fmt(S_FOT+S_CASH)}</td><td class="n">${fmt(S_FOT/NDFL)}</td><td></td></tr>`;
+}
+
 // ───────── роутинг ─────────
-const VIEWS=["dashboard","journal","contractors","extra","acts"];
+const VIEWS=["dashboard","journal","contractors","staff","extra","acts"];
 function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h))h="dashboard";
   VIEWS.forEach(v=>{document.getElementById("v-"+v).hidden=v!==h});
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+h))}
@@ -436,6 +540,6 @@ document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<opti
 ["fSys","fState","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",jTable));jTable();phone();
 document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="Подрядчик Б";
 document.getElementById("cSel").addEventListener("change",contractor);contractor();
-extra();acts();route();
+staff();extra();acts();route();
 </script>
 </body></html>
