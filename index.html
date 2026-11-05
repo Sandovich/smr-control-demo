@@ -43,7 +43,7 @@ nav a.on svg{color:var(--accent)}
 .top .crumbs b{color:var(--fg);font-weight:600}
 .period{margin-left:auto;font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted);white-space:nowrap}
 .stamp{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:1px 8px;font-size:12px;line-height:16px;font-weight:600;color:var(--muted);white-space:nowrap}
-main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 40px;max-width:1240px;width:100%;margin:0 auto}
+main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 40px;max-width:1320px;width:100%;margin:0 auto}
 .view[hidden]{display:none}
 h1{font-size:22px;line-height:32px;font-weight:500;margin:0 0 2px;text-wrap:balance;display:flex;align-items:center;gap:10px;min-height:36px}
 h1::before{content:"";width:18px;height:18px;border-radius:3px;background:var(--accent);flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
@@ -71,8 +71,10 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 tr.tot td{font-weight:600;background:var(--soft2)}
 tr:last-child td{border-bottom:0}
 .wrap{overflow-x:auto;margin:0 -16px;padding:0 16px}
-#jTable{min-width:980px}
-#jTable td:nth-child(2){min-width:300px}
+#jTable{min-width:0;width:100%}
+#jTable td:nth-child(2){min-width:200px}
+#jTable td:nth-child(7){white-space:nowrap}
+#jTable th,#jTable td{padding-left:8px;padding-right:8px}
 #sysTable td:first-child,#sysTable td:last-child{white-space:nowrap}
 #sysTable th,#sysTable td{padding-left:8px;padding-right:8px}
 #sysTable .bar{min-width:88px}
@@ -101,9 +103,9 @@ button.sec{background:var(--line2);color:var(--fg)}
 button.sec svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visible{outline:2px solid var(--focus);outline-offset:-1px}
 .jgrid{display:grid;grid-template-columns:1fr;gap:16px}
-@media (min-width:1500px){.jgrid{grid-template-columns:1fr 300px}}
+@media (min-width:1500px){.jgrid{grid-template-columns:1fr 280px}}
 @media (max-width:1499px){.jgrid>div:last-child{order:-1}}
-.phone{border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:14px 16px;max-width:300px;margin:0}
+.phone{border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:14px 16px;max-width:300px;margin:0;width:100%}
 .phone .hd{font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between}
 .phone label{display:block;font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted);font-weight:600;margin:10px 0 4px}
 .phone input,.phone select{width:100%}
