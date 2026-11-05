@@ -57,7 +57,7 @@ h1::before{content:"";width:18px;height:18px;border-radius:3px;background:var(--
 .tile.bad .v{color:var(--bad)} .tile.warn .v{color:var(--warn)} .tile.ok .v{color:var(--ok)}
 .tile.bad .d,.tile.warn .d{font-weight:600}
 .tile.bad .d{color:var(--bad)} .tile.warn .d{color:var(--warn)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
 @media (max-width:860px){.grid2{grid-template-columns:1fr}}
 .panel{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px;min-width:0}
 .panel h2{font-weight:600;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
@@ -300,6 +300,7 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
 .seg button.on{background:var(--blue);color:#fff}
 .seg button.on b{color:#fff}
 .act-btn{height:28px;padding:0 10px;white-space:nowrap}
+#cDog td:nth-child(-n+2){white-space:nowrap}
 #aReg td:last-child{padding-top:3px;padding-bottom:3px;text-align:right}
 #xTable td:nth-child(3){min-width:240px}
 #xTable td:nth-child(5),#xTable td:nth-child(9),#xTable td:nth-child(2){white-space:nowrap}
@@ -367,6 +368,7 @@ th{font-weight:600}
 @media (max-width:700px){.steps{grid-template-columns:1fr;gap:8px}.st{flex-direction:row;align-items:center}.st::before{display:none}}
 
 /* ── ровные колонки: панели во второй колонке тянутся до высоты соседней ── */
+.grid2>div{min-width:0}
 .grid2>div:not(.panel){display:flex;flex-direction:column}
 .grid2>div:not(.panel)>.panel:last-child{flex:1}
 
@@ -476,10 +478,12 @@ th{font-weight:600}
   <div class="toolbar"><label for="cSel">Исполнитель</label><select id="cSel"></select></div>
   <div class="tiles" id="cTiles"></div>
   <div class="grid2">
+    <div>
     <div class="panel"><h2>Гарантийные удержания <span>по договору субподряда</span></h2><div class="wrap"><table id="cRet"></table></div><p class="note">Ставка и срок возврата — из договора. Возврат удержания — отдельным документом после окончания гарантийного срока или по КС-11.</p></div>
+    <div class="panel" style="margin-top:14px"><h2>Договор субподряда <span>откуда берутся цены и вычеты в акте</span></h2><div class="wrap"><table id="cDog"></table></div></div>
+    </div>
     <div class="panel"><h2>Условия оплаты <span>платёж не уходит, пока не закрыто</span></h2><div class="chk" id="cPay"></div></div>
   </div>
-  <div class="panel"><h2>Договор субподряда <span>откуда берутся цены и вычеты в акте</span></h2><div class="wrap"><table id="cDog"></table></div></div>
   <div class="panel"><h2 id="cTitle">Позиции</h2><div class="wrap"><table id="cTable"></table></div></div>
 </section>
 
@@ -815,7 +819,7 @@ function contractor(){
    ["Договор",`№ ${dn} от 14.05.2026`,"номер и дата — в шапке каждого акта"],
    ["Договорной коэффициент",SUB_RATE[who].toFixed(2).replace(".",","),`цена в акте = расценка сметы заказчика × ${SUB_RATE[who].toFixed(2).replace(".",",")}, п. 3.2`],
    ["Гарантийное удержание","5 %","отдельной строкой в акте, возврат после КС-11 + 24 мес."],
-   ["Генподрядные услуги","3 %","отдельной строкой в акте, п. 4.6 — субподрядчик видит, почему к оплате меньше"],
+   ["Генподрядные услуги","3 %","отдельной строкой в акте, п. 4.6"],
    ["НДС",v[0],`${v[1]} · ${v[2]}`]].map(x=>`<tr><td>${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td></tr>`).join("");
   const h=`<tr><th>Система</th><th>Позиция</th><th class="n">По смете</th><th class="n">Выполнил</th><th class="n">Расценка его / сметная</th><th class="n">К оплате</th><th class="n">По смете</th><th>Статус</th></tr>`;
   const b=rs.map(r=>`<tr><td>${r.sys}</td><td>${r.code} · ${r.name}</td><td class="n">${r.qty} ${r.unit}</td><td class="n">${r.sub} ${r.unit}</td><td class="n">${fmt(r.rate)} / ${fmt(r.ps)}</td><td class="n">${fmt(r.sub*r.rate)}</td><td class="n">${fmt(r.sub*r.ps)}</td><td>${r.sub>r.client*1.02&&r.sub-r.client>.5?'<span class="pill bad">не сдано заказчику</span>':r.sub>=r.qty?'<span class="pill ok">закрыто</span>':'<span class="pill mut">в работе</span>'}</td></tr>`).join("");
