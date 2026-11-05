@@ -324,6 +324,18 @@ td.n,th.n,.tile .v,.n{font-variant-numeric:tabular-nums}
 th{font-weight:600}
 .tile .l{font-weight:600}
 .act h2{font-weight:700}
+
+/* ── «?» формула, дельты, версии, оспаривание ── */
+.tile .l{display:flex;justify-content:space-between;align-items:flex-end;gap:6px}
+.tile .q{height:16px;width:16px;padding:0;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:600;cursor:pointer;flex:none}
+.tile .q:hover{border-color:var(--fg2);color:var(--fg2)}
+.tile .formula{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--fg2)}
+.tile .delta{margin-top:6px;color:var(--muted)}
+.tile .delta.ok{color:var(--ok)} .tile .delta.bad{color:var(--bad)} .tile .delta.warn{color:hsl(45,100%,22%)}
+.acts2{white-space:nowrap} .acts2 button+button{margin-left:6px}
+.inl{height:28px;padding:0 8px;width:130px;margin-right:6px}
+#subActs .inl{width:220px}
+.formula,.tile .delta,.tile .formula{font-size:12px;line-height:16px}
 </style></head><body>
 
 <header class="top">
@@ -624,7 +636,17 @@ function tiles(){
    ["Допработы без решения",fmtM(sum(EXTRA.filter(x=>x.st<2),x=>x.sum)),EXTRA.filter(x=>x.st<2).length+" позиции","warn"],
    ["ФОТ своих, октябрь",fmtM(S_FOT),"+"+fmtM(S_CASH)+" наличных · без привязки к системам","bad"],
   ];
-  document.getElementById("tiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  const F={"Договор СМР":"Сумма «СМР предбюджет» по 15 системам из сметы договора, без НДС",
+   "Сдано заказчику":"Σ объёмов, принятых заказчиком по КС-2 × сметная расценка",
+   "Закрыто подрядчикам":"Σ объёмов, принятых у субподрядчиков × сметная расценка",
+   "Перекос закрытия":"Σ по позициям: max(0, закрыто подрядчику − сдано заказчику) × сметная расценка",
+   "Маржа СМР план / факт":"План — из бюджета договора. Факт = 1 − (к оплате субподрядчикам по их расценкам ÷ закрыто по сметным)",
+   "Допработы без решения":"Σ допработ в статусах «выявлено» и «согласовано внутри»",
+   "ФОТ своих, октябрь":"Табель за октябрь: зарплата + премии; наличные отдельно"};
+  const D={"Сдано заказчику":["▲","+"+fmtM(T_CLIENT*0.24/4.3)+" за неделю","ok"],"Закрыто подрядчикам":["▲","+"+fmtM(T_SUB*0.23/4.3)+" за неделю",""],
+   "Перекос закрытия":["▲","+"+fmtM(T_SKEW*0.12)+" за неделю","bad"],"Допработы без решения":["▲","+1 позиция за неделю","warn"]};
+  document.getElementById("tiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}<button type="button" class="q" title="${F[l]||""}" aria-label="Как считается">?</button></div><div class="v">${v}</div><div class="d">${d}</div>${D[l]?`<div class="delta ${D[l][2]}">${D[l][0]} ${D[l][1]}</div>`:""}</div>`).join("");
+  document.querySelectorAll("#tiles .q").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const t=b.closest(".tile");let f=t.querySelector(".formula");if(f){f.remove();return}f=document.createElement("div");f.className="formula";f.textContent=b.title;t.appendChild(f)}));
 }
 function sysTable(){
   const h=`<tr><th>Система</th><th class="n">Договор</th><th>Прогресс</th><th class="n">Сдано</th><th class="n">Закрыто</th><th>Статус</th></tr>`;
@@ -742,16 +764,19 @@ function extra(){
   const list=EXTRA.map((x,i)=>({...x,i})).filter(x=>F<0||x.st===F);
   const pill=st=>`<span class="pill ${st<2?"bad":st===2?"warn":"ok"}">${EX_ST[st]}</span>`;
   const NEXT=["Согласовать","Выставить заказчику","Принято заказчиком",""];
-  document.getElementById("xTable").innerHTML=`<tr><th>№</th><th>Дата</th><th>Что сделано</th><th>Система</th><th>Исполнитель</th><th class="n">Сумма, ₽</th><th>Статус</th><th></th></tr>`+
-   list.map(x=>`<tr><td class="n" style="text-align:left">ДР-${String(x.i+1).padStart(3,"0")}</td><td>${x.d}</td><td>${x.t}</td><td>${x.sys}</td><td>${x.who}</td><td class="n">${fmt(x.sum)}</td><td>${pill(x.st)}</td><td>${NEXT[x.st]?`<button class="sec act-btn" type="button" data-i="${x.i}">${NEXT[x.st]}</button>`:""}</td></tr>`).join("")+
-   `<tr class="tot"><td colspan="5">Итого по показанным</td><td class="n">${fmt(sum(list,x=>x.sum))}</td><td colspan="2"></td></tr>`;
+  document.getElementById("xTable").innerHTML=`<tr><th>№</th><th>Дата</th><th>Что сделано</th><th>Система</th><th>Исполнитель</th><th class="n">Сумма, ₽</th><th>Версия</th><th>Статус</th><th></th></tr>`+
+   list.map(x=>`<tr><td class="n" style="text-align:left">ДР-${String(x.i+1).padStart(3,"0")}</td><td>${x.d}</td><td>${x.t}</td><td>${x.sys}</td><td>${x.who}</td><td class="n" id="xs${x.i}">${fmt(x.sum)}</td><td><span class="pill mut" title="${(x.hist||[]).map(h=>"v"+h.rev+": "+fmt(h.sum)+" ₽ · "+h.d).join("\n")||"первая версия"}">v${x.rev||1}</span>${x.hist&&x.hist.length?`<div class="who">было ${fmt(x.hist[x.hist.length-1].sum)}</div>`:""}</td><td>${pill(x.st)}</td><td class="acts2">${x.st<3?`<button class="sec act-btn rev-btn" type="button" data-i="${x.i}">Уточнить</button>`:""}${NEXT[x.st]?`<button class="sec act-btn" type="button" data-i="${x.i}">${NEXT[x.st]}</button>`:""}</td></tr>`).join("")+
+   `<tr class="tot"><td colspan="5">Итого по показанным</td><td class="n">${fmt(sum(list,x=>x.sum))}</td><td colspan="3"></td></tr>`;
+  document.querySelectorAll("#xTable .rev-btn").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.i,x=EXTRA[i],td=document.getElementById("xs"+i);
+    td.innerHTML=`<input type="number" class="inl" value="${x.sum}" aria-label="Новая сумма"><button class="pri act-btn" type="button">Сохранить</button>`;
+    td.querySelector("button").addEventListener("click",()=>{const v=+td.querySelector("input").value||x.sum;(x.hist=x.hist||[]).push({rev:x.rev||1,sum:x.sum,d:x.d});x.rev=(x.rev||1)+1;x.sum=v;x.d="05.11";extra();tiles()})}));
   document.getElementById("xCount").textContent=list.length+" из "+EXTRA.length;
-  document.querySelectorAll("#xTable .act-btn").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];if(x.st<3)x.st++;extra();tiles()}));
+  document.querySelectorAll("#xTable .act-btn:not(.rev-btn)").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];if(x.st<3)x.st++;extra();tiles()}));
 }
 
 // ───────── акты ─────────
 function regTable(){
-  document.getElementById("aReg").innerHTML=`<tr><th>№ акта</th><th>Субподрядчик</th><th>Период</th><th>Системы</th><th class="n">Сумма без НДС</th><th>Статус</th></tr>`+ACTS.map(a=>`<tr${a[6]?' style="background:var(--ok-bg)"':''}><td class="n" style="text-align:left">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")?"ok":a[5]==="сформирован"?"mut":"warn"}">${a[5]}</span></td></tr>`).join("");
+  document.getElementById("aReg").innerHTML=`<tr><th>№ акта</th><th>Субподрядчик</th><th>Период</th><th>Системы</th><th class="n">Сумма без НДС</th><th>Статус</th></tr>`+ACTS.map(a=>`<tr${a[6]?' style="background:var(--ok-bg)"':''}><td class="n" style="text-align:left">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td class="n">${fmt(a[4])}</td><td title="${a[7]||""}"><span class="pill ${a[5].startsWith("подписан")||a[5]==="подтверждён"?"ok":a[5]==="оспорен"?"bad":a[5]==="сформирован"?"mut":"warn"}">${a[5]}</span></td></tr>`).join("");
 }
 let ACT_STATE=null;
 function renderAct(no, who, mon, share, note){
@@ -924,8 +949,10 @@ function subcab(){
   const who="Подрядчик Б";const rs=rows.filter(r=>r.who===who&&r.sub>0);const ss=SYS.filter(x=>x.who===who);
   const pay=sum(ss,x=>x.subPay);const acted=ACTS.filter(a=>a[1]===who).reduce((s,a)=>s+a[4],0);const paid=ACTS.filter(a=>a[1]===who&&a[5].includes("оплачен")).reduce((s,a)=>s+a[4],0);
   document.getElementById("subTiles").innerHTML=[["Принято по моей расценке",fmtM(pay),ss.map(x=>x.s).join(", "),""],["Заактировано",fmtM(acted),ACTS.filter(a=>a[1]===who).length+" акта",""],["Оплачено",fmtM(paid),"по подписанным актам","ok"],["Удержание 5 %",fmtM(acted*.05),"возврат по сдаче заказчику",""],(()=>{const n=ACTS.filter(a=>a[1]===who&&a[5]==="сформирован").length;return ["Ждёт моего подтверждения",n+" акт.",n?"подтвердите или оспорьте":"всё подтверждено",n?"warn":"ok"]})()].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
-  const acts=()=>{document.getElementById("subActs").innerHTML=`<tr><th>№ акта</th><th>Период</th><th class="n">Сумма</th><th>Статус</th><th></th></tr>`+ACTS.filter(a=>a[1]===who).map((a,i)=>`<tr><td class="n" style="text-align:left">${a[0]}</td><td>${a[2]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")||a[5]==="подтверждён"?"ok":a[5]==="сформирован"?"warn":"mut"}">${a[5]}</span></td><td>${a[5]==="сформирован"?`<button class="pri conf" data-i="${ACTS.indexOf(a)}" type="button">Подтвердить</button>`:""}</td></tr>`).join("");
-    document.querySelectorAll("#subActs .conf").forEach(b=>b.addEventListener("click",()=>{ACTS[+b.dataset.i][5]="подтверждён";subcab();regTable();}))};
+  const acts=()=>{document.getElementById("subActs").innerHTML=`<tr><th>№ акта</th><th>Период</th><th class="n">Сумма</th><th>Статус</th><th></th></tr>`+ACTS.filter(a=>a[1]===who).map((a,i)=>`<tr><td class="n" style="text-align:left">${a[0]}</td><td>${a[2]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")||a[5]==="подтверждён"?"ok":a[5]==="сформирован"?"warn":"mut"}">${a[5]}</span></td><td class="acts2">${a[5]==="сформирован"?`<button class="pri conf" data-i="${ACTS.indexOf(a)}" type="button">Подтвердить</button><button class="sec disp" data-i="${ACTS.indexOf(a)}" type="button">Оспорить</button>`:a[5]==="оспорен"?`<span class="who">${a[7]||""}</span>`:""}</td></tr>`).join("");
+    document.querySelectorAll("#subActs .conf").forEach(b=>b.addEventListener("click",()=>{ACTS[+b.dataset.i][5]="подтверждён";subcab();regTable();}));
+    document.querySelectorAll("#subActs .disp").forEach(b=>b.addEventListener("click",()=>{const td=b.parentElement;td.innerHTML=`<input class="inl" placeholder="что не так: позиция, объём" aria-label="Причина"><button class="pri act-btn" type="button">Отправить</button>`;
+      td.querySelector("button").addEventListener("click",()=>{const r=td.querySelector("input").value.trim()||"без комментария";const a=ACTS[+b.dataset.i];a[5]="оспорен";a[7]=r;subcab();regTable();})}))};
   acts();
   document.getElementById("subRows").innerHTML=`<tr><th>Система</th><th>Позиция</th><th class="n">Принято</th><th class="n">Моя расценка</th><th class="n">Сумма</th></tr>`+rs.slice(0,12).map(r=>`<tr><td>${r.sys}</td><td>${r.code} · ${r.name}</td><td class="n">${r.sub} ${r.unit}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(r.sub*r.rate)}</td></tr>`).join("")+`<tr class="tot"><td colspan="4">Итого по показанным</td><td class="n">${fmt(sum(rs.slice(0,12),r=>r.sub*r.rate))}</td></tr>`;
 }
