@@ -318,7 +318,7 @@ th,th.n,.tile .l,.tile .d,.panel h2,.panel h2 span,.pill,.legend,.legend span,.h
 .top .whoName small,.act th,.act-btn,td .who,.seg button b,.side .cap,.side .foot,.side .brand small{font-size:12px;line-height:16px}
 .panel h2,.top .brand{text-transform:uppercase;letter-spacing:.5px}
 .panel h2 span{text-transform:none;letter-spacing:0}
-#sysTable td span,#jTable td .who{font-size:12px;line-height:16px;color:var(--muted)}
+#sysTable td span,#jTable td .who,td.who{font-size:12px;line-height:16px;color:var(--muted)}
 svg text{font-size:12px}
 td.n,th.n,.tile .v,.n{font-variant-numeric:tabular-nums}
 th{font-weight:600}
@@ -422,7 +422,7 @@ th{font-weight:600}
 <!-- ───────── ЖУРНАЛ ───────── -->
 <section class="view" id="v-journal" hidden>
   <h1>Журнал выполнения по позициям сметы</h1>
-  <p class="sub">Одна строка сметы — четыре цифры. Нельзя закрыть субподрядчику больше остатка без флага «допработа».</p>
+  <p class="sub">Одна строка сметы — четыре цифры. Нельзя закрыть субподрядчику больше остатка без флага «допработа». Каждая запись — дата, прораб, фото: журнал фактов вместо КС-6а, доказательство для заказчика при споре по объёмам.</p>
   <div class="jgrid">
     <div class="panel">
       <div class="toolbar">
@@ -487,6 +487,7 @@ th{font-weight:600}
     <h2>Проверки табеля <span>инструмент делает их сам при каждом вводе</span></h2>
     <ul class="alerts" id="sAlerts"></ul>
   </div>
+  <div class="panel" style="margin-bottom:16px"><h2>Сдельная оплата из закрытых позиций <span>бригада — по объёмам, принятым прорабом, а не «по запискам»</span></h2><div class="wrap"><table id="sPiece"></table></div><p class="note">Расценка сдельной — за единицу позиции сметы. Сумма за месяц считается сама из журнала фактов; спорный объём виден по дате и фото. Самозанятым — акт на результат, не табель.</p></div>
   <div class="panel"><h2>Люди на объекте <span>октябрь 2026 · 21 человек</span></h2><div class="wrap"><table id="sTable"></table></div></div>
 </section>
 
@@ -746,12 +747,13 @@ function forecast(){
 // ───────── журнал ─────────
 function jTable(){
   const sys=document.getElementById("fSys").value,st=document.getElementById("fState").value,q=document.getElementById("fQ").value.toLowerCase();
-  const h=`<tr><th>Шифр</th><th>Позиция</th><th class="n">По смете</th><th class="n">Сдано заказчику</th><th class="n">Закрыто подрядчику</th><th class="n">Остаток</th><th>Исполнитель</th><th></th></tr>`;
+  const h=`<tr><th>Шифр</th><th>Позиция</th><th class="n">По смете</th><th class="n">Сдано заказчику</th><th class="n">Закрыто подрядчику</th><th class="n">Остаток</th><th>Исполнитель</th><th>Последний факт</th><th></th></tr>`;
+  const FACT=r=>{const h=[...r.code].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7);const d=28+(h%5);const day=d>31?d-31:d;const mon=d>31?"11":"10";return `${String(day).padStart(2,"0")}.${mon} · Иванов · ${1+h%4} фото`};
   const b=rows.filter(r=>(!sys||r.sys===sys)&&(!q||(r.name+r.code).toLowerCase().includes(q))).map(r=>{
     const rest=r.qty-Math.max(r.client,r.sub);const skew=r.sub>r.client*1.02&&r.sub-r.client>0.5;const done=rest<=0;
     const s=skew?"bad":done?"done":"open"; if(st&&st!==s)return"";
     const pill=skew?`<span class="pill bad">перекос +${r.sub-r.client>=1?fmt(r.sub-r.client):(r.sub-r.client).toFixed(1)}</span>`:done?`<span class="pill ok">закрыто</span>`:`<span class="pill mut">в работе</span>`;
-    return `<tr><td class="n" style="text-align:left">${r.code}</td><td><b>${r.sys}</b> · ${r.name}</td><td class="n">${r.qty} ${r.unit}</td><td class="n">${r.client}</td><td class="n">${r.sub}</td><td class="n">${Math.max(0,rest).toFixed(rest%1?1:0)}</td><td>${r.who}</td><td>${pill}</td></tr>`}).join("");
+    return `<tr><td class="n" style="text-align:left">${r.code}</td><td><b>${r.sys}</b> · ${r.name}</td><td class="n">${r.qty} ${r.unit}</td><td class="n">${r.client}</td><td class="n">${r.sub}</td><td class="n">${Math.max(0,rest).toFixed(rest%1?1:0)}</td><td>${r.who}</td><td class="who">${r.sub>0?FACT(r):"—"}</td><td>${pill}</td></tr>`}).join("");
   document.getElementById("jTable").innerHTML=h+b;
 }
 function phone(){
@@ -827,7 +829,7 @@ function renderAct(no, who, mon, share, note){
   <div class="meta"><div><b>Заказчик (Генподрядчик):</b> ООО «АСТЭКС»</div><div><b>Подрядчик:</b> ${who}</div><div><b>Объект:</b> ЖК «Публицист 11»</div><div><b>Договор субподряда:</b> № СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026 от 14.05.2026</div></div>
   <div class="wrap"><table><tr><th>№</th><th>Шифр сметы</th><th>Наименование работ</th><th>Ед.</th><th>Кол-во</th><th>Цена, ₽</th><th>Сумма, ₽</th><th class="dec">Решение</th></tr>
   ${rs.map((r,i)=>{const d=DEC[r.code]||{t:"ok"};return `<tr class="${d.t==="defer"?"deferred":""}"><td style="text-align:center">${i+1}</td><td style="text-align:center">${r.code}</td><td>${r.name}${d.t!=="ok"?`<div class="who">${d.t==="part"?"принято частично":"отложено"}${d.why?" · "+d.why:""}${d.t==="part"?" · подано "+q0(r):""}</div>`:""}</td><td style="text-align:center">${r.unit}</td><td class="n">${q(r)}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(q(r)*r.rate)}</td><td class="dec"><select data-code="${r.code}" aria-label="Решение по позиции"><option value="ok"${d.t==="ok"?" selected":""}>Принять</option><option value="part"${d.t==="part"?" selected":""}>Частично</option><option value="defer"${d.t==="defer"?" selected":""}>Отложить</option></select>${d.t!=="ok"?`<input class="inl" data-code="${r.code}" placeholder="причина" value="${d.why||""}" aria-label="Причина">`:""}${d.t==="part"?`<input class="inl qty" type="number" data-code="${r.code}" value="${d.q}" aria-label="Принято">`:""}</td></tr>`}).join("")}
-  <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmt(tot)}</b></td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 %</td><td class="n">−${fmt(tot*.05)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right"><b>К оплате без НДС</b></td><td class="n"><b>${fmt(tot*.95)}</b></td><td class="dec"></td></tr></table></div>
+  <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmt(tot)}</b></td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 %</td><td class="n">−${fmt(tot*.05)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Генподрядные услуги 3 % (п. 4.6 договора субподряда)</td><td class="n">−${fmt(tot*.03)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right"><b>К оплате без НДС</b></td><td class="n"><b>${fmt(tot*.92)}</b></td><td class="dec"></td></tr></table></div>
   ${deferred.length||partial.length?`<p class="note">${deferred.length?`Отложено ${deferred.length} поз. на сумму ${fmt(sum(deferred,r=>q0(r)*r.rate))} ₽ — перейдут в акт следующего периода. `:""}${partial.length?`Частично принято ${partial.length} поз. — остаток ${fmt(sum(partial,r=>(q0(r)-q(r))*r.rate))} ₽ переносится.`:""} Субподрядчик видит причину в своём кабинете.</p>`:""}
   <p style="margin:10px 0 0">В демо показаны первые ${rs.length} позиций акта из ${all}. Объёмы приняты по журналу выполнения за ${mon}, подтверждены прорабом ${last}.${mi}.${yr}. Позиции, не сданные Заказчику по КС-2, в акт не включены — они в «Допработах».</p>
   <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», прораб ______________</div></div>`;
@@ -855,7 +857,7 @@ function actDocx(){
   const head=new D.TableRow({tableHeader:true,children:["№","Шифр сметы","Наименование работ","Ед. изм.","Кол-во","Цена, руб.","Сумма, руб."].map((t,i)=>cell(t,{w:W[i],head:true,bold:true,al:C}))});
   const rows=a.rs.map((r,i)=>new D.TableRow({cantSplit:true,children:[cell(String(i+1),{w:W[0],al:C}),cell(r.code,{w:W[1],al:C}),cell(r.name,{w:W[2]}),cell(r.unit,{w:W[3],al:C}),cell(String(a.q(r)),{w:W[4],al:R}),cell(fmt(r.rate),{w:W[5],al:R}),cell(fmt(a.q(r)*r.rate),{w:W[6],al:R})]}));
   const tot=(l,v,b)=>new D.TableRow({cantSplit:true,children:[cell(l,{span:6,al:R,bold:b}),cell(v,{w:W[6],al:R,bold:b})]});
-  const table=new D.Table({width:{size:9400,type:D.WidthType.DXA},columnWidths:W,rows:[head,...rows,tot("Итого без НДС",fmt(a.tot),true),tot("Гарантийное удержание 5 %","−"+fmt(a.tot*.05)),tot("К оплате без НДС",fmt(a.tot*.95),true)]});
+  const table=new D.Table({width:{size:9400,type:D.WidthType.DXA},columnWidths:W,rows:[head,...rows,tot("Итого без НДС",fmt(a.tot),true),tot("Гарантийное удержание 5 %","−"+fmt(a.tot*.05)),tot("Генподрядные услуги 3 % (п. 4.6 договора субподряда)","−"+fmt(a.tot*.03)),tot("К оплате без НДС",fmt(a.tot*.92),true)]});
   const sigCol=(role,org)=>[P(role,{bold:true}),P(org,{b:mm(2)}),P("_______________ / _______________",{b:mm(8)}),P("подпись / расшифровка",{sz:18}),P("М. П.",{b:mm(4)})];
   const sig=new D.Table({width:{size:9400,type:D.WidthType.DXA},columnWidths:[4700,4700],rows:[new D.TableRow({cantSplit:true,children:[cell(sigCol("Сдал:",a.who),{w:4700,nb:true}),cell(sigCol("Принял:","ООО «АСТЭКС», производитель работ"),{w:4700,nb:true})]})]});
   const meta=new D.Table({width:{size:9400,type:D.WidthType.DXA},columnWidths:[4700,4700],rows:[new D.TableRow({children:[
@@ -1060,6 +1062,13 @@ function exportAll(){
   add("Свой персонал",[["Роль","Оплата","Ставка","Часы","Дни","Зарплата","Премия","Наличные"],...STAFF.map(s=>[s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[8]])]);
   saveFile("СМР-Контроль_Публицист11_"+new Date().toISOString().slice(0,10)+".xlsx",new Blob([XLSX.write(wb,{type:"array",bookType:"xlsx"})]));
 }
+
+// ───────── сдельная ─────────
+function piece(){
+  const P=[["ККСС","32.1","Лоток 300×50, монтаж","мп",180,85,"Бригада 1 (Монтажники 03–05)"],["ККСС","32.2","Крышка лотка 300","мп",160,25,"Бригада 1 (Монтажники 03–05)"],["АПС","23.1","Прибор ППКУ, монтаж и подключение","шт",6,1800,"Бригада 2 (Монтажники 06–08)"],["АПС","23.3","Аккумулятор 12 В, установка","шт",32,120,"Бригада 2 (Монтажники 06–08)"],["СОВ","35.1","Панель вызова, монтаж","шт",8,950,"Бригада 3 (Монтажники 09–11)"],["АДСП","13.2","Кабель КПСнг 1×2×0,5, прокладка","мп",420,22,"Бригада 3 (Монтажники 09–11)"]];
+  const tot=sum(P,p=>p[4]*p[5]);
+  document.getElementById("sPiece").innerHTML=`<tr><th>Система</th><th>Шифр</th><th>Работа</th><th class="n">Принято</th><th class="n">Расценка, ₽</th><th class="n">Сумма, ₽</th><th>Бригада</th></tr>`+P.map(p=>`<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td><td class="n">${p[4]} ${p[3]}</td><td class="n">${fmt(p[5])}</td><td class="n">${fmt(p[4]*p[5])}</td><td>${p[6]}</td></tr>`).join("")+`<tr class="tot"><td colspan="5">Итого сдельная за октябрь</td><td class="n">${fmt(tot)}</td><td></td></tr>`;
+}
 // ───────── роутинг ─────────
 const VIEWS=["dashboard","journal","contractors","staff","extra","acts","foreman","sub","client"];
 function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h)||!ROLES[ROLE].tools.includes(h))h=ROLES[ROLE].home;
@@ -1072,6 +1081,6 @@ document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<opti
 ["fSys","fState","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",jTable));jTable();phone();
 document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="Подрядчик Б";
 document.getElementById("cSel").addEventListener("change",contractor);contractor();
-staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();document.getElementById("xlsAll").addEventListener("click",exportAll);setRole("director");
+staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();document.getElementById("xlsAll").addEventListener("click",exportAll);setRole("director");
 </script>
 </body></html>
