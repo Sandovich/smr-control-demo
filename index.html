@@ -300,6 +300,7 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
 .seg button.on{background:var(--blue);color:#fff}
 .seg button.on b{color:#fff}
 .act-btn{height:28px;padding:0 10px;white-space:nowrap}
+#aReg td:last-child{padding-top:3px;padding-bottom:3px;text-align:right}
 #xTable td:nth-child(3){min-width:240px}
 #xTable td:nth-child(5),#xTable td:nth-child(9),#xTable td:nth-child(2){white-space:nowrap}
 
@@ -478,6 +479,7 @@ th{font-weight:600}
     <div class="panel"><h2>Гарантийные удержания <span>по договору субподряда</span></h2><div class="wrap"><table id="cRet"></table></div><p class="note">Ставка и срок возврата — из договора. Возврат удержания — отдельным документом после окончания гарантийного срока или по КС-11.</p></div>
     <div class="panel"><h2>Условия оплаты <span>платёж не уходит, пока не закрыто</span></h2><div class="chk" id="cPay"></div></div>
   </div>
+  <div class="panel"><h2>Договор субподряда <span>откуда берутся цены и вычеты в акте</span></h2><div class="wrap"><table id="cDog"></table></div></div>
   <div class="panel"><h2 id="cTitle">Позиции</h2><div class="wrap"><table id="cTable"></table></div></div>
 </section>
 
@@ -620,6 +622,9 @@ const rows = POS.map(p=>{
 const fmt=n=>new Intl.NumberFormat("ru-RU",{maximumFractionDigits:0}).format(Math.round(n));
 const fmtM=n=>(n/1e6).toLocaleString("ru-RU",{minimumFractionDigits:1,maximumFractionDigits:1})+" млн";
 const pct=n=>Math.round(n*100)+" %";
+const fmtS=n=>n<0?"−"+fmt(-n):fmt(n);
+// НДС контрагента с датой: ставка меняется не только законом (22 % с 01.01.2026, 425-ФЗ), но и самим субподрядчиком (УСН → НДС 5 %)
+const SUB_VAT={"Подрядчик А":["22 %","общая система","с 01.01.2026"],"Подрядчик Б":["22 %","общая система","с 01.01.2026"],"Подрядчик В":["5 %","УСН с НДС 5 %","с 01.01.2026, уведомление от 20.01.2026"],"Подрядчик Г":["22 %","общая система","с 01.01.2026"],"Подрядчик Д":["22 %","общая система","с 01.01.2026"],"Подрядчик Е":["без НДС","УСН, доход за 2025 меньше 20 млн ₽","проверить в январе 2027"],"Подрядчик Ж":["5 %","УСН с НДС 5 %","с 01.01.2026"],"Штатные сотрудники":["—","свой персонал","не применяется"]};
 const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
 
 // агрегаты по системам: доли из SYS_PROG × бюджет системы (демо), по позициям — реальные расценки
@@ -805,6 +810,13 @@ function contractor(){
   const P=(CHK[who]||CHK.default).concat([["Допуск СРО действует","ok","до 30.06.2027"],["Самозанятых в бригаде ≤ 35 (риск переквалификации)","ok","проверено ФНС"]]);
   const blocked=P.filter(x=>x[1]!=="ok").length;
   document.getElementById("cPay").innerHTML=P.map(x=>`<div class="chki ${x[1]}"><span class="dot"></span><span>${x[0]}</span><span class="who">${x[2]}</span></div>`).join("")+`<div class="chki ${blocked?"warn":"ok"}" style="border-bottom:0"><span class="dot"></span><b>${blocked?"Оплата на паузе: "+blocked+" усл.":"Оплата разрешена"}</b></div>`;
+  const dn=`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`, v=SUB_VAT[who]||["22 %","общая система","с 01.01.2026"];
+  document.getElementById("cDog").innerHTML=`<tr><th>Условие</th><th>Значение</th><th>Как применяется</th></tr>`+[
+   ["Договор",`№ ${dn} от 14.05.2026`,"номер и дата — в шапке каждого акта"],
+   ["Договорной коэффициент",SUB_RATE[who].toFixed(2).replace(".",","),`цена в акте = расценка сметы заказчика × ${SUB_RATE[who].toFixed(2).replace(".",",")}, п. 3.2`],
+   ["Гарантийное удержание","5 %","отдельной строкой в акте, возврат после КС-11 + 24 мес."],
+   ["Генподрядные услуги","3 %","отдельной строкой в акте, п. 4.6 — субподрядчик видит, почему к оплате меньше"],
+   ["НДС",v[0],`${v[1]} · ${v[2]}`]].map(x=>`<tr><td>${x[0]}</td><td><b>${x[1]}</b></td><td>${x[2]}</td></tr>`).join("");
   const h=`<tr><th>Система</th><th>Позиция</th><th class="n">По смете</th><th class="n">Выполнил</th><th class="n">Расценка его / сметная</th><th class="n">К оплате</th><th class="n">По смете</th><th>Статус</th></tr>`;
   const b=rs.map(r=>`<tr><td>${r.sys}</td><td>${r.code} · ${r.name}</td><td class="n">${r.qty} ${r.unit}</td><td class="n">${r.sub} ${r.unit}</td><td class="n">${fmt(r.rate)} / ${fmt(r.ps)}</td><td class="n">${fmt(r.sub*r.rate)}</td><td class="n">${fmt(r.sub*r.ps)}</td><td>${r.sub>r.client*1.02&&r.sub-r.client>.5?'<span class="pill bad">не сдано заказчику</span>':r.sub>=r.qty?'<span class="pill ok">закрыто</span>':'<span class="pill mut">в работе</span>'}</td></tr>`).join("");
   document.getElementById("cTable").innerHTML=h+b+`<tr class="tot"><td colspan="5">Итого по показанным позициям</td><td class="n">${fmt(sum(rs,r=>r.sub*r.rate))}</td><td class="n">${fmt(sum(rs,r=>r.sub*r.ps))}</td><td></td></tr>`;
@@ -833,7 +845,8 @@ function extra(){
 
 // ───────── акты ─────────
 function regTable(){
-  document.getElementById("aReg").innerHTML=`<tr><th>№ акта</th><th>Субподрядчик</th><th>Период</th><th>Системы</th><th class="n">Сумма без НДС</th><th>Статус</th></tr>`+ACTS.map(a=>`<tr${a[6]?' style="background:var(--ok-bg)"':''}><td class="n" style="text-align:left">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td class="n">${fmt(a[4])}</td><td title="${a[7]||""}"><span class="pill ${a[5].startsWith("подписан")||a[5]==="подтверждён"?"ok":a[5]==="оспорен"?"bad":a[5]==="сформирован"?"mut":"warn"}">${a[5]}</span></td></tr>`).join("");
+  document.getElementById("aReg").innerHTML=`<tr><th>№ акта</th><th>Субподрядчик</th><th>Период</th><th>Системы</th><th class="n">Сумма без НДС</th><th>Статус</th><th></th></tr>`+ACTS.map(a=>`<tr${a[6]&&a[5]!=="корректировочный"?' style="background:var(--ok-bg)"':''}><td class="n" style="text-align:left">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td class="n">${fmtS(a[4])}</td><td title="${a[7]||""}"><span class="pill ${a[5].startsWith("подписан")||a[5]==="подтверждён"?"ok":a[5]==="оспорен"||a[5]==="корректировочный"?"bad":a[5]==="сформирован"?"mut":"warn"}">${a[5]}</span></td><td>${a[5].startsWith("подписан")&&!ACTS.some(b=>b[8]===a[0])?`<button class="sec act-btn corr-btn" type="button" data-no="${a[0]}">Корректировка</button>`:""}</td></tr>`).join("");
+  document.querySelectorAll("#aReg .corr-btn").forEach(b=>b.addEventListener("click",()=>corrForm(b.dataset.no)));
 }
 let ACT_STATE=null;
 function renderAct(no, who, mon, share, note){
@@ -848,7 +861,7 @@ function renderAct(no, who, mon, share, note){
   <div class="meta"><div><b>Заказчик (Генподрядчик):</b> ООО «АСТЭКС»</div><div><b>Подрядчик:</b> ${who}</div><div><b>Объект:</b> ЖК «Публицист 11»</div><div><b>Договор субподряда:</b> № СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026 от 14.05.2026</div></div>
   <div class="wrap"><table><tr><th>№</th><th>Шифр сметы</th><th>Наименование работ</th><th>Ед.</th><th>Кол-во</th><th>Цена, ₽</th><th>Сумма, ₽</th><th class="dec">Решение</th></tr>
   ${rs.map((r,i)=>{const d=DEC[r.code]||{t:"ok"};return `<tr class="${d.t==="defer"?"deferred":""}"><td style="text-align:center">${i+1}</td><td style="text-align:center">${r.code}</td><td>${r.name}${d.t!=="ok"?`<div class="who">${d.t==="part"?"принято частично":"отложено"}${d.why?" · "+d.why:""}${d.t==="part"?" · подано "+q0(r):""}</div>`:""}</td><td style="text-align:center">${r.unit}</td><td class="n">${q(r)}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(q(r)*r.rate)}</td><td class="dec"><select data-code="${r.code}" aria-label="Решение по позиции"><option value="ok"${d.t==="ok"?" selected":""}>Принять</option><option value="part"${d.t==="part"?" selected":""}>Частично</option><option value="defer"${d.t==="defer"?" selected":""}>Отложить</option></select>${d.t!=="ok"?`<input class="inl" data-code="${r.code}" placeholder="причина" value="${d.why||""}" aria-label="Причина">`:""}${d.t==="part"?`<input class="inl qty" type="number" data-code="${r.code}" value="${d.q}" aria-label="Принято">`:""}</td></tr>`}).join("")}
-  <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmt(tot)}</b></td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 %</td><td class="n">−${fmt(tot*.05)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Генподрядные услуги 3 % (п. 4.6 договора субподряда)</td><td class="n">−${fmt(tot*.03)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right"><b>К оплате без НДС</b></td><td class="n"><b>${fmt(tot*.92)}</b></td><td class="dec"></td></tr></table></div>
+  <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmtS(tot)}</b></td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 %</td><td class="n">${fmtS(-tot*.05)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Генподрядные услуги 3 % (п. 4.6 договора субподряда)</td><td class="n">${fmtS(-tot*.03)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right"><b>К оплате без НДС</b></td><td class="n"><b>${fmtS(tot*.92)}</b></td><td class="dec"></td></tr></table></div>
   ${deferred.length||partial.length?`<p class="note">${deferred.length?`Отложено ${deferred.length} поз. на сумму ${fmt(sum(deferred,r=>q0(r)*r.rate))} ₽ — перейдут в акт следующего периода. `:""}${partial.length?`Частично принято ${partial.length} поз. — остаток ${fmt(sum(partial,r=>(q0(r)-q(r))*r.rate))} ₽ переносится.`:""} Субподрядчик видит причину в своём кабинете.</p>`:""}
   <p style="margin:10px 0 0">В демо показаны первые ${rs.length} позиций акта из ${all}. Объёмы приняты по журналу выполнения за ${mon}, подтверждены прорабом ${last}.${mi}.${yr}. Позиции, не сданные Заказчику по КС-2, в акт не включены — они в «Допработах».</p>
   <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», прораб ______________</div></div>`;
@@ -874,9 +887,9 @@ function actDocx(){
   const R=D.AlignmentType.RIGHT,C=D.AlignmentType.CENTER;
   const W=[450,1050,4100,650,800,1050,1300];
   const head=new D.TableRow({tableHeader:true,children:["№","Шифр сметы","Наименование работ","Ед. изм.","Кол-во","Цена, руб.","Сумма, руб."].map((t,i)=>cell(t,{w:W[i],head:true,bold:true,al:C}))});
-  const rows=a.rs.map((r,i)=>new D.TableRow({cantSplit:true,children:[cell(String(i+1),{w:W[0],al:C}),cell(r.code,{w:W[1],al:C}),cell(r.name,{w:W[2]}),cell(r.unit,{w:W[3],al:C}),cell(String(a.q(r)),{w:W[4],al:R}),cell(fmt(r.rate),{w:W[5],al:R}),cell(fmt(a.q(r)*r.rate),{w:W[6],al:R})]}));
+  const rows=a.rs.map((r,i)=>new D.TableRow({cantSplit:true,children:[cell(String(i+1),{w:W[0],al:C}),cell(r.code,{w:W[1],al:C}),cell(r.name,{w:W[2]}),cell(r.unit,{w:W[3],al:C}),cell(String(a.q(r)).replace("-","−"),{w:W[4],al:R}),cell(fmt(r.rate),{w:W[5],al:R}),cell(fmtS(a.q(r)*r.rate),{w:W[6],al:R})]}));
   const tot=(l,v,b)=>new D.TableRow({cantSplit:true,children:[cell(l,{span:6,al:R,bold:b}),cell(v,{w:W[6],al:R,bold:b})]});
-  const table=new D.Table({width:{size:9400,type:D.WidthType.DXA},columnWidths:W,rows:[head,...rows,tot("Итого без НДС",fmt(a.tot),true),tot("Гарантийное удержание 5 %","−"+fmt(a.tot*.05)),tot("Генподрядные услуги 3 % (п. 4.6 договора субподряда)","−"+fmt(a.tot*.03)),tot("К оплате без НДС",fmt(a.tot*.92),true)]});
+  const table=new D.Table({width:{size:9400,type:D.WidthType.DXA},columnWidths:W,rows:[head,...rows,tot("Итого без НДС",fmtS(a.tot),true),tot("Гарантийное удержание 5 %"+(a.base?" (уменьшение)":""),fmtS(-a.tot*.05)),tot("Генподрядные услуги 3 % (п. 4.6 договора субподряда)"+(a.base?" (уменьшение)":""),fmtS(-a.tot*.03)),tot(a.base?"Изменение суммы к оплате без НДС":"К оплате без НДС",fmtS(a.tot*.92),true)]});
   const sigCol=(role,org)=>[P(role,{bold:true}),P(org,{b:mm(2)}),P("_______________ / _______________",{b:mm(8)}),P("подпись / расшифровка",{sz:18}),P("М. П.",{b:mm(4)})];
   const sig=new D.Table({width:{size:9400,type:D.WidthType.DXA},columnWidths:[4700,4700],rows:[new D.TableRow({cantSplit:true,children:[cell(sigCol("Сдал:",a.who),{w:4700,nb:true}),cell(sigCol("Принял:","ООО «АСТЭКС», производитель работ"),{w:4700,nb:true})]})]});
   const meta=new D.Table({width:{size:9400,type:D.WidthType.DXA},columnWidths:[4700,4700],rows:[new D.TableRow({children:[
@@ -888,14 +901,44 @@ function actDocx(){
       headers:{default:new D.Header({children:[new D.Paragraph({alignment:C,children:[new D.TextRun({children:[D.PageNumber.CURRENT],font:F,size:22})]})]}),first:new D.Header({children:[P("")]})},
       children:[
         P("ООО «АСТЭКС»",{al:C}),P("Объект: ЖК «Публицист 11»",{al:C,sz:22,a:mm(5)}),
-        P("АКТ № "+a.no,{al:C,bold:true,sz:28}),P("о приёмке выполненных работ",{al:C,bold:true,sz:28}),
+        P((a.base?"КОРРЕКТИРОВОЧНЫЙ АКТ № ":"АКТ № ")+a.no,{al:C,bold:true,sz:28}),P(a.base?"к акту № "+a.base+" о приёмке выполненных работ":"о приёмке выполненных работ",{al:C,bold:true,sz:28}),
         P(`за период с 01.${a.mi}.${a.yr} по ${a.last}.${a.mi}.${a.yr}`,{al:C,b:mm(1),a:mm(5)}),
         meta,P("",{a:mm(3)}),table,
-        P(`Объёмы приняты по журналу выполнения за ${a.mon}, подтверждены прорабом ${a.last}.${a.mi}.${a.yr}. Позиции, не сданные Заказчику по КС-2, в акт не включены.`,{sz:21,b:mm(3),a:mm(8)}),
+        P(a.base?`Основание: ${a.why}. Объём исключается из акта № ${a.base}; акт № ${a.base} в остальной части не изменяется.`:`Объёмы приняты по журналу выполнения за ${a.mon}, подтверждены прорабом ${a.last}.${a.mi}.${a.yr}. Позиции, не сданные Заказчику по КС-2, в акт не включены.`,{sz:21,b:mm(3),a:mm(8)}),
         sig,
         P(`Сформировано в СМР-Контроль ${new Date().toLocaleDateString("ru-RU")}.`,{sz:18,b:mm(8)})
       ]}]});
   D.Packer.toBlob(doc).then(blob=>saveFile(`Акт_${a.no}_${a.who.replace(/\s+/g,"_")}.docx`,blob));
+}
+// Корректировочный акт: заказчик снял объём после подписания или работу переделывает другой субподрядчик.
+// Подписанный акт не правится — выпускается отдельный акт с минусом, номер ссылается на исходный.
+function corrForm(no){
+  const a=ACTS.find(x=>x[0]===no); const who=a[1];
+  const rs=rows.filter(r=>r.who===who&&r.sub>0).slice(0,9);
+  document.getElementById("act").innerHTML=`<h2>Корректировочный акт к акту № ${no}</h2><div style="text-align:center">${who} · ${a[2]}</div>
+  <div class="toolbar" style="margin:14px 0"><select id="crPos" aria-label="Позиция">${rs.map(r=>`<option value="${r.code}">${r.code} · ${r.name.slice(0,60)}</option>`).join("")}</select>
+  <input id="crQty" class="inl" type="number" min="0" step="any" aria-label="Снять объём" style="width:110px"><span id="crUnit" class="note" style="margin:0"></span>
+  <input id="crWhy" class="inl" placeholder="причина: снято заказчиком по КС-2 № 6" aria-label="Причина" style="width:280px">
+  <button class="pri" id="crMake" type="button">Сформировать</button></div>
+  <p class="note">Подписанный акт не меняется. Корректировочный уменьшает объём и сумму с минусом, удержание и генуслуги пересчитываются в обратную сторону. Снятый объём возвращается в остаток позиции в журнале.</p>`;
+  const pos=document.getElementById("crPos"),qty=document.getElementById("crQty");
+  const upd=()=>{const r=rs.find(x=>x.code===pos.value);qty.value=r.unit==="шт"||r.unit==="компл"?Math.max(1,Math.round(r.sub*.05)):Math.round(r.sub*.05*100)/100;document.getElementById("crUnit").textContent=`${r.unit} из ${r.sub} закрытых · ${fmt(r.rate)} ₽ за ${r.unit}`};
+  pos.addEventListener("change",upd);upd();
+  document.getElementById("crMake").addEventListener("click",()=>{
+    const r=rs.find(x=>x.code===pos.value),q=Math.min(+qty.value||0,r.sub),why=document.getElementById("crWhy").value.trim()||"снято заказчиком";
+    if(q<=0){qty.focus();return}
+    const cno=no+"-К1",tot=-q*r.rate;
+    ACTS.unshift([cno,who,a[2],r.sys,tot,"корректировочный",true,why,no]);regTable();
+    const [mName,yr]=a[2].split(" "),mi={"октябрь":"10","сентябрь":"09","ноябрь":"11"}[mName],last={"10":"31","09":"30","11":"30"}[mi];
+    document.getElementById("act").innerHTML=`<div class="alerts" style="margin-bottom:14px;font-family:var(--sans)"><li class="ok"><b>Акт ${cno} сформирован:</b> минус ${fmt(-tot)} ₽ к акту ${no}. Объём ${q} ${r.unit} вернулся в остаток позиции ${r.code}; субподрядчик видит причину в кабинете.</li></div>
+    <h2>КОРРЕКТИРОВОЧНЫЙ АКТ № ${cno}</h2><div style="text-align:center">к акту № ${no} за период с 01.${mi}.${yr} по ${last}.${mi}.${yr}</div>
+    <div class="wrap" style="margin-top:14px"><table><tr><th>№</th><th>Шифр сметы</th><th>Наименование работ</th><th>Ед.</th><th>Кол-во</th><th>Цена, ₽</th><th>Сумма, ₽</th></tr>
+    <tr><td style="text-align:center">1</td><td style="text-align:center">${r.code}</td><td>${r.name}<div class="who">${why}</div></td><td style="text-align:center">${r.unit}</td><td class="n">−${q}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmtS(tot)}</td></tr>
+    <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmtS(tot)}</b></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 % (уменьшение)</td><td class="n">${fmtS(-tot*.05)}</td></tr><tr><td colspan="6" style="text-align:right">Генподрядные услуги 3 % (уменьшение)</td><td class="n">${fmtS(-tot*.03)}</td></tr><tr><td colspan="6" style="text-align:right"><b>Изменение суммы к оплате</b></td><td class="n"><b>${fmtS(tot*.92)}</b></td></tr></table></div>
+    <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», прораб ______________</div></div>`;
+    ACT_STATE={no:cno,base:no,why,who,mon:a[2],rs:[r],q:()=>-q,tot,mi,yr,last,contract:`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`};
+  });
+  document.getElementById("act").scrollIntoView({behavior:"smooth",block:"start"});
 }
 const CHK={"Подрядчик Б":[["Объёмы подтверждены прорабом","ok","31.10"],["Фото скрытых работ (лотки, трассы)","ok","42 фото"],["Исполнительная: АОСР по ККСС","warn","нет АОСР на 3 этаж"],["Доверенность подписанта","ok","до 31.12.2026"],["Сертификаты на материалы","ok","Синтека"],["Полис / договор субподряда действует","warn","истекает 30.11.2026"]],
  "default":[["Объёмы подтверждены прорабом","ok","31.10"],["Фото скрытых работ","ok",""],["Исполнительная документация","ok",""],["Доверенность подписанта","ok",""],["Сертификаты на материалы","ok","Синтека"],["Договор субподряда действует","ok",""]]};
@@ -917,7 +960,7 @@ function acts(){
     if(dup){renderAct(dup[0],who,mon,dup[2].startsWith("ноябрь")?.15:.23,`<b>Повторно не заактировать:</b> за ${mon} у исполнителя «${who}» уже есть акт ${dup[0]} (${dup[5]}). Открыт он.`);}
     else{
       n++; const no=`А-2026-${mon.startsWith("ноябрь")?"11":mon.startsWith("октябрь")?"10":"09"}-${String(n).padStart(2,"0")}`;
-      const tot=renderAct(no,who,mon,mon.startsWith("ноябрь")?.15:.23,`<b>Акт ${no} сформирован</b> для «${who}» за ${mon}: PDF в папке «Акты/${mon}», строка в реестре, записи журнала помечены номером акта, исполнителю ушло уведомление.`);
+      const tot=renderAct(no,who,mon,mon.startsWith("ноябрь")?.15:.23,`<b>Акт ${no} сформирован</b> для «${who}» за ${mon}: строка в реестре, записи журнала помечены номером акта, исполнителю ушло уведомление. Акт в Word — кнопкой «Скачать Word».`);
       const systems=[...new Set(SYS.filter(x=>x.who===who).map(x=>x.s))].join(", ")||"—";
       ACTS.unshift([no,who,mon,systems,tot,"сформирован",true]); regTable();
     }
