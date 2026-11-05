@@ -327,7 +327,7 @@ th{font-weight:600}
 
 /* ── «?» формула, дельты, версии, оспаривание ── */
 .tile .l{display:flex;justify-content:space-between;align-items:flex-end;gap:6px}
-.tile .q{height:16px;width:16px;padding:0;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:600;cursor:pointer;flex:none}
+.tile .q{height:18px;width:18px;min-width:18px;padding:0;border-radius:50%;border:1px solid var(--muted2);background:var(--panel);color:var(--muted);font-weight:600;cursor:pointer;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:11px;line-height:1;align-self:flex-start;margin-top:-1px}
 .tile .q:hover{border-color:var(--fg2);color:var(--fg2)}
 .tile .formula{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--fg2)}
 .tile .delta{margin-top:6px;color:var(--muted)}
@@ -564,6 +564,11 @@ th{font-weight:600}
     <button class="sec" id="aDocx" title="Word: A4, Times New Roman 12, поля 20/10/20/20 мм — ГОСТ Р 7.0.97-2016"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Скачать Word</button>
     <span class="note" style="margin:0">→ строка в реестре, номер в журнал, уведомление субподрядчику; PDF — по кнопке, в системе уходит в папку «Акты/месяц» сам</span>
   </div>
+  <div class="panel" style="margin-bottom:14px"><h2>Документы заказчику <span>унифицированные формы № 100 · Word</span></h2>
+    <div class="toolbar" style="margin:0"><select id="ksSys" aria-label="Система"></select><select id="ksMon" aria-label="Период"><option value="10">октябрь 2026</option><option value="09">сентябрь 2026</option></select>
+    <button class="sec" id="ks2" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>КС-2</button>
+    <button class="sec" id="ks3" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>КС-3</button>
+    <span class="note" style="margin:0">КС-2 — по позициям сметы из принятых заказчиком объёмов за период; КС-3 — нарастающим итогом по системам, НДС 22 %.</span></div></div>
   <div class="panel" style="margin-bottom:14px"><h2>Комплектность перед актом <span id="chkCap"></span></h2><div class="chk" id="chk"></div><p class="note">Акт не уходит субподрядчику, пока чек-лист не закрыт. Документы с истекающим сроком подсвечиваются за 30 дней.</p></div>
   <div class="panel" style="margin-bottom:14px"><h2>Реестр актов</h2><div class="wrap"><table id="aReg"></table></div></div>
   <div class="act" id="act"></div>
@@ -1069,6 +1074,72 @@ function piece(){
   const tot=sum(P,p=>p[4]*p[5]);
   document.getElementById("sPiece").innerHTML=`<tr><th>Система</th><th>Шифр</th><th>Работа</th><th class="n">Принято</th><th class="n">Расценка, ₽</th><th class="n">Сумма, ₽</th><th>Бригада</th></tr>`+P.map(p=>`<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td><td class="n">${p[4]} ${p[3]}</td><td class="n">${fmt(p[5])}</td><td class="n">${fmt(p[4]*p[5])}</td><td>${p[6]}</td></tr>`).join("")+`<tr class="tot"><td colspan="5">Итого сдельная за октябрь</td><td class="n">${fmt(tot)}</td><td></td></tr>`;
 }
+
+// ───────── КС-2 и КС-3 по форме № 100 ─────────
+const KS={client:"ООО «Монолит»",gp:"ООО «АСТЭКС»",stroy:"Жилой комплекс «Публицист 11», г. Санкт-Петербург",contract:"№ ГП-14/2026",cdate:"14.03.2026"};
+function ksPeriod(){const m=document.getElementById("ksMon").value;return {m,last:m==="09"?"30":"31",share:m==="09"?.24:.23,name:m==="09"?"сентябрь 2026":"октябрь 2026",no:m==="09"?"5":"6"}}
+function ksDoc(D,landscape,children){
+  const mm=v=>Math.round(v*56.7);
+  return new D.Document({creator:"СМР-Контроль",styles:{default:{document:{run:{font:"Times New Roman",size:20}}}},
+    sections:[{properties:{page:{size:landscape?{width:11906,height:16838,orientation:D.PageOrientation.LANDSCAPE}:{width:11906,height:16838},margin:{top:mm(10),right:mm(10),bottom:mm(10),left:mm(20)}}},children}]});
+}
+function ksKit(D){
+  const F="Times New Roman",line={style:D.BorderStyle.SINGLE,size:4,color:"000000"},none={style:D.BorderStyle.NONE,size:0,color:"FFFFFF"};
+  const P=(t,o={})=>new D.Paragraph({alignment:o.al||D.AlignmentType.LEFT,spacing:{before:o.b||0,after:o.a||0},children:[].concat(t).map(x=>typeof x==="string"?new D.TextRun({text:x,font:F,size:o.sz||20,bold:!!o.bold}):x)});
+  const C=(t,o={})=>new D.TableCell({width:o.w?{size:o.w,type:D.WidthType.DXA}:undefined,columnSpan:o.span,rowSpan:o.rs,verticalAlign:D.VerticalAlign.CENTER,margins:{top:15,bottom:15,left:60,right:60},
+    borders:o.nb?{top:none,bottom:none,left:none,right:none}:o.ul?{top:none,left:none,right:none,bottom:line}:{top:line,bottom:line,left:line,right:line},
+    children:[].concat(t).map(x=>x instanceof D.Paragraph?x:P(String(x),{al:o.al,sz:o.sz||18,bold:o.bold}))});
+  return {P,C,R:D.AlignmentType.RIGHT,M:D.AlignmentType.CENTER};
+}
+function ksHeader(D,K,okud,title,no,pr,extra){
+  const {P,C,R,M}=K;
+  const req=[["Инвестор",KS.client,"по ОКПО",""],["Заказчик (Генподрядчик)",KS.client,"по ОКПО",""],["Подрядчик (Субподрядчик)",KS.gp,"по ОКПО",""],["Стройка",KS.stroy,"",""],["Объект",extra.obj,"",""],["","","Вид деятельности по ОКДП",""],["","","Договор подряда (контракт): номер",KS.contract],["","","дата",KS.cdate],["","","Вид операции",""]];
+  const W1=extra.land?[2600,8200,2600,1600]:[2100,4900,1900,1300];
+  const t=new D.Table({width:{size:W1.reduce((a,b)=>a+b),type:D.WidthType.DXA},columnWidths:W1,rows:[
+    new D.TableRow({children:[C("",{w:W1[0],nb:true}),C("",{w:W1[1],nb:true}),C("Форма по ОКУД",{w:W1[2],nb:true,al:R}),C(okud,{w:W1[3],al:M})]}),
+    ...req.map(r=>new D.TableRow({children:[C(r[0],{w:W1[0],nb:true}),C(r[1],{w:W1[1],ul:!!r[1]||!!r[0]}),C(r[2],{w:W1[2],nb:true,al:R}),C(r[3],{w:W1[3],al:M})]}))]});
+  const hd=new D.Table({width:{size:5400,type:D.WidthType.DXA},columnWidths:[1600,1600,1100,1100],alignment:D.AlignmentType.CENTER,rows:[
+    new D.TableRow({children:[C("Номер документа",{w:1600,al:M,rs:2}),C("Дата составления",{w:1600,al:M,rs:2}),C("Отчётный период",{span:2,al:M})]}),
+    new D.TableRow({children:[C("с",{w:1100,al:M}),C("по",{w:1100,al:M})]}),
+    new D.TableRow({children:[C(no,{al:M}),C(pr.last+"."+pr.m+".2026",{al:M}),C("01."+pr.m+".2026",{al:M}),C(pr.last+"."+pr.m+".2026",{al:M})]})]});
+  return [P("Унифицированная форма № "+(okud==="0322005"?"КС-2":"КС-3"),{al:R,sz:16}),P("Утверждена постановлением Госкомстата России от 11.11.99 № 100",{al:R,sz:16,a:60}),t,P("",{a:60}),hd,P(title,{al:M,bold:true,sz:24,b:100,a:60})];
+}
+function ksSign(D,K,left,right,land=true){
+  const {P,C}=K;
+  const col=(role,org)=>[P(role,{bold:true}),P(org,{b:80}),P("__________   __________   ________________",{b:160}),P("   должность            подпись             расшифровка подписи",{sz:14}),P("М. П.",{b:120})];
+  const h=land?7000:5100;return new D.Table({width:{size:h*2,type:D.WidthType.DXA},columnWidths:[h,h],rows:[new D.TableRow({cantSplit:true,children:[C(col(left[0],left[1]),{w:h,nb:true}),C(col(right[0],right[1]),{w:h,nb:true})]})]});
+}
+function ks2(){
+  const D=window.docx;if(!D)return;const K=ksKit(D),{P,C,R,M}=K,pr=ksPeriod(),sys=document.getElementById("ksSys").value;
+  const rs=rows.filter(r=>(!sys||r.sys===sys)&&r.client>0);
+  const q=r=>(r.unit==="шт"||r.unit==="компл")?Math.max(1,Math.round(r.client*pr.share)):Math.round(r.client*pr.share*100)/100;
+  const W=[900,1100,6000,1500,1000,1100,1300,1500];
+  const head=new D.TableRow({tableHeader:true,children:["Номер по порядку","Номер позиции по смете","Наименование работ","Номер единичной расценки","Единица измерения","Количество","Цена за единицу, руб.","Стоимость, руб."].map((t,i)=>C(t,{w:W[i],al:M,bold:true}))});
+  const nums=new D.TableRow({tableHeader:true,children:W.map((w,i)=>C(String(i+1),{w,al:M}))});
+  const body=rs.map((r,i)=>new D.TableRow({cantSplit:true,children:[C(String(i+1),{al:M}),C(r.code,{al:M}),C(r.sys+". "+r.name),C("—",{al:M}),C(r.unit,{al:M}),C(String(q(r)),{al:R}),C(fmt(r.ps),{al:R}),C(fmt(q(r)*r.ps),{al:R})]}));
+  const tot=sum(rs,r=>q(r)*r.ps);
+  const doc=ksDoc(D,true,[...ksHeader(D,K,"0322005","АКТ О ПРИЁМКЕ ВЫПОЛНЕННЫХ РАБОТ",pr.no+(sys?"-"+sys:""),pr,{obj:sys?("Система "+sys):"Инженерные системы (15 систем)",land:true}),
+    P("Сметная (договорная) стоимость в соответствии с договором подряда (субподряда): "+fmt(sys?SYS_BUDGET[sys]:T_CONTRACT)+" руб.",{al:R,a:120}),
+    new D.Table({width:{size:W.reduce((a,b)=>a+b),type:D.WidthType.DXA},columnWidths:W,rows:[head,nums,...body,new D.TableRow({cantSplit:true,children:[C("Итого",{span:7,al:R,bold:true}),C(fmt(tot),{al:R,bold:true})]})]}),
+    P("",{a:240}),ksSign(D,K,["Сдал:",KS.gp+", генеральный директор"],["Принял:",KS.client+", представитель заказчика"])]);
+  D.Packer.toBlob(doc).then(b=>saveFile(`КС-2_№${pr.no}${sys?"_"+sys:""}_${pr.name.replace(" ","_")}.docx`,b));
+}
+function ks3(){
+  const D=window.docx;if(!D)return;const K=ksKit(D),{P,C,R,M}=K,pr=ksPeriod(),sys=document.getElementById("ksSys").value;
+  const list=SYS.filter(x=>!sys||x.s===sys);const cumF=pr.m==="09"?.77:1;
+  const W=[750,4150,700,1550,1550,1500];
+  const head=[new D.TableRow({tableHeader:true,children:[C("Номер по порядку",{w:W[0],al:M,rs:2}),C("Наименование пусковых комплексов, этапов, объектов, видов выполненных работ, оборудования, затрат",{w:W[1],al:M,rs:2}),C("Код",{w:W[2],al:M,rs:2}),C("Стоимость выполненных работ и затрат, руб.",{span:3,al:M})]}),
+    new D.TableRow({tableHeader:true,children:[C("с начала проведения работ",{w:W[3],al:M}),C("с начала года",{w:W[4],al:M}),C("в том числе за отчётный период",{w:W[5],al:M})]}),
+    new D.TableRow({tableHeader:true,children:W.map((w,i)=>C(String(i+1),{w,al:M}))})];
+  const body=list.map((x,i)=>{const c=x.client*cumF,p=x.client*pr.share;return new D.TableRow({cantSplit:true,children:[C(String(i+1),{al:M}),C("Монтажные работы: "+x.s),C("",{al:M}),C(fmt(c),{al:R}),C(fmt(c),{al:R}),C(fmt(p),{al:R})]})});
+  const sc=sum(list,x=>x.client*cumF),sp=sum(list,x=>x.client*pr.share);
+  const t=(l,a,b,bold)=>new D.TableRow({cantSplit:true,children:[C(l,{span:3,al:R,bold}),C(fmt(a),{al:R,bold}),C(fmt(a),{al:R,bold}),C(fmt(b),{al:R,bold})]});
+  const doc=ksDoc(D,false,[...ksHeader(D,K,"0322001","СПРАВКА О СТОИМОСТИ ВЫПОЛНЕННЫХ РАБОТ И ЗАТРАТ",pr.no+(sys?"-"+sys:""),pr,{obj:sys?("Система "+sys):"Инженерные системы (15 систем)",land:false}),
+    new D.Table({width:{size:W.reduce((a,b)=>a+b),type:D.WidthType.DXA},columnWidths:W,rows:[...head,...body,t("Итого",sc,sp,true),t("Сумма НДС 22 %",sc*.22,sp*.22,false),t("Всего с учётом НДС",sc*1.22,sp*1.22,true)]}),
+    P("",{a:240}),ksSign(D,K,["Заказчик (Генподрядчик):",KS.client],["Подрядчик (Субподрядчик):",KS.gp],false)]);
+  D.Packer.toBlob(doc).then(b=>saveFile(`КС-3_№${pr.no}${sys?"_"+sys:""}_${pr.name.replace(" ","_")}.docx`,b));
+}
+function ksInit(){const s=document.getElementById("ksSys");s.innerHTML='<option value="">Все системы</option>'+Object.keys(SYS_BUDGET).map(x=>`<option>${x}</option>`).join("");document.getElementById("ks2").addEventListener("click",ks2);document.getElementById("ks3").addEventListener("click",ks3)}
 // ───────── роутинг ─────────
 const VIEWS=["dashboard","journal","contractors","staff","extra","acts","foreman","sub","client"];
 function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h)||!ROLES[ROLE].tools.includes(h))h=ROLES[ROLE].home;
@@ -1081,6 +1152,6 @@ document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<opti
 ["fSys","fState","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",jTable));jTable();phone();
 document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="Подрядчик Б";
 document.getElementById("cSel").addEventListener("change",contractor);contractor();
-staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();document.getElementById("xlsAll").addEventListener("click",exportAll);setRole("director");
+staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();ksInit();document.getElementById("xlsAll").addEventListener("click",exportAll);setRole("director");
 </script>
 </body></html>
