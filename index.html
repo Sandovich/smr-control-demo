@@ -9,7 +9,7 @@
   --line:hsl(200,8%,85%); --line2:hsl(200,8%,90%); --soft:hsl(200,8%,94%); --soft2:hsl(200,8%,98%);
   --accent:hsl(19,100%,50%); --accent-hover:hsl(19,100%,45%); --accent-ink:#ffffff;
   --ok:hsl(125,50%,30%); --ok-bg:hsl(125,50%,94%); --ok-line:hsl(125,50%,90%);
-  --warn:hsl(218,75%,40%); --warn-bg:hsl(218,75%,96%); --warn-line:hsl(218,75%,90%);
+  --warn:hsl(45,100%,22%); --warn-bg:#FFF6CC; --warn-line:#FFD43B; --warn-mark:#FFC800;
   --bad:hsl(360,70%,50%); --bad-bg:hsl(360,70%,94%); --bad-line:hsl(360,70%,90%);
   --blue:hsl(218,75%,50%); --blue-bg:hsl(218,75%,94%); --focus:hsl(218,75%,40%);
   --client:hsl(218,75%,50%); --sub:hsl(19,100%,50%);
@@ -244,6 +244,45 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
   .top nav a.on::before{left:0;right:0;height:3px}
   main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 }
+
+/* ── личные кабинеты ── */
+[hidden]{display:none!important}
+.top .who{height:48px;border:0;background:transparent;color:#fff;display:flex;align-items:center;gap:9px;padding:0 4px;cursor:pointer;font-weight:400}
+.top .who:hover{background:rgba(255,255,255,.08)}
+.top .whoName{font-size:13px;line-height:16px;text-align:left;white-space:nowrap}
+.top .whoName small{display:block;font-size:11px;line-height:14px;color:rgba(255,255,255,.6)}
+.rolemenu{position:absolute;right:8px;top:48px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow2);min-width:260px;padding:6px 0;z-index:20}
+.rolemenu .cap{font-size:12px;line-height:16px;font-weight:600;color:var(--muted);padding:6px 14px 4px;letter-spacing:.25px}
+.rolemenu button{display:flex;flex-direction:column;align-items:flex-start;width:100%;height:auto;padding:7px 14px;background:transparent;border:0;border-radius:0;font-weight:500;color:var(--fg);gap:0;cursor:pointer}
+.rolemenu button:hover{background:var(--line2)}
+.rolemenu button.on{background:var(--line2);box-shadow:inset 4px 0 0 var(--accent)}
+.rolemenu button small{font-weight:400;font-size:12px;line-height:16px;color:var(--muted)}
+.top{position:sticky}
+.fgrid{grid-template-columns:340px 1fr}
+@media (min-width:1500px){.fgrid{grid-template-columns:340px 1fr}}
+@media (max-width:1499px){.fgrid>div:last-child{order:0}}
+@media (max-width:900px){.fgrid{grid-template-columns:1fr}}
+.phone2{max-width:340px;width:100%}
+.phone .photo{border:1px dashed var(--muted2);border-radius:var(--r);padding:10px 12px;display:flex;justify-content:space-between;align-items:center;color:var(--fg2);font-weight:600;cursor:pointer}
+.phone .photo .hint{margin:0;font-weight:400}
+.phone button.sec{width:100%;margin-top:8px;justify-content:center}
+.pill.queue{background:var(--blue-bg);border-color:var(--warn-line);color:var(--warn)}
+.conf{height:28px;padding:0 10px;font-size:12px}
+@media (max-width:1800px){.top .whoName small{display:none}}
+@media (max-width:1650px){.top .whoName{display:none}}
+@media (max-width:1100px){.rolemenu{right:0}}
+
+/* ── жёлтый предупреждения: метка и фон #FFC800, текст тёмный ── */
+.tile.warn{border-left:4px solid var(--warn-mark)}
+.tile.warn .v{color:var(--fg)}
+.tile.warn .d{color:var(--fg);font-weight:600}
+.tile.warn .d::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn-mark);margin-right:6px;vertical-align:0}
+.pill.warn{background:var(--warn-bg);border-color:var(--warn-line);color:hsl(45,100%,18%)}
+.alerts li{border-color:var(--warn-line);border-left-color:var(--warn-mark)}
+.alerts li.bad{border-color:var(--bad-line);border-left-color:var(--bad)}
+.alerts li.ok{border-color:var(--ok-line);border-left-color:var(--ok)}
+.card.warn{border-left-color:var(--warn-mark)}
+.pill.queue{background:var(--warn-bg);border-color:var(--warn-line);color:hsl(45,100%,18%)}
 </style></head><body>
 
 <header class="top">
@@ -258,7 +297,7 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
     <a href="#extra"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Допработы</a>
     <a href="#acts"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6z M14 3v6h6"/></svg>Акты</a>
   </nav>
-  <span class="sp"><span class="period">май – октябрь 2026 · без НДС</span><span class="stamp">демо</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/></svg><span class="av"></span></span>
+  <span class="sp"><span class="period">май – октябрь 2026 · без НДС</span><span class="stamp">демо</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0"/></svg><button class="who" id="whoBtn" type="button" aria-haspopup="true"><span class="av"></span><span class="whoName" id="whoName">Берг М. С.<small id="whoRole">руководитель</small></span></button><div class="rolemenu" id="roleMenu" hidden><div class="cap">Войти как</div></div></span>
 </header>
 
 <main>
@@ -362,6 +401,59 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
     <ul class="alerts" id="sAlerts"></ul>
   </div>
   <div class="panel"><h2>Люди на объекте <span>октябрь 2026 · 21 человек</span></h2><div class="wrap"><table id="sTable"></table></div></div>
+</section>
+
+<!-- ───────── КАБИНЕТ ПРОРАБА ───────── -->
+<section class="view" id="v-foreman" hidden>
+  <h1>Мой день · прораб</h1>
+  <p class="sub">Телефон прораба: внести объём за четыре касания, посмотреть, что внесено сегодня, отправить допработу с фото. Без связи записи копятся и уходят, когда появится сеть.</p>
+  <div class="tiles" id="fTiles"></div>
+  <div class="jgrid fgrid">
+    <div class="phone phone2">
+      <div class="hd"><span>Внести объём</span><span>Публицист 11 · сегодня</span></div>
+      <label for="fPos">Позиция сметы</label>
+      <select id="fPos"></select>
+      <div class="hint" id="fRest"></div>
+      <label for="fSysSel">Система</label>
+      <select id="fSysSel"></select>
+      <label for="fQty">Объём</label>
+      <input id="fQty" type="number" inputmode="decimal" value="40">
+      <div class="hint" id="fMoney"></div>
+      <label>Фото</label>
+      <div class="photo" id="fPhoto"><span>+ Снять</span><span class="hint">обязательно для скрытых работ</span></div>
+      <div id="fWarn" class="warnbox" hidden></div>
+      <div id="fOk" class="ok" hidden></div>
+      <button class="pri" id="fSave" type="button">Записать</button>
+      <button class="sec" id="fExtra" type="button">Допработа сверх сметы</button>
+    </div>
+    <div class="panel"><h2>Внесено сегодня <span id="fTodayCap">2 ноября</span></h2><div class="wrap"><table id="fToday"></table></div>
+      <p class="note">Записи с меткой «ожидает сети» отправятся сами. Исправить запись можно до конца дня, дальше — через ПТО.</p></div>
+  </div>
+</section>
+
+<!-- ───────── КАБИНЕТ СУБПОДРЯДЧИКА ───────── -->
+<section class="view" id="v-sub" hidden>
+  <h1>Кабинет субподрядчика</h1>
+  <p class="sub">Субподрядчик видит только свои объёмы по своей расценке и свои акты. Сметные расценки, маржа и другие исполнители ему не показываются. Доступ бесплатный, по ссылке.</p>
+  <div class="tiles" id="subTiles"></div>
+  <div class="grid2">
+    <div class="panel"><h2>Мои акты <span>подтверждение — одной кнопкой</span></h2><div class="wrap"><table id="subActs"></table></div></div>
+    <div class="panel"><h2>Мои объёмы <span>принято генподрядчиком</span></h2><div class="wrap"><table id="subRows"></table></div></div>
+  </div>
+</section>
+
+<!-- ───────── КАБИНЕТ ЗАКАЗЧИКА ───────── -->
+<section class="view" id="v-client" hidden>
+  <h1>Кабинет заказчика · Монолит</h1>
+  <p class="sub">Заказчик видит ход работ по договору и сданные КС-2. Субподрядчики, расценки и себестоимость генподрядчика скрыты.</p>
+  <div class="tiles" id="clTiles"></div>
+  <div class="grid2">
+    <div class="panel"><h2>Выполнение по системам <span>сдано по КС-2, % от договора</span></h2><div class="wrap"><table id="clSys"></table></div></div>
+    <div>
+      <div class="panel" style="margin-bottom:16px"><h2>Реестр КС-2 <span>подписанные за период</span></h2><div class="wrap"><table id="clKs"></table></div></div>
+      <div class="panel"><h2>Срок <span>по темпу последних 4 недель</span></h2><div class="wrap"><table id="clTerm"></table></div></div>
+    </div>
+  </div>
 </section>
 
 <!-- ───────── ДОПРАБОТЫ ───────── -->
@@ -472,6 +564,7 @@ const MONT=STAFF.filter(s=>s[2]>0), M_H=sum(MONT,s=>s[3]), M_FOT=sum(MONT,s=>s[5
 const HOUR=M_FOT/M_H, HOUR_FULL=HOUR/NDFL*(1+VZNOSY);
 const FOT_TOTAL=sum(FOT_MONTHS,m=>m[0]);
 const ACTS=[
+ ["А-2026-11-08","Подрядчик Б","ноябрь 2026","АПС, АПВ, ККСС",612300,"сформирован"],
  ["А-2026-10-07","Подрядчик Б","октябрь 2026","АПС, АПВ, ККСС",1261400,"подписан"],
  ["А-2026-10-06","Подрядчик А","октябрь 2026","АСУД, АСКУЭ",318900,"подписан"],
  ["А-2026-10-05","Подрядчик Д","октябрь 2026","СОУЭ",201300,"на подписи"],
@@ -718,9 +811,83 @@ function staff(){
   document.getElementById("sTable").innerHTML=h+b+`<tr class="tot"><td colspan="4">Итого</td><td class="n">${S_H}</td><td></td><td class="n">${fmt(S_ZP)}</td><td class="n">${fmt(S_PR)}</td><td class="n">${fmt(S_CASH)}</td><td class="n">${fmt(S_FOT+S_CASH)}</td><td class="n">${fmt(S_FOT/NDFL)}</td><td></td></tr>`;
 }
 
+
+// ───────── личные кабинеты ─────────
+const ROLES={
+  director:{name:"Берг М. С.",role:"руководитель",home:"dashboard",tools:["dashboard","journal","contractors","staff","extra","acts"]},
+  pto:{name:"Костылева Е. Ю.",role:"ПТО",home:"journal",tools:["journal","contractors","staff","extra","acts"]},
+  foreman:{name:"Иванов А. В.",role:"прораб",home:"foreman",tools:["foreman","journal","extra"]},
+  sub:{name:"Подрядчик Б",role:"субподрядчик",home:"sub",tools:["sub"]},
+  client:{name:"Монолит",role:"заказчик",home:"client",tools:["client"]},
+};
+const TOOL_LABEL={foreman:["Мой день",'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>'],sub:["Мои объёмы и акты",'<svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6z M14 3v6h6"/></svg>'],client:["Ход работ",'<svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l4-6 4 3 4-7"/></svg>']};
+let ROLE="director";
+function setRole(r){
+  ROLE=r; const R=ROLES[r];
+  document.getElementById("whoName").firstChild.textContent=R.name; document.getElementById("whoRole").textContent=R.role;
+  const nav=document.getElementById("nav");
+  // пункты ролевых экранов добавляем в начало, остальные показываем/прячем
+  ["foreman","sub","client"].forEach(v=>{let a=nav.querySelector(`a[href="#${v}"]`); if(!a){a=document.createElement("a");a.href="#"+v;a.innerHTML=TOOL_LABEL[v][1]+TOOL_LABEL[v][0];nav.prepend(a)}});
+  nav.querySelectorAll("a").forEach(a=>{a.hidden=!R.tools.includes(a.getAttribute("href").slice(1))});
+  document.querySelectorAll("#roleMenu button").forEach(b=>b.classList.toggle("on",b.dataset.role===r));
+  document.getElementById("roleMenu").hidden=true;
+  if(r==="sub")subcab(); if(r==="client")clientcab(); if(r==="foreman")document.getElementById("fOk").hidden=true;
+  document.getElementById("whoBtn").title=R.name+" · "+R.role;
+  const h=(location.hash||"").slice(1);
+  if(!R.tools.includes(h)) location.hash="#"+R.home; else route();
+}
+function roleMenu(){
+  const m=document.getElementById("roleMenu");
+  m.innerHTML='<div class="cap">Войти как</div>'+Object.entries(ROLES).map(([k,v])=>`<button type="button" data-role="${k}">${v.name}<small>${v.role}</small></button>`).join("");
+  m.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>setRole(b.dataset.role)));
+  document.getElementById("whoBtn").addEventListener("click",e=>{e.stopPropagation();m.hidden=!m.hidden});
+  document.addEventListener("click",e=>{if(!m.contains(e.target))m.hidden=true});
+}
+// прораб
+const TODAY=[
+ {t:"08:40",code:"32.1",name:"Лоток 300×50",sys:"ККСС",qty:"40 м.п.",who:"Подрядчик Б",st:"sent"},
+ {t:"09:15",code:"23.3",name:"Аккумулятор 12В, 7А/ч",sys:"АПС",qty:"12 шт",who:"Подрядчик Б",st:"sent"},
+ {t:"11:02",code:"13.2",name:"Кабель КПСнг(А)-FRLS 1x2x0,5",sys:"АДСП",qty:"120 м.п.",who:"Штатные сотрудники",st:"queue"},
+ {t:"11:20",code:"—",name:"Допработа: штробление под кабель АПС, 18 м.п., фото 2",sys:"АПС",qty:"18 м.п.",who:"Подрядчик Б",st:"extra"},
+];
+function foreman(){
+  const sel=document.getElementById("fPos");sel.innerHTML=rows.map((r,i)=>`<option value="${i}">${r.code} · ${r.name.slice(0,44)}</option>`).join("");sel.value=rows.findIndex(r=>r.sys==="ККСС");
+  const ss=document.getElementById("fSysSel");ss.innerHTML=Object.keys(SYS_BUDGET).map(s=>`<option>${s}</option>`).join("");
+  const upd=()=>{const r=rows[+sel.value];ss.value=r.sys;const rest=r.qty-r.sub;document.getElementById("fRest").textContent=`По смете ${r.qty} ${r.unit} · закрыто ${r.sub} · остаток ${Math.max(0,rest).toFixed(rest%1?1:0)} ${r.unit}`;
+    const q=+document.getElementById("fQty").value||0;document.getElementById("fMoney").textContent=`${r.who} · × ${fmt(r.rate)} ₽ = ${fmt(q*r.rate)} ₽`;
+    const w=document.getElementById("fWarn");if(q>rest){w.hidden=false;w.textContent=`Больше остатка на ${(q-rest).toFixed(1)} ${r.unit} — уйдёт в «Допработы» на решение, в акт не попадёт.`}else w.hidden=true;document.getElementById("fOk").hidden=true};
+  sel.addEventListener("change",upd);document.getElementById("fQty").addEventListener("input",upd);upd();
+  const table=()=>{document.getElementById("fToday").innerHTML=`<tr><th>Время</th><th>Позиция</th><th>Система</th><th class="n">Объём</th><th>Исполнитель</th><th>Статус</th></tr>`+TODAY.map(x=>`<tr><td class="n" style="text-align:left">${x.t}</td><td>${x.code!=="—"?x.code+" · ":""}${x.name}</td><td>${x.sys}</td><td class="n">${x.qty}</td><td>${x.who}</td><td>${x.st==="sent"?'<span class="pill ok">в журнале</span>':x.st==="queue"?'<span class="pill queue">ожидает сети</span>':'<span class="pill warn">допработа · на решении</span>'}</td></tr>`).join("");
+    const q=TODAY.filter(x=>x.st==="queue").length;
+    document.getElementById("fTiles").innerHTML=[["Записей сегодня",TODAY.length,"по журналу и допработам",""],["Ожидают сети",q,q?"отправятся сами":"всё отправлено",q?"warn":"ok"],["Допработ на решении",TODAY.filter(x=>x.st==="extra").length,"с фото","warn"],["Мой объект","Публицист 11","системы: все 15",""]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("")};
+  table();
+  document.getElementById("fSave").addEventListener("click",()=>{const r=rows[+sel.value];const q=+document.getElementById("fQty").value||0;const now=new Date();
+    TODAY.push({t:now.getHours()+":"+String(now.getMinutes()).padStart(2,"0"),code:r.code,name:r.name.slice(0,40),sys:ss.value,qty:q+" "+r.unit,who:r.who,st:q>r.qty-r.sub?"extra":"sent"});table();
+    const o=document.getElementById("fOk");o.hidden=false;o.textContent=`Записано · ${r.code} · ${q} ${r.unit} · система ${ss.value}`;});
+  document.getElementById("fExtra").addEventListener("click",()=>{const o=document.getElementById("fOk");o.hidden=false;o.textContent="Допработа: опишите работу, снимите фото — запись уйдёт в «Допработы» со статусом «выявлено».";});
+  document.getElementById("fPhoto").addEventListener("click",()=>{document.getElementById("fPhoto").firstElementChild.textContent="✓ 1 фото";});
+}
+// субподрядчик
+function subcab(){
+  const who="Подрядчик Б";const rs=rows.filter(r=>r.who===who&&r.sub>0);const ss=SYS.filter(x=>x.who===who);
+  const pay=sum(ss,x=>x.subPay);const acted=ACTS.filter(a=>a[1]===who).reduce((s,a)=>s+a[4],0);const paid=ACTS.filter(a=>a[1]===who&&a[5].includes("оплачен")).reduce((s,a)=>s+a[4],0);
+  document.getElementById("subTiles").innerHTML=[["Принято по моей расценке",fmtM(pay),ss.map(x=>x.s).join(", "),""],["Заактировано",fmtM(acted),ACTS.filter(a=>a[1]===who).length+" акта",""],["Оплачено",fmtM(paid),"по подписанным актам","ok"],["Удержание 5 %",fmtM(acted*.05),"возврат по сдаче заказчику",""],(()=>{const n=ACTS.filter(a=>a[1]===who&&a[5]==="сформирован").length;return ["Ждёт моего подтверждения",n+" акт.",n?"подтвердите или оспорьте":"всё подтверждено",n?"warn":"ok"]})()].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  const acts=()=>{document.getElementById("subActs").innerHTML=`<tr><th>№ акта</th><th>Период</th><th class="n">Сумма</th><th>Статус</th><th></th></tr>`+ACTS.filter(a=>a[1]===who).map((a,i)=>`<tr><td class="n" style="text-align:left">${a[0]}</td><td>${a[2]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")||a[5]==="подтверждён"?"ok":a[5]==="сформирован"?"warn":"mut"}">${a[5]}</span></td><td>${a[5]==="сформирован"?`<button class="pri conf" data-i="${ACTS.indexOf(a)}" type="button">Подтвердить</button>`:""}</td></tr>`).join("");
+    document.querySelectorAll("#subActs .conf").forEach(b=>b.addEventListener("click",()=>{ACTS[+b.dataset.i][5]="подтверждён";subcab();regTable();}))};
+  acts();
+  document.getElementById("subRows").innerHTML=`<tr><th>Система</th><th>Позиция</th><th class="n">Принято</th><th class="n">Моя расценка</th><th class="n">Сумма</th></tr>`+rs.slice(0,12).map(r=>`<tr><td>${r.sys}</td><td>${r.code} · ${r.name}</td><td class="n">${r.sub} ${r.unit}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(r.sub*r.rate)}</td></tr>`).join("")+`<tr class="tot"><td colspan="4">Итого по показанным</td><td class="n">${fmt(sum(rs.slice(0,12),r=>r.sub*r.rate))}</td></tr>`;
+}
+// заказчик
+function clientcab(){
+  const left=T_CONTRACT-T_CLIENT;const weekRate=T_CLIENT*0.24/4.3;const end=new Date(2026,10,2);end.setDate(end.getDate()+Math.round(left/weekRate*7));
+  document.getElementById("clTiles").innerHTML=[["Договор СМР",fmtM(T_CONTRACT),"15 систем, без НДС",""],["Сдано по КС-2",fmtM(T_CLIENT),pct(T_CLIENT/T_CONTRACT)+" договора",""],["Осталось",fmtM(left),"по договору",""],["Окончание при текущем темпе",end.toLocaleDateString("ru-RU"),"срок по договору 31.05.2027",end>new Date(2027,4,31)?"bad":"ok"]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  document.getElementById("clSys").innerHTML=`<tr><th>Система</th><th class="n">Договор</th><th>Сдано</th><th class="n">%</th></tr>`+SYS.map(x=>`<tr><td><b>${x.s}</b></td><td class="n">${fmt(x.b)}</td><td><div class="bar"><i class="c" style="width:${x.client/x.b*100}%;background:hsl(125,50%,45%)"></i></div></td><td class="n">${pct(x.client/x.b)}</td></tr>`).join("")+`<tr class="tot"><td>Итого</td><td class="n">${fmt(T_CONTRACT)}</td><td></td><td class="n">${pct(T_CLIENT/T_CONTRACT)}</td></tr>`;
+  document.getElementById("clKs").innerHTML=`<tr><th>КС-2</th><th>Период</th><th class="n">Сумма без НДС</th><th>Статус</th></tr>`+[["КС-2 №6","октябрь 2026",T_CLIENT*.23,"подписан"],["КС-2 №5","сентябрь 2026",T_CLIENT*.24,"подписан, оплачен"],["КС-2 №4","август 2026",T_CLIENT*.21,"подписан, оплачен"]].map(k=>`<tr><td>${k[0]}</td><td>${k[1]}</td><td class="n">${fmt(k[2])}</td><td><span class="pill ok">${k[3]}</span></td></tr>`).join("");
+  document.getElementById("clTerm").innerHTML=[["Темп сдачи в неделю",fmt(weekRate)+" ₽"],["Окончание при текущем темпе",end.toLocaleDateString("ru-RU")],["Срок по договору","31.05.2027"]].map(([a,b])=>`<tr><td>${a}</td><td class="n">${b}</td></tr>`).join("");
+}
 // ───────── роутинг ─────────
-const VIEWS=["dashboard","journal","contractors","staff","extra","acts"];
-function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h))h="dashboard";
+const VIEWS=["dashboard","journal","contractors","staff","extra","acts","foreman","sub","client"];
+function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h)||!ROLES[ROLE].tools.includes(h))h=ROLES[ROLE].home;
   VIEWS.forEach(v=>{document.getElementById("v-"+v).hidden=v!==h});
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+h))}
 window.addEventListener("hashchange",route);
@@ -730,6 +897,6 @@ document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<opti
 ["fSys","fState","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",jTable));jTable();phone();
 document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="Подрядчик Б";
 document.getElementById("cSel").addEventListener("change",contractor);contractor();
-staff();extra();acts();route();
+staff();extra();acts();roleMenu();foreman();subcab();clientcab();setRole("director");
 </script>
 </body></html>
