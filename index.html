@@ -2,6 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
+:root{color-scheme:light}
 /* Layout: Procore CORE (@procore/core-react 12.54): Inter 14/20, серые в HSL(200,8%), оранжевый 19°/100% как единственный акцент, кнопки 36px без бордера, шапка таблиц 48px на gray96, пилюли 12/16 с бордером tone90, карточки radius 4 с тенью. Слева навигация 200px (активный пункт — полоса 5px orange50), сверху белая полоса 48px. На телефоне навигация — горизонтальная лента. */
 :root{
   --bg:hsl(200,8%,96%); --panel:#ffffff; --fg:hsl(200,8%,15%); --fg2:hsl(200,8%,30%); --muted:hsl(200,8%,45%); --muted2:hsl(200,8%,70%);
@@ -16,8 +17,6 @@
   --sans:"Inter",system-ui,"Segoe UI",Arial,sans-serif; --mono:"Inter",system-ui,"Segoe UI",Arial,sans-serif;
   --r:4px; --side-w:200px; --top-h:48px;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:hsl(200,8%,10%);--panel:hsl(200,8%,14%);--fg:hsl(200,8%,94%);--fg2:hsl(200,8%,80%);--muted:hsl(200,8%,62%);--muted2:hsl(200,8%,40%);--line:hsl(200,8%,24%);--line2:hsl(200,8%,20%);--soft:hsl(200,8%,18%);--soft2:hsl(200,8%,16%);--accent:hsl(19,100%,55%);--accent-hover:hsl(19,100%,60%);--accent-ink:#1a0d06;--ok:hsl(125,45%,62%);--ok-bg:hsl(125,30%,16%);--ok-line:hsl(125,30%,22%);--warn:hsl(45,85%,60%);--warn-bg:hsl(45,40%,16%);--warn-line:hsl(45,40%,22%);--bad:hsl(360,70%,66%);--bad-bg:hsl(360,35%,17%);--bad-line:hsl(360,35%,23%);--blue:hsl(218,75%,66%);--blue-bg:hsl(218,40%,18%);--focus:hsl(218,75%,66%);--client:hsl(218,75%,66%);--sub:hsl(19,100%,58%);--shadow:0 1px 2px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.4);--shadow2:0 3px 6px rgba(0,0,0,.5),0 3px 6px rgba(0,0,0,.4);color-scheme:dark}}
-:root[data-theme="dark"]{--bg:hsl(200,8%,10%);--panel:hsl(200,8%,14%);--fg:hsl(200,8%,94%);--fg2:hsl(200,8%,80%);--muted:hsl(200,8%,62%);--muted2:hsl(200,8%,40%);--line:hsl(200,8%,24%);--line2:hsl(200,8%,20%);--soft:hsl(200,8%,18%);--soft2:hsl(200,8%,16%);--accent:hsl(19,100%,55%);--accent-hover:hsl(19,100%,60%);--accent-ink:#1a0d06;--ok:hsl(125,45%,62%);--ok-bg:hsl(125,30%,16%);--ok-line:hsl(125,30%,22%);--warn:hsl(45,85%,60%);--warn-bg:hsl(45,40%,16%);--warn-line:hsl(45,40%,22%);--bad:hsl(360,70%,66%);--bad-bg:hsl(360,35%,17%);--bad-line:hsl(360,35%,23%);--blue:hsl(218,75%,66%);--blue-bg:hsl(218,40%,18%);--focus:hsl(218,75%,66%);--client:hsl(218,75%,66%);--sub:hsl(19,100%,58%);--shadow:0 1px 2px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.4);--shadow2:0 3px 6px rgba(0,0,0,.5),0 3px 6px rgba(0,0,0,.4);color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:20px;letter-spacing:.15px;margin:0}
@@ -52,8 +51,8 @@ h1::before{content:"";width:18px;height:18px;border-radius:3px;background:var(--
 /* ── карточки показателей ── */
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:12px;margin-bottom:16px}
 .tile{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px;min-width:0}
-.tile .l{font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted);font-weight:600}
-.tile .v{font-size:24px;line-height:32px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:0}
+.tile .l{font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted);font-weight:600;min-height:32px;display:flex;align-items:flex-end}
+.tile .v{font-size:24px;line-height:32px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:0;white-space:nowrap}
 .tile .d{font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted);margin-top:2px}
 .tile.bad .v{color:var(--bad)} .tile.warn .v{color:var(--warn)} .tile.ok .v{color:var(--ok)}
 .tile.bad .d,.tile.warn .d{font-weight:600}
@@ -101,9 +100,10 @@ button.pri:hover{background:var(--accent-hover)}
 button.sec{background:var(--line2);color:var(--fg)}
 button.sec svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visible{outline:2px solid var(--focus);outline-offset:-1px}
-.jgrid{display:grid;grid-template-columns:1fr 340px;gap:16px}
-@media (max-width:960px){.jgrid{grid-template-columns:1fr}}
-.phone{border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:14px 16px;max-width:340px;margin:0 auto}
+.jgrid{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:1500px){.jgrid{grid-template-columns:1fr 300px}}
+@media (max-width:1499px){.jgrid>div:last-child{order:-1}}
+.phone{border-radius:var(--r);background:var(--panel);box-shadow:var(--shadow);padding:14px 16px;max-width:300px;margin:0}
 .phone .hd{font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between}
 .phone label{display:block;font-size:12px;line-height:16px;letter-spacing:.25px;color:var(--muted);font-weight:600;margin:10px 0 4px}
 .phone input,.phone select{width:100%}
@@ -161,6 +161,22 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
 }
 @media (max-width:420px){.tiles{grid-template-columns:1fr 1fr} .tile .v{font-size:17px}}
 @media (prefers-reduced-motion:no-preference){.bar i{transition:width .4s ease}}
+
+/* ── типографика по шкале CORE: body 14/20, table 13/20, small 12/16, label 14/20 600 ── */
+svg text{font-size:12px}
+.alerts li,.card{font-size:14px;line-height:20px}
+.card .m{font-size:12px;line-height:16px}
+table b,td b{font-weight:600}
+.act{font-family:var(--sans);letter-spacing:.15px;font-size:14px;line-height:20px}
+.act h2{font-size:16px;line-height:24px;font-weight:600;display:block}
+.act table{font-family:var(--sans);font-size:13px;line-height:20px;letter-spacing:.25px}
+.act th{font-size:12px;line-height:16px;font-weight:600;background:var(--bg);color:var(--fg2);height:auto;padding:6px 8px}
+.act td{padding:4px 8px;border:1px solid var(--line)}
+.act th{border:1px solid var(--line)}
+.act .meta{font-size:14px;line-height:20px}
+.act .sig{font-size:14px;line-height:20px}
+.act .sig div{border-top:1px solid var(--line)}
+.act p{font-size:13px;line-height:20px}
 </style></head><body>
 
 <div class="shell">
