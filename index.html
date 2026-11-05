@@ -247,9 +247,9 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
   <p class="sub">Акт собирается из принятых объёмов за период по кнопке. Номер пишется обратно в журнал, второй раз те же объёмы не заактировать.</p>
   <div class="toolbar">
     <select id="aWho"></select>
-    <select id="aMon"><option>октябрь 2026</option><option>сентябрь 2026</option></select>
+    <select id="aMon"></select>
     <button class="pri" id="aMake">Сформировать акт</button>
-    <span class="note" style="margin:0">→ PDF в папку «Акты/2026-10», строка в реестре, уведомление субподрядчику</span>
+    <span class="note" style="margin:0">→ PDF в папку «Акты/месяц», строка в реестре, номер в журнал, уведомление субподрядчику</span>
   </div>
   <div class="panel" style="margin-bottom:14px"><h2>Реестр актов</h2><div class="wrap"><table id="aReg"></table></div></div>
   <div class="act" id="act"></div>
@@ -466,19 +466,42 @@ function extra(){
 }
 
 // ───────── акты ─────────
+function regTable(){
+  document.getElementById("aReg").innerHTML=`<tr><th>№ акта</th><th>Субподрядчик</th><th>Период</th><th>Системы</th><th class="n">Сумма без НДС</th><th>Статус</th></tr>`+ACTS.map(a=>`<tr${a[6]?' style="background:var(--ok-bg)"':''}><td class="n" style="text-align:left">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")?"ok":a[5]==="сформирован"?"mut":"warn"}">${a[5]}</span></td></tr>`).join("");
+}
+function renderAct(no, who, mon, share, note){
+  const rs=rows.filter(r=>r.who===who&&r.sub>0).slice(0,9);
+  const q=r=>(r.unit==="шт"||r.unit==="компл")?Math.max(1,Math.round(r.sub*share)):Math.round(r.sub*share*100)/100;
+  const tot=sum(rs,r=>q(r)*r.rate);
+  const [mName,yr]=mon.split(" "); const mi={"октябрь":"10","сентябрь":"09","ноябрь":"11"}[mName]; const last={"10":"31","09":"30","11":"30"}[mi];
+  const all=rows.filter(r=>r.who===who&&r.sub>0).length;
+  document.getElementById("act").innerHTML=`${note?`<div class="alerts" style="margin-bottom:14px;font-family:var(--sans)"><li class="ok">${note}</li></div>`:""}<h2>АКТ № ${no} о приёмке выполненных работ</h2><div style="text-align:center;font-size:13px">за период с 01.${mi}.${yr} по ${last}.${mi}.${yr}</div>
+  <div class="meta"><div><b>Заказчик (Генподрядчик):</b> ООО «АСТЭКС»</div><div><b>Подрядчик:</b> ${who}</div><div><b>Объект:</b> ЖК «Публицист 11»</div><div><b>Договор субподряда:</b> № СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026 от 14.05.2026</div></div>
+  <div class="wrap"><table><tr><th>№</th><th>Шифр сметы</th><th>Наименование работ</th><th>Ед.</th><th>Кол-во</th><th>Цена, ₽</th><th>Сумма, ₽</th></tr>
+  ${rs.map((r,i)=>`<tr><td style="text-align:center">${i+1}</td><td style="text-align:center">${r.code}</td><td>${r.name}</td><td style="text-align:center">${r.unit}</td><td class="n">${q(r)}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(q(r)*r.rate)}</td></tr>`).join("")}
+  <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmt(tot)}</b></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 %</td><td class="n">−${fmt(tot*.05)}</td></tr><tr><td colspan="6" style="text-align:right"><b>К оплате без НДС</b></td><td class="n"><b>${fmt(tot*.95)}</b></td></tr></table></div>
+  <p style="font-size:12.5px;margin:10px 0 0">В демо показаны первые ${rs.length} позиций акта из ${all}. Объёмы приняты по журналу выполнения за ${mon}, подтверждены прорабом ${last}.${mi}.${yr}. Позиции, не сданные Заказчику по КС-2, в акт не включены — они в «Допработах».</p>
+  <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», прораб ______________</div></div>`;
+  return tot;
+}
 function acts(){
   document.getElementById("aWho").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("aWho").value="Подрядчик Б";
-  document.getElementById("aReg").innerHTML=`<tr><th>№ акта</th><th>Субподрядчик</th><th>Период</th><th>Системы</th><th class="n">Сумма без НДС</th><th>Статус</th></tr>`+ACTS.map(a=>`<tr><td class="n" style="text-align:left">${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")?"ok":"warn"}">${a[5]}</span></td></tr>`).join("");
-  const who="Подрядчик Б";const rs=rows.filter(r=>r.who===who&&r.sub>0).slice(0,9);
-  const tot=sum(rs,r=>r.sub*r.rate*.23);
-  document.getElementById("act").innerHTML=`<h2>АКТ № А-2026-10-07 о приёмке выполненных работ</h2><div style="text-align:center;font-size:13px">за период с 01.10.2026 по 31.10.2026</div>
-  <div class="meta"><div><b>Заказчик (Генподрядчик):</b> ООО «АСТЭКС»</div><div><b>Подрядчик:</b> ${who}</div><div><b>Объект:</b> ЖК «Публицист 11»</div><div><b>Договор субподряда:</b> № СП-07/2026 от 14.05.2026</div></div>
-  <div class="wrap"><table><tr><th>№</th><th>Шифр сметы</th><th>Наименование работ</th><th>Ед.</th><th>Кол-во</th><th>Цена, ₽</th><th>Сумма, ₽</th></tr>
-  ${rs.map((r,i)=>{const q=(r.unit==="шт"||r.unit==="компл")?Math.max(1,Math.round(r.sub*.23)):Math.round(r.sub*.23*100)/100;return `<tr><td style="text-align:center">${i+1}</td><td style="text-align:center">${r.code}</td><td>${r.name}</td><td style="text-align:center">${r.unit}</td><td class="n">${q}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(q*r.rate)}</td></tr>`}).join("")}
-  <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmt(tot)}</b></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 %</td><td class="n">−${fmt(tot*.05)}</td></tr><tr><td colspan="6" style="text-align:right"><b>К оплате без НДС</b></td><td class="n"><b>${fmt(tot*.95)}</b></td></tr></table></div>
-  <p style="font-size:12.5px;margin:10px 0 0">В демо показаны первые 9 позиций акта из 212. Объёмы приняты по журналу выполнения, записи № 1 702–1 798, подтверждены прорабом 31.10.2026. Позиции, не сданные Заказчику по КС-2, в акт не включены (ККСС, лоток 300×50 — 86 м.п., см. «Допработы»).</p>
-  <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», прораб ______________</div></div>`;
-  document.getElementById("aMake").addEventListener("click",()=>{document.getElementById("act").scrollIntoView({behavior:"smooth"})});
+  document.getElementById("aMon").innerHTML=["ноябрь 2026","октябрь 2026","сентябрь 2026"].map(m=>`<option>${m}</option>`).join("");document.getElementById("aMon").value="ноябрь 2026";
+  regTable();
+  renderAct("А-2026-10-07","Подрядчик Б","октябрь 2026",.23,"");
+  let n=ACTS.length;
+  document.getElementById("aMake").addEventListener("click",()=>{
+    const who=document.getElementById("aWho").value, mon=document.getElementById("aMon").value;
+    const dup=ACTS.find(a=>a[1]===who&&a[2]===mon);
+    if(dup){renderAct(dup[0],who,mon,dup[2].startsWith("ноябрь")?.15:.23,`<b>Повторно не заактировать:</b> за ${mon} у исполнителя «${who}» уже есть акт ${dup[0]} (${dup[5]}). Открыт он.`);}
+    else{
+      n++; const no=`А-2026-${mon.startsWith("ноябрь")?"11":mon.startsWith("октябрь")?"10":"09"}-${String(n).padStart(2,"0")}`;
+      const tot=renderAct(no,who,mon,mon.startsWith("ноябрь")?.15:.23,`<b>Акт ${no} сформирован</b> для «${who}» за ${mon}: PDF в папке «Акты/${mon}», строка в реестре, записи журнала помечены номером акта, исполнителю ушло уведомление.`);
+      const systems=[...new Set(SYS.filter(x=>x.who===who).map(x=>x.s))].join(", ")||"—";
+      ACTS.unshift([no,who,mon,systems,tot,"сформирован",true]); regTable();
+    }
+    document.getElementById("act").scrollIntoView({behavior:"smooth",block:"start"});
+  });
 }
 
 // ───────── свой персонал ─────────
