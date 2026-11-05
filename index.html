@@ -283,6 +283,14 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
 .alerts li.ok{border-color:var(--ok-line);border-left-color:var(--ok)}
 .card.warn{border-left-color:var(--warn-mark)}
 .pill.queue{background:var(--warn-bg);border-color:var(--warn-line);color:hsl(45,100%,18%)}
+
+/* ── единый вид статусов в плашках: полоса слева + точка, цифра и подпись тёмные ── */
+.tile.bad,.tile.ok{border-left:4px solid var(--bad)}
+.tile.ok{border-left-color:var(--ok)}
+.tile.bad .v,.tile.ok .v,.tile.warn .v{color:var(--fg)}
+.tile.bad .d,.tile.ok .d{color:var(--fg);font-weight:600}
+.tile.bad .d::before,.tile.ok .d::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:0;background:var(--bad)}
+.tile.ok .d::before{background:var(--ok)}
 </style></head><body>
 
 <header class="top">
