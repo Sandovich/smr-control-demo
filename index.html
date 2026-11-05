@@ -18,7 +18,7 @@
   --r:4px; --side-w:200px; --top-h:48px;
 }
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{min-height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--sans);margin:0}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
 .shell{display:grid;grid-template-columns:var(--side-w) 1fr;min-height:100%}
@@ -300,7 +300,8 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
 .seg button.on{background:var(--blue);color:#fff}
 .seg button.on b{color:#fff}
 .act-btn{height:28px;padding:0 10px;white-space:nowrap}
-#xTable td:nth-child(3){min-width:260px}
+#xTable td:nth-child(3){min-width:240px}
+#xTable td:nth-child(5),#xTable td:nth-child(9),#xTable td:nth-child(2){white-space:nowrap}
 
 
 /* ══ ТИПОГРАФСКАЯ ШКАЛА — единственное место, где задаются размеры шрифта ══
@@ -326,8 +327,9 @@ th{font-weight:600}
 .act h2{font-weight:700}
 
 /* ── «?» формула, дельты, версии, оспаривание ── */
-.tile .l{display:flex;justify-content:space-between;align-items:flex-end;gap:6px}
+.tile .l{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
 .tile .q{height:18px;width:18px;min-width:18px;padding:0;border-radius:50%;border:1px solid var(--muted2);background:var(--panel);color:var(--muted);font-weight:600;cursor:pointer;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:11px;line-height:1;align-self:flex-start;margin-top:-1px}
+.tile .q{margin-top:-1px}
 .tile .q:hover{border-color:var(--fg2);color:var(--fg2)}
 .tile .formula{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);color:var(--fg2)}
 .tile .delta{margin-top:6px;color:var(--muted)}
@@ -344,7 +346,9 @@ th{font-weight:600}
 .act tr.deferred td{color:var(--muted)}
 .act tr.deferred td:nth-child(3){text-decoration:line-through;text-decoration-color:var(--muted2)}
 .act tr.deferred td:nth-child(3) .who{text-decoration:none}
-.chk{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 16px}
+.chk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 24px}
+@media (max-width:1100px){.chk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.chk{grid-template-columns:1fr}}
 .chki{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line2)}
 .chki .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
 .chki.warn .dot{background:var(--warn-mark)} .chki.bad .dot{background:var(--bad)}
@@ -360,6 +364,16 @@ th{font-weight:600}
 .st.done{color:var(--fg)} .st.done .sd{background:var(--ok);border-color:var(--ok)} .st.done::before{background:var(--ok)}
 .st.now{color:var(--fg);font-weight:600} .st.now .sd{border-color:var(--warn-mark);background:var(--warn-mark)}
 @media (max-width:700px){.steps{grid-template-columns:1fr;gap:8px}.st{flex-direction:row;align-items:center}.st::before{display:none}}
+
+/* ── ровные колонки: панели во второй колонке тянутся до высоты соседней ── */
+.grid2>div:not(.panel){display:flex;flex-direction:column}
+.grid2>div:not(.panel)>.panel:last-child{flex:1}
+
+#jTable td.who{white-space:nowrap}
+.grid2 .chk{grid-template-columns:1fr}
+.chki .who{white-space:nowrap}
+#v-sub .grid2{grid-template-columns:1fr}
+#subActs td:nth-child(2){white-space:nowrap}
 </style></head><body>
 
 <header class="top">
@@ -562,7 +576,7 @@ th{font-weight:600}
     <select id="aMon"></select>
     <button class="pri" id="aMake">Сформировать акт</button>
     <button class="sec" id="aDocx" title="Word: A4, Times New Roman 12, поля 20/10/20/20 мм — ГОСТ Р 7.0.97-2016"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Скачать Word</button>
-    <span class="note" style="margin:0">→ строка в реестре, номер в журнал, уведомление субподрядчику; PDF — по кнопке, в системе уходит в папку «Акты/месяц» сам</span>
+    <span class="note" style="margin:0">→ строка в реестре, номер в журнал, уведомление субподрядчику; акт в Word — по кнопке</span>
   </div>
   <div class="panel" style="margin-bottom:14px"><h2>Документы заказчику <span>унифицированные формы № 100 · Word</span></h2>
     <div class="toolbar" style="margin:0"><select id="ksSys" aria-label="Система"></select><select id="ksMon" aria-label="Период"><option value="10">октябрь 2026</option><option value="09">сентябрь 2026</option></select>
@@ -752,8 +766,8 @@ function forecast(){
 // ───────── журнал ─────────
 function jTable(){
   const sys=document.getElementById("fSys").value,st=document.getElementById("fState").value,q=document.getElementById("fQ").value.toLowerCase();
-  const h=`<tr><th>Шифр</th><th>Позиция</th><th class="n">По смете</th><th class="n">Сдано заказчику</th><th class="n">Закрыто подрядчику</th><th class="n">Остаток</th><th>Исполнитель</th><th>Последний факт</th><th></th></tr>`;
-  const FACT=r=>{const h=[...r.code].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7);const d=28+(h%5);const day=d>31?d-31:d;const mon=d>31?"11":"10";return `${String(day).padStart(2,"0")}.${mon} · Иванов · ${1+h%4} фото`};
+  const h=`<tr><th>Шифр</th><th>Позиция</th><th class="n">По смете</th><th class="n">Сдано заказчику</th><th class="n">Закрыто подрядчику</th><th class="n">Остаток</th><th>Исполнитель</th><th>Последний факт, фото</th><th></th></tr>`;
+  const FACT=r=>{const h=[...r.code].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7);const d=28+(h%5);const day=d>31?d-31:d;const mon=d>31?"11":"10";return `${String(day).padStart(2,"0")}.${mon} · Иванов · ${1+h%4}`};
   const b=rows.filter(r=>(!sys||r.sys===sys)&&(!q||(r.name+r.code).toLowerCase().includes(q))).map(r=>{
     const rest=r.qty-Math.max(r.client,r.sub);const skew=r.sub>r.client*1.02&&r.sub-r.client>0.5;const done=rest<=0;
     const s=skew?"bad":done?"done":"open"; if(st&&st!==s)return"";
@@ -1007,7 +1021,7 @@ function foreman(){
   sel.addEventListener("change",upd);document.getElementById("fQty").addEventListener("input",upd);upd();
   const table=()=>{document.getElementById("fToday").innerHTML=`<tr><th>Время</th><th>Позиция</th><th>Система</th><th class="n">Объём</th><th>Исполнитель</th><th>Статус</th></tr>`+TODAY.map(x=>`<tr><td class="n" style="text-align:left">${x.t}</td><td>${x.code!=="—"?x.code+" · ":""}${x.name}</td><td>${x.sys}</td><td class="n">${x.qty}</td><td>${x.who}</td><td>${x.st==="sent"?'<span class="pill ok">в журнале</span>':x.st==="queue"?'<span class="pill queue">ожидает сети</span>':'<span class="pill warn">допработа · на решении</span>'}</td></tr>`).join("");
     const q=TODAY.filter(x=>x.st==="queue").length;
-    document.getElementById("fTiles").innerHTML=[["Записей сегодня",TODAY.length,"по журналу и допработам",""],["Ожидают сети",q,q?"отправятся сами":"всё отправлено",q?"warn":"ok"],["Допработ на решении",TODAY.filter(x=>x.st==="extra").length,"с фото","warn"],["Мой объект","Публицист 11","системы: все 15",""]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("")};
+    document.getElementById("fTiles").innerHTML=[["Записей сегодня",TODAY.length,"по журналу и допработам",""],["Ожидают сети",q,q?"отправятся сами":"всё отправлено",q?"warn":"ok"],["Допработ на решении",TODAY.filter(x=>x.st==="extra").length,"с фото","warn"],["Мои системы","15","объект «Публицист 11»",""]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("")};
   table();
   document.getElementById("fSave").addEventListener("click",()=>{const r=rows[+sel.value];const q=+document.getElementById("fQty").value||0;const now=new Date();
     TODAY.push({t:now.getHours()+":"+String(now.getMinutes()).padStart(2,"0"),code:r.code,name:r.name.slice(0,40),sys:ss.value,qty:q+" "+r.unit,who:r.who,st:q>r.qty-r.sub?"extra":"sent"});table();
