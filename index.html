@@ -116,7 +116,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
 .okbox{margin-top:10px;background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-line);border-radius:var(--r);padding:8px 10px}
 .chain{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.chain .ci{border-left:3px solid var(--line);padding:2px 0 2px 10px;min-width:0}.chain .ci .l{color:var(--muted);font-weight:600}.chain .ci .v{font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}.chain .ci .d{color:var(--muted)}
 table.mini td,table.mini th{padding:4px 8px}
-.qrow{display:flex;gap:6px;align-items:stretch}.qrow input{flex:1 1 0;width:auto!important;min-width:0}.qrow button{flex:0 0 auto;white-space:nowrap;width:auto!important}
+.qrow{display:flex;gap:6px;align-items:stretch}.phone .qrow button.sec{margin-top:0;width:auto}.qrow input{flex:1 1 0;width:auto!important;min-width:0}.qrow button{flex:0 0 auto;white-space:nowrap;width:auto!important}
 .fgrid>div,.jgrid>div{min-width:0}
 .warnbox.soft{background:var(--warn-bg,#fff7e0)!important;color:var(--warn)!important;border-color:var(--warn-line,#f0d48a)!important}
 .phone .warnbox{margin-top:10px;background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad-line);border-radius:var(--r);padding:8px 10px;}
@@ -311,6 +311,7 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
 #cDog td:nth-child(-n+2){white-space:nowrap}
 #aReg td:last-child{padding-top:3px;padding-bottom:3px;text-align:right}
 #xTable td:nth-child(3){min-width:240px}
+#clNotes td:nth-child(3){min-width:300px}#clNotes td:nth-child(1){white-space:nowrap}
 #xTable td:nth-child(5),#xTable td:nth-child(9),#xTable td:nth-child(2){white-space:nowrap}
 
 
@@ -586,6 +587,9 @@ th{font-weight:600}
       <div class="panel"><h2>Срок <span>по темпу последних 4 недель</span></h2><div class="wrap"><table id="clTerm"></table></div></div>
     </div>
   </div>
+  <div class="panel" style="margin-top:16px"><h2>Уведомления о дополнительных работах <span id="clNoteCap"></span></h2>
+    <div class="wrap"><table id="clNotes"></table></div>
+    <p class="note">Уведомление по ст. 743 ГК: генподрядчик сообщает о работах вне договора и ждёт ответа 10 дней. Два отдельных решения: «объём подтверждён» (технадзор видел работу) и «оплата согласована» (готовы оплатить, идёт в ДС). Ответ сразу виден генподрядчику на экране «Допработы».</p></div>
 </section>
 
 <!-- ───────── ДОПРАБОТЫ ───────── -->
@@ -934,7 +938,8 @@ function extra(){
   document.querySelectorAll("#xTable .rev-btn").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.i,x=EXTRA[i],td=document.getElementById("xs"+i);
     td.innerHTML=`<input type="number" class="inl" value="${x.sum}" aria-label="Новая сумма"><button class="pri act-btn" type="button">Сохранить</button>`;
     td.querySelector("button").addEventListener("click",()=>{const v=+td.querySelector("input").value||x.sum;(x.hist=x.hist||[]).push({rev:x.rev||1,sum:x.sum,d:x.d});x.rev=(x.rev||1)+1;x.cl=Math.round(x.cl*v/x.sum);x.sum=v;x.d="05.11";extra();tiles()})}));
-  document.querySelectorAll("#xTable .ntf-btn").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.notice={d:"05.11",no:"исх. "+(214+ +b.dataset.i)};extra();msg(`Уведомление ${x.notice.no} от 05.11 ушло заказчику по ЭДО: что выявлено, фото, сумма ${fmt(x.cl)} ₽, срок ответа 10 дней (ст. 743 ГК). Доставка подтверждена.`,"ok")}));
+  document.querySelectorAll("#xTable .ntf-btn").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.notice={d:"05.11",no:"исх. "+(214+ +b.dataset.i)};extra();msg(`Уведомление ${x.notice.no} от 05.11 на ${fmt(x.cl)} ₽ появилось в кабинете заказчика, срок ответа 10 дней (ст. 743 ГК). В рабочей платформе оно уходит письмом по ЭДО (Диадок / СБИС) и на почту технадзора с исходящим номером, подтверждение доставки даёт оператор ЭДО. В демо отправка имитируется. <button type="button" class="sec act-btn" id="goClient">Открыть кабинет заказчика</button>`,"ok");
+    document.getElementById("goClient").addEventListener("click",()=>{setRole("client");location.hash="client"})}));
   document.querySelectorAll("#xTable .dec-sel").forEach(sl=>sl.addEventListener("change",()=>{EXTRA[+sl.dataset.i].dec=sl.value;extra()}));
   document.getElementById("xCount").textContent=list.length+" из "+EXTRA.length;
   document.querySelectorAll("#xTable .nx-btn").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.i,x=EXTRA[i],no="ДР-"+String(i+1).padStart(3,"0");
@@ -1243,11 +1248,26 @@ function subcab(){
   document.getElementById("subRows").innerHTML=`<tr><th>Система</th><th>Позиция</th><th class="n">Принято</th><th class="n">Моя расценка</th><th class="n">Сумма</th></tr>`+rs.slice(0,12).map(r=>`<tr><td>${r.sys}</td><td>${r.code} · ${r.name}</td><td class="n">${r.sub} ${r.unit}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(r.sub*r.rate)}</td></tr>`).join("")+`<tr class="tot"><td colspan="4">Итого по показанным</td><td class="n">${fmt(sum(rs.slice(0,12),r=>r.sub*r.rate))}</td></tr>`;
 }
 // заказчик
+function clientNotes(){
+  const L=EXTRA.map((x,i)=>({...x,i})).filter(x=>x.notice);
+  const open=L.filter(x=>!x.ans).length;
+  document.getElementById("clNoteCap").textContent=open?`${open} без ответа · срок 10 дней`:"все отвечены";
+  document.getElementById("clNotes").innerHTML=`<tr><th>Исх. №</th><th>Дата</th><th>Что выявлено</th><th class="n">Сумма, ₽</th><th>Срок ответа</th><th>Объём</th><th>Оплата</th><th></th></tr>`+L.map(x=>{const n=ago(x.notice.d),left=10-n;
+    return `<tr><td class="n" style="text-align:left">${x.notice.no}</td><td>${x.notice.d}</td><td>${x.t}<div class="who">${x.sys} · инициатор: ${x.init}</div></td><td class="n">${fmt(x.cl)}</td>
+     <td>${x.ans?`<span class="pill ok">ответ ${x.ans}</span>`:left>0?`<span class="pill warn">осталось ${left} дн.</span>`:`<span class="pill bad">просрочен на ${-left} дн.</span>`}</td>
+     <td>${x.y1?'<span class="pill ok">✓ подтверждён</span>':'<span class="pill mut">—</span>'}</td><td>${x.y2?'<span class="pill ok">✓ согласована</span>':'<span class="pill mut">—</span>'}</td>
+     <td class="acts2">${x.y1?"":`<button class="sec act-btn cl-y1" type="button" data-i="${x.i}">Объём подтверждён</button>`}${x.y2?"":`<button class="pri act-btn cl-y2" type="button" data-i="${x.i}">Оплата согласована</button>`}${x.ans?"":`<button class="sec act-btn cl-no" type="button" data-i="${x.i}">Отклонить</button>`}</td></tr>`}).join("")||`<tr><td colspan="8" style="color:var(--muted)">Уведомлений нет</td></tr>`;
+  const today="05.11";
+  document.querySelectorAll("#clNotes .cl-y1").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.y1=true;x.ans=x.ans||today+": объём подтверждён технадзором";clientNotes();extra();tiles()}));
+  document.querySelectorAll("#clNotes .cl-y2").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.y1=true;x.y2=true;x.ans=today+": оплата согласована, готовим ДС";if(x.st<3&&x.dec==="rebill")x.st=3;clientNotes();extra();tiles()}));
+  document.querySelectorAll("#clNotes .cl-no").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.ans=today+": отклонено заказчиком";clientNotes();extra();tiles()}));
+}
 function clientcab(){
   const left=T_CONTRACT-T_CLIENT;const weekRate=T_CLIENT*0.24/4.3;const end=new Date(2026,10,2);end.setDate(end.getDate()+Math.round(left/weekRate*7));
   document.getElementById("clTiles").innerHTML=[["Договор СМР",fmtM(T_CONTRACT),"15 систем, без НДС",""],["Сдано по КС-2",fmtM(T_CLIENT),pct(T_CLIENT/T_CONTRACT)+" договора",""],["Осталось",fmtM(left),"по договору",""],["Окончание при текущем темпе",end.toLocaleDateString("ru-RU"),"срок по договору 31.05.2027",end>new Date(2027,4,31)?"bad":"ok"]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
   document.getElementById("clSys").innerHTML=`<tr><th>Система</th><th class="n">Договор</th><th>Сдано</th><th class="n">%</th></tr>`+SYS.map(x=>`<tr><td><b>${x.s}</b></td><td class="n">${fmt(x.b)}</td><td><div class="bar"><i class="c" style="width:${x.client/x.b*100}%;background:hsl(125,50%,45%)"></i></div></td><td class="n">${pct(x.client/x.b)}</td></tr>`).join("")+`<tr class="tot"><td>Итого</td><td class="n">${fmt(T_CONTRACT)}</td><td></td><td class="n">${pct(T_CLIENT/T_CONTRACT)}</td></tr>`;
   document.getElementById("clKs").innerHTML=`<tr><th>КС-2</th><th>Период</th><th class="n">Сумма без НДС</th><th>Статус</th></tr>`+[["КС-2 №6","октябрь 2026",T_CLIENT*.23,"подписан"],["КС-2 №5","сентябрь 2026",T_CLIENT*.24,"подписан, оплачен"],["КС-2 №4","август 2026",T_CLIENT*.21,"подписан, оплачен"]].map(k=>`<tr><td>${k[0]}</td><td>${k[1]}</td><td class="n">${fmt(k[2])}</td><td><span class="pill ok">${k[3]}</span></td></tr>`).join("");
+  clientNotes();
   document.getElementById("clTerm").innerHTML=[["Темп сдачи в неделю",fmt(weekRate)+" ₽"],["Окончание при текущем темпе",end.toLocaleDateString("ru-RU")],["Срок по договору","31.05.2027"]].map(([a,b])=>`<tr><td>${a}</td><td class="n">${b}</td></tr>`).join("");
 }
 
