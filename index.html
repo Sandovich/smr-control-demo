@@ -116,6 +116,49 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
 .okbox{margin-top:10px;background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-line);border-radius:var(--r);padding:8px 10px}
 .chain{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.chain .ci{border-left:3px solid var(--line);padding:2px 0 2px 10px;min-width:0}.chain .ci .l{color:var(--muted);font-weight:600}.chain .ci .v{font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}.chain .ci .d{color:var(--muted)}
 table.mini td,table.mini th{padding:4px 8px}
+/* вход, входящие, тост, быстрые переходы, сворачивание, подписи ТЗ */
+.bell{position:relative;height:48px;width:40px;border:0;background:transparent;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.bell:hover{background:rgba(255,255,255,.08)}
+.bell b{position:absolute;top:7px;right:2px;min-width:17px;height:17px;border-radius:9px;background:var(--accent);color:#fff;font-size:11px;line-height:17px;text-align:center;padding:0 4px;font-weight:700}
+.inbox{right:64px;min-width:320px;width:380px;max-width:calc(100vw - 16px);max-height:70vh;overflow:auto;padding:0}
+.inbox .tabs{display:flex;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}
+.inbox .tabs button{flex:1;height:40px;border:0;border-radius:0;background:transparent;font-weight:600;color:var(--fg2);cursor:pointer}
+.inbox .tabs button.on{box-shadow:inset 0 -3px 0 var(--accent);color:var(--fg)}
+.inbox .tabs b{position:static!important;display:inline-block;min-width:0;height:auto;line-height:16px;background:var(--accent);color:#fff;border-radius:9px;padding:0 6px;margin-left:4px;font-size:11px}
+.inbox .it{padding:9px 14px;border-bottom:1px solid var(--line2);line-height:1.4}
+.inbox .it.new{box-shadow:inset 3px 0 0 var(--accent);background:var(--soft2,#fafafa)}
+.inbox .it small{display:block;color:var(--muted);margin-bottom:2px}
+.inbox .it .act-btn{margin-top:6px}
+.toast{position:fixed;right:16px;bottom:16px;max-width:min(440px,calc(100vw - 32px));background:hsl(200,8%,12%);color:#fff;border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow2);z-index:60;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;line-height:1.4}
+.toast.on{opacity:1;transform:none}.toast b{display:block;margin-bottom:4px}.toast span{color:rgba(255,255,255,.8)}
+#gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.gbox{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow2);padding:24px;max-width:580px;width:100%}
+.gbox h2{margin:0 0 6px;font-size:22px;font-weight:600}
+.gbrand{font-weight:700;letter-spacing:.5px;color:var(--accent);margin-bottom:10px}
+.groles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:16px 0}
+.groles button{display:flex;flex-direction:column;align-items:flex-start;height:auto;padding:12px;border:1px solid var(--line);background:var(--panel);border-radius:var(--r);cursor:pointer;text-align:left;color:var(--fg);gap:2px}
+.groles button.on,.groles button:hover{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.groles small{color:var(--muted);font-weight:400}
+.gcode label{display:block;font-weight:600;margin-bottom:4px}
+body.gated{overflow:hidden}
+.mcode{padding:8px 14px 10px;border-top:1px solid var(--line)}.mcode label{display:block;font-weight:600;margin-bottom:4px}
+.tz{font-size:12px;line-height:17px;color:var(--muted);margin:-6px 0 10px;max-width:120ch}.tz b{color:var(--fg2);font-weight:600}
+.subnav{flex-direction:row!important;flex-wrap:nowrap!important;align-items:center;height:auto!important;width:auto!important;border-left:0!important;position:sticky;top:48px;z-index:8;background:var(--panel);display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin:0 0 12px;scrollbar-width:thin;border-bottom:1px solid var(--line2);max-width:100%}
+.subnav button{width:auto!important;display:inline-flex;align-items:center;margin:0!important;flex:none;height:30px;padding:0 12px;border:1px solid var(--line);border-radius:15px;background:var(--panel);color:var(--fg2);font-weight:600;cursor:pointer;white-space:nowrap}
+.subnav button:hover{border-color:var(--accent);color:var(--fg)}
+.subnav .gap{flex:1 0 8px}
+.subnav .fa{border-style:dashed;font-weight:400}
+.panel.foldable{position:relative}
+.panel.foldable>h2{padding-right:36px;cursor:pointer}
+.fold{position:absolute;top:9px;right:8px;width:30px;height:30px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.fold:hover{background:var(--line2);color:var(--fg)}
+.fold svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.panel.folded>:not(h2):not(.fold){display:none!important}
+.panel.folded>h2{margin-bottom:0}.panel.folded{align-self:start;flex:0 0 auto!important;height:auto!important;min-height:0!important}.actbar button{white-space:nowrap;display:inline-flex;align-items:center;gap:6px}.actbar svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}.inbox .tabs button{flex-direction:row!important;align-items:center!important;justify-content:center;gap:6px;padding:0 10px!important}.inbox .ib-go{width:auto!important;display:inline-flex!important;flex-direction:row!important;padding:4px 12px!important;border:1px solid var(--line)!important;border-radius:6px!important;background:var(--panel)!important;font-weight:600}.inbox .ib-go:hover{border-color:var(--accent)!important}
+.panel.folded .fold svg{transform:rotate(-90deg)}
+.actbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:900px;margin:0 auto 8px}
+.actbar b{margin-right:auto}
+#actBar2{margin:8px auto 0;justify-content:flex-end}
 .qrow{display:flex;gap:6px;align-items:stretch}.phone .qrow button.sec{margin-top:0;width:auto}.qrow input{flex:1 1 0;width:auto!important;min-width:0}.qrow button{flex:0 0 auto;white-space:nowrap;width:auto!important}
 .fgrid>div,.jgrid>div{min-width:0}
 .warnbox.soft{background:var(--warn-bg,#fff7e0)!important;color:var(--warn)!important;border-color:var(--warn-line,#f0d48a)!important}
@@ -246,6 +289,7 @@ tr.tot td{background:hsl(200,8%,94%);font-weight:700}
   .top .dd{display:none}
   .top .sp{padding:0 12px 0 0;gap:10px;margin-left:auto}
   .top .sp svg,.top .sp .period{display:none}
+  .top .sp .bell svg{display:block}
   .tile .l{min-height:0}
   .top nav{order:10;flex-basis:100%;margin:0;border-left:0;border-top:1px solid rgba(255,255,255,.12);height:44px}
   .top nav a{height:44px;padding:0 10px}
@@ -400,14 +444,16 @@ th{font-weight:600}
     <a href="#extra"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Допработы</a>
     <a href="#acts"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6z M14 3v6h6"/></svg>Акты</a>
   </nav>
-  <span class="sp"><span class="period">май – октябрь 2026 · без НДС</span><span class="stamp">демо</span><button class="who" id="whoBtn" type="button" aria-haspopup="true"><span class="av"></span><span class="whoName" id="whoName">Берг М. С.<small id="whoRole">руководитель</small></span></button><div class="rolemenu" id="roleMenu" hidden><div class="cap">Войти как</div></div></span>
+  <span class="sp"><span class="period">май – октябрь 2026 · без НДС</span><span class="stamp">демо</span><button class="bell" id="bellBtn" type="button" aria-label="Входящие и отправленные" title="Входящие и отправленные"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z M10 20a2 2 0 0 0 4 0"/></svg><b id="bellN" hidden>0</b></button><div class="rolemenu inbox" id="inbox" hidden></div><button class="who" id="whoBtn" type="button" aria-haspopup="true"><span class="av"></span><span class="whoName" id="whoName">Берг М. С.<small id="whoRole">руководитель</small></span></button><div class="rolemenu" id="roleMenu" hidden><div class="cap">Войти как</div></div></span>
 </header>
 
+<div id="gate" hidden></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <main>
 <!-- ───────── СВОДКА ───────── -->
 <section class="view" id="v-dashboard">
   <h1>Сводная панель руководителя</h1>
   <p class="sub">Договор по СМР против того, что сдано заказчику и принято у субподрядчиков. Красное — деньги ушли подрядчику раньше, чем пришли от заказчика.</p>
+  <p class="tz"><b>ТЗ · блок 5 «Сводная аналитика»</b> — сделано: % выполнения по 15 системам; баланс «заказчик ↔ подрядчик» по каждому субподрядчику; перекос по позициям и по месяцам; маржа план/факт и потеря маржи в п. п.; маржа по слоям и «Непокрытый ФОТ»; прогноз срока и % прошедшего срока; деньги на 30/60/90 дней; «Требует решения»; выгрузка всего в Excel. Фаза 1: поставка и ПНР из договора и Синтеки, сводка руководителю в Telegram по понедельникам.</p>
   <p class="terms">Статусы объёма везде одинаковые: <b>принято прорабом</b> → <b>заактировано</b> (акт субподрядчику) → <b>оплачено</b>. Заказчику: <b>сдано по КС-2</b> → <b>оплачено по КС-3</b>.</p>
   <div class="tiles" id="tiles"></div>
   <div class="grid2">
@@ -455,6 +501,7 @@ th{font-weight:600}
 <section class="view" id="v-journal" hidden>
   <h1>Журнал выполнения по позициям сметы</h1>
   <p class="sub">Одна строка сметы — четыре цифры. Нельзя закрыть субподрядчику больше остатка без флага «допработа». Каждая запись — дата, прораб, фото: журнал фактов вместо КС-6а, доказательство для заказчика при споре по объёмам.</p>
+  <p class="tz"><b>ТЗ · блок 1 «Учёт выполненных работ по КС»</b> — сделано: четыре цифры по каждой позиции сметы (по договору, сдано заказчику, принято у субподрядчика, остаток); два потолка на строке и правило закрытия; «Закрыть остаток»; фильтры по системе и статусу; журнал фактов (дата, прораб). Фаза 1: импорт сметы из XML Гранд-Сметы, отчёт за период и нарастающим итогом, фото к записи.</p>
   <div class="jgrid">
     <div class="panel">
       <div class="toolbar">
@@ -490,6 +537,7 @@ th{font-weight:600}
 <section class="view" id="v-contractors" hidden>
   <h1>Карточка субподрядчика</h1>
   <p class="sub">Один клик по фамилии — всё, что он сделал: в метрах и штуках, в деньгах по его расценке и по сметной, что заактировано и что должны.</p>
+  <p class="tz"><b>ТЗ · блок 3 «Персонифицированный учёт» — субподрядчики</b> — сделано: по каждому — физобъёмы, деньги по его расценке и по сметной, сдано заказчику по его системам, заактировано, удержания по актам, паспорт денег, договор (коэффициент, удержание, генуслуги, НДС с датой, сумма не ниже заактированного), условия оплаты с паузой, причиной и датой. Фаза 1: документы субподрядчика со сроками, рейтинг.</p>
   <div class="toolbar"><label for="cSel">Исполнитель</label><select id="cSel"></select></div>
   <div class="tiles" id="cTiles"></div>
   <div class="panel" style="margin-bottom:14px"><h2>Паспорт денег <span>по цене субподрядчика, ₽ без НДС</span></h2><div class="chain" id="cChain"></div></div>
@@ -507,6 +555,7 @@ th{font-weight:600}
 <section class="view" id="v-staff" hidden>
   <h1>Свой персонал на объекте</h1>
   <p class="sub">Табель за октябрь 2026 как он есть: люди обезличены, часы и деньги настоящие. Прораб вносит часы с телефона с указанием системы — тогда ФОТ ложится в себестоимость системы, а не висит на объекте.</p>
+  <p class="tz"><b>ТЗ · блок 3 «Персонифицированный учёт» — свой персонал</b> — сделано: табель октября по людям (часы, зарплата, премия, наличные), ФОТ по месяцам, полная стоимость часа (НДФЛ, взносы, травматизм), разнесение ФОТ по системам (пока условно), проверки табеля, сдельная из принятых объёмов, правило для самозанятых. Фаза 1: часы из сетки прораба — сразу в себестоимость систем, выгрузка в 1С:ЗУП.</p>
   <div class="tiles" id="sTiles"></div>
   <div class="grid2">
     <div class="panel">
@@ -531,6 +580,7 @@ th{font-weight:600}
 <section class="view" id="v-foreman" hidden>
   <h1>Мой день · прораб</h1>
   <p class="sub">Телефон прораба: внести объём за четыре касания, посмотреть, что внесено сегодня, отправить допработу с фото. Без связи записи копятся и уходят, когда появится сеть.</p>
+  <p class="tz"><b>ТЗ · блоки 1 и 3 — ввод на объекте</b> — сделано: объём за четыре касания с подсказкой остатка и лимита; «Закрыть остаток»; допработа с объекта сразу в реестр допработ; часы бригады по системам; всё уходит в ПТО. Фаза 1: приложение на телефоне с фото и работой без связи.</p>
   <div class="tiles" id="fTiles"></div>
   <div class="jgrid fgrid">
     <div class="phone phone2">
@@ -567,6 +617,7 @@ th{font-weight:600}
 <section class="view" id="v-sub" hidden>
   <h1>Кабинет субподрядчика</h1>
   <p class="sub">Субподрядчик видит только свои объёмы по своей расценке и свои акты. Сметные расценки, маржа и другие исполнители ему не показываются. Доступ бесплатный, по ссылке.</p>
+  <p class="tz"><b>ТЗ · блоки 3 и 4 — кабинет субподрядчика</b> — сделано: свои объёмы по своей расценке, свои акты, «где мой акт» по шагам, подтвердить или оспорить с причиной (уходит в ПТО и руководителю), скачать акт в Word. Сметные цены и маржа скрыты. Доступ бесплатный, по ссылке.</p>
   <div class="tiles" id="subTiles"></div>
   <div class="panel" style="margin-bottom:16px"><h2>Где мой акт <span>статус в реальном времени</span></h2><div id="subWhere"></div></div>
   <div class="grid2">
@@ -579,6 +630,7 @@ th{font-weight:600}
 <section class="view" id="v-client" hidden>
   <h1>Кабинет заказчика · Монолит</h1>
   <p class="sub">Заказчик видит ход работ по договору и сданные КС-2. Субподрядчики, расценки и себестоимость генподрядчика скрыты.</p>
+  <p class="tz"><b>ТЗ · блоки 1, 2 и 5 — кабинет заказчика</b> — сделано: ход работ по 15 системам, реестр КС-2, срок, уведомления о допработах с ответом «объём подтверждён / оплата согласована / отклонить» (ответ уходит генподрядчику). Субподрядчики и себестоимость скрыты.</p>
   <div class="tiles" id="clTiles"></div>
   <div class="grid2">
     <div class="panel"><h2>Выполнение по системам <span>сдано по КС-2, % от договора</span></h2><div class="wrap"><table id="clSys"></table></div></div>
@@ -596,6 +648,7 @@ th{font-weight:600}
 <section class="view" id="v-extra" hidden>
   <h1>Допработы: вне утверждённой сметы</h1>
   <p class="sub">Всё, что подрядчик сделал сверх сметы, лежит здесь, а не в журнале КС. Пока не принято решение, оно не попадает в акт.</p>
+  <p class="tz"><b>ТЗ · блок 2 «Контроль допработ»</b> — сделано: реестр со статусами и сигналом (дни висения, срок ст. 743 ГК); две суммы — «стоит нам» и «заказчику»; решение по строке, без него в акт не попадает; уведомление заказчику и его ответ в кабинете заказчика; два «да» заказчика; версии сумм; порог 10 % по ст. 744; допработа с объекта от прораба. Фаза 1: фото и подпись технадзора на телефоне, ДС и смета на допработы в Word.</p>
   <div class="tiles" id="xTiles"></div>
   <div class="panel"><h2>Допработы <span id="xCount"></span></h2><div class="seg" id="xSeg"></div><ul class="alerts" id="xMsg" hidden style="margin:8px 0"></ul><ul class="alerts" id="xMsg" hidden style="margin:8px 0"></ul><div class="wrap"><table id="xTable"></table></div><p class="note">Статус двигается кнопкой в строке: выявлено → согласовано внутри → выставлено заказчику → принято (ДС). В бюджет и в акт допработа попадает только после «принято».</p></div>
 </section>
@@ -604,6 +657,7 @@ th{font-weight:600}
 <section class="view" id="v-acts" hidden>
   <h1>Акты для субподрядчиков</h1>
   <p class="sub">Акт собирается из принятых объёмов за период по кнопке. Номер пишется обратно в журнал, второй раз те же объёмы не заактировать.</p>
+  <p class="tz"><b>ТЗ · блок 4 «Автоформирование актов»</b> — сделано: акт субподрядчику из принятых объёмов по кнопке; реестр; защита от двойного закрытия (резерв объёмов, «повторно не заактировать»); решение по каждой строке; проверка акта; правило закрытия; корректировочный акт; Word по ГОСТ Р 7.0.97; КС-2 и КС-3 заказчику; уведомление субподрядчику. Фаза 1: КС-6а, ДС, XML для ЭДО, обмен с 1С.</p>
   <div class="toolbar">
     <select id="aWho"></select>
     <select id="aMon"></select>
@@ -623,7 +677,9 @@ th{font-weight:600}
   <div class="panel" style="margin-bottom:14px"><h2>Комплектность перед актом <span id="chkCap"></span></h2><div class="chk" id="chk"></div><p class="note">Акт не уходит субподрядчику, пока чек-лист не закрыт. Документы с истекающим сроком подсвечиваются за 30 дней.</p></div>
   <div class="panel" style="margin-bottom:14px"><h2>Реестр актов</h2><div class="wrap"><table id="aReg"></table></div></div>
   <div class="panel" id="actCheck" hidden style="margin-bottom:14px"></div>
+  <div class="actbar" id="actBar"><b id="actBarNo">Акт</b><button class="sec" id="aCheck2" type="button">Проверить акт</button><button class="pri" id="aDocx2" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Скачать акт в Word</button><button class="sec" id="aFold" type="button">Свернуть акт</button></div>
   <div class="act" id="act"></div>
+  <div class="actbar" id="actBar2"><button class="pri" id="aDocx3" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Скачать акт в Word</button></div>
 </section>
 </main>
 
@@ -866,7 +922,9 @@ function phone(){
   sel.addEventListener("change",upd);document.getElementById("pQty").addEventListener("input",upd);
   document.getElementById("pRestBtn").addEventListener("click",()=>{const r=rows[+sel.value];document.getElementById("pQty").value=Math.max(0,Math.round((r.qty-r.sub)*100)/100);upd()});
   document.getElementById("pSave").addEventListener("click",()=>{const r=rows[+sel.value],c=capCheck(r,+document.getElementById("pQty").value||0);const o=document.getElementById("pOk");o.hidden=false;
-    o.textContent=c.lvl==="block"?"Не записано: правило объекта. Нужна отметка руководителя с причиной.":c.lvl==="warn"?"Записано как «аванс под контроль» · ждёт отметки руководителя.":c.lvl==="extra"?"Записано в «Допработы» со статусом «выявлено».":"Записано. Запись #1 842 · в акт за ноябрь.";o.className=c.lvl==="block"?"warnbox":"ok"});
+    o.textContent=c.lvl==="block"?"Не записано: правило объекта. Нужна отметка руководителя с причиной.":c.lvl==="warn"?"Записано как «аванс под контроль» · ждёт отметки руководителя.":c.lvl==="extra"?"Записано в «Допработы» со статусом «выявлено».":"Записано. Запись #1 842 · в акт за ноябрь.";o.className=c.lvl==="block"?"warnbox":"ok";
+    if(c.lvl==="extra")addExtraFrom(r,Math.round(((+document.getElementById("pQty").value||0)-Math.max(0,r.qty-r.sub))*100)/100,r.sys);
+    else if(c.lvl!=="block"){send("pto",`Запись в журнал: ${r.code} · ${r.name.slice(0,40)} — ${+document.getElementById("pQty").value||0} ${r.unit}, ${document.getElementById("pWho").value}`,"journal");if(c.lvl==="warn")send("director",`Аванс под контроль: ${r.code} сверх сданного заказчику — нужна ваша отметка`,"journal")}});
   document.getElementById("pQty").value=40;upd();
 }
 
@@ -938,16 +996,19 @@ function extra(){
   document.querySelectorAll("#xTable .rev-btn").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.i,x=EXTRA[i],td=document.getElementById("xs"+i);
     td.innerHTML=`<input type="number" class="inl" value="${x.sum}" aria-label="Новая сумма"><button class="pri act-btn" type="button">Сохранить</button>`;
     td.querySelector("button").addEventListener("click",()=>{const v=+td.querySelector("input").value||x.sum;(x.hist=x.hist||[]).push({rev:x.rev||1,sum:x.sum,d:x.d});x.rev=(x.rev||1)+1;x.cl=Math.round(x.cl*v/x.sum);x.sum=v;x.d="05.11";extra();tiles()})}));
-  document.querySelectorAll("#xTable .ntf-btn").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.notice={d:"05.11",no:"исх. "+(214+ +b.dataset.i)};extra();msg(`Уведомление ${x.notice.no} от 05.11 на ${fmt(x.cl)} ₽ появилось в кабинете заказчика, срок ответа 10 дней (ст. 743 ГК). В рабочей платформе оно уходит письмом по ЭДО (Диадок / СБИС) и на почту технадзора с исходящим номером, подтверждение доставки даёт оператор ЭДО. В демо отправка имитируется. <button type="button" class="sec act-btn" id="goClient">Открыть кабинет заказчика</button>`,"ok");
+  document.querySelectorAll("#xTable .ntf-btn").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.notice={d:"05.11",no:"исх. "+(214+ +b.dataset.i)};extra();send("client",`Уведомление ${x.notice.no} о допработе: ${x.t} — ${fmt(x.cl)} ₽. Ответ в 10 дней (ст. 743 ГК)`,"client");msg(`Уведомление ${x.notice.no} от 05.11 на ${fmt(x.cl)} ₽ появилось в кабинете заказчика, срок ответа 10 дней (ст. 743 ГК). В рабочей платформе оно уходит письмом по ЭДО (Диадок / СБИС) и на почту технадзора с исходящим номером, подтверждение доставки даёт оператор ЭДО. В демо отправка имитируется. <button type="button" class="sec act-btn" id="goClient">Открыть кабинет заказчика</button>`,"ok");
     document.getElementById("goClient").addEventListener("click",()=>{setRole("client");location.hash="client"})}));
-  document.querySelectorAll("#xTable .dec-sel").forEach(sl=>sl.addEventListener("change",()=>{EXTRA[+sl.dataset.i].dec=sl.value;extra()}));
+  document.querySelectorAll("#xTable .dec-sel").forEach(sl=>sl.addEventListener("change",()=>{const i=+sl.dataset.i,x=EXTRA[i],no="ДР-"+String(i+1).padStart(3,"0");x.dec=sl.value;extra();tiles();if(x.dec==="reject")sendSub(x.who,`${no}: отказ по допработе «${x.t}» — в акт не войдёт`);else if(x.dec==="own")send("pto",`${no}: решение «за наш счёт» — ${fmt(x.sum)} ₽ субподрядчику, заказчику не выставляем`,"extra");else if(x.dec==="rebill")send("pto",`${no}: решение «перевыставить заказчику» — ${fmt(x.cl)} ₽`,"extra")}));
   document.getElementById("xCount").textContent=list.length+" из "+EXTRA.length;
   document.querySelectorAll("#xTable .nx-btn").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.i,x=EXTRA[i],no="ДР-"+String(i+1).padStart(3,"0");
     if(x.st===0&&!x.dec){msg(`${no}: сначала решение — перевыставить заказчику, за наш счёт или отказ субподрядчику.`);return}
     if(x.st===1&&x.dec!=="rebill"){msg(`${no}: выставить заказчику можно только с решением «Перевыставить заказчику».`);return}
     if(x.st===1&&!x.notice){msg(`${no}: сначала уведомите заказчика — без уведомления по ст. 743 ГК право на оплату теряется.`);return}
     if(x.st===2){x.y1=true;x.y2=true}
-    if(x.st<3)x.st++;extra();tiles()}));
+    if(x.st<3)x.st++;extra();tiles();
+    if(x.st===1)send("pto",`${no} согласована внутри: ${x.t} — ${fmt(x.cl)} ₽ заказчику. Подготовить ДС`,"extra");
+    if(x.st===2)send("client",`${no} выставлена: ${x.t} — ${fmt(x.cl)} ₽. Нужно подтвердить объём и согласовать оплату`,"client");
+    if(x.st===3){send("pto",`${no} принята заказчиком (ДС) — ${fmt(x.cl)} ₽ в новую версию сметы`,"extra");sendSub(x.who,`${no}: допработа принята — войдёт в акт`)}}));
 }
 
 // ───────── акты ─────────
@@ -978,7 +1039,7 @@ function renderAct(no, who, mon, share, note){
   <p style="margin:10px 0 0">В демо загружены 90 из 585 позиций сметы, поэтому на экране первые ${rs.length} строк из ${all}, а сумма меньше суммы акта в реестре (там — по всем позициям). Объёмы приняты по журналу выполнения за ${mon}, подтверждены прорабом ${last}.${mi}.${yr}. Работы вне сметы попадают в акт только после решения в «Допработах».</p>
   <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», представитель по доверенности ______________</div></div>`;
   window.ACT_OV=OV;
-  ACT_STATE={no,who,mon,rs:rs.filter(r=>q(r)>0),q,tot,mi,yr,last,all,ov:OV,live,contract:`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`};
+  ACT_STATE={no,who,mon,rs:rs.filter(r=>q(r)>0),q,tot,mi,yr,last,all,ov:OV,live,contract:`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`};actBarSync();
   const rerender=()=>renderAct(no,who,mon,share,note);
   document.querySelectorAll("#act select[data-code]").forEach(sel=>sel.addEventListener("change",()=>{const r=rs.find(x=>x.code===sel.dataset.code);DEC[sel.dataset.code]=sel.value==="ok"?{t:"ok"}:sel.value==="part"?{t:"part",q:Math.round(q0(r)/2*100)/100,why:""}:{t:"defer",why:""};rerender()}));
   document.querySelectorAll("#act input.qty").forEach(inp=>inp.addEventListener("change",()=>{DEC[inp.dataset.code].q=+inp.value||0;rerender()}));
@@ -1041,7 +1102,7 @@ function corrForm(no){
     const r=rs.find(x=>x.code===pos.value),q=Math.min(+qty.value||0,r.sub),why=document.getElementById("crWhy").value.trim()||"снято заказчиком";
     if(q<=0){qty.focus();return}
     const cno=no+"-К1",tot=-q*r.rate;
-    ACTS.unshift([cno,who,a[2],r.sys,tot,"корректировочный",true,why,no]);regTable();
+    ACTS.unshift([cno,who,a[2],r.sys,tot,"корректировочный",true,why,no]);regTable();sendSub(who,`Корректировочный акт ${cno} к акту ${no}: ${fmt(tot)} ₽. Причина: ${why||"—"}`);
     const [mName,yr]=a[2].split(" "),mi={"октябрь":"10","сентябрь":"09","ноябрь":"11"}[mName],last={"10":"31","09":"30","11":"30"}[mi];
     document.getElementById("act").innerHTML=`<div class="alerts" style="margin-bottom:14px;font-family:var(--sans)"><li class="ok"><b>Акт ${cno} сформирован:</b> минус ${fmt(-tot)} ₽ к акту ${no}. Объём ${q} ${r.unit} вернулся в остаток позиции ${r.code}; субподрядчик видит причину в кабинете.</li></div>
     <h2>КОРРЕКТИРОВОЧНЫЙ АКТ № ${cno}</h2><div style="text-align:center">к акту № ${no} за период с 01.${mi}.${yr} по ${last}.${mi}.${yr}</div>
@@ -1049,7 +1110,7 @@ function corrForm(no){
     <tr><td style="text-align:center">1</td><td style="text-align:center">${r.code}</td><td>${r.name}<div class="who">${why}</div></td><td style="text-align:center">${r.unit}</td><td class="n">−${q}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmtS(tot)}</td></tr>
     <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmtS(tot)}</b></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 % (уменьшение)</td><td class="n">${fmtS(-tot*.05)}</td></tr><tr><td colspan="6" style="text-align:right">Генподрядные услуги 3 % (уменьшение)</td><td class="n">${fmtS(-tot*.03)}</td></tr><tr><td colspan="6" style="text-align:right"><b>Изменение суммы к оплате</b></td><td class="n"><b>${fmtS(tot*.92)}</b></td></tr></table></div>
     <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», представитель по доверенности ______________</div></div>`;
-    ACT_STATE={no:cno,base:no,why,who,mon:a[2],rs:[r],q:()=>-q,tot,mi,yr,last,contract:`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`};
+    ACT_STATE={no:cno,base:no,why,who,mon:a[2],rs:[r],q:()=>-q,tot,mi,yr,last,contract:`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`};actBarSync();
   });
   document.getElementById("act").scrollIntoView({behavior:"smooth",block:"start"});
 }
@@ -1076,6 +1137,7 @@ function acts(){
       const tot=renderAct(no,who,mon,mon.startsWith("ноябрь")?.15:.23,`<b>Акт ${no} сформирован</b> для «${who}» за ${mon}: строка в реестре, записи журнала помечены номером акта, исполнителю ушло уведомление. Акт в Word — кнопкой «Скачать Word».`);
       const systems=[...new Set(SYS.filter(x=>x.who===who).map(x=>x.s))].join(", ")||"—";
       ACTS.unshift([no,who,mon,systems,tot,"сформирован",true]); regTable();
+      sendSub(who,`Акт ${no} за ${mon} на ${fmt(tot)} ₽ ждёт вашего подтверждения`);
     }
     document.getElementById("act").scrollIntoView({behavior:"smooth",block:"start"});
   });
@@ -1105,7 +1167,7 @@ function checkAct(){
   const zero=a.rs.filter(r=>a.q(r)<=0).length; if(zero)L.push(["warn",`<b>${zero} строк с нулевым объёмом</b> — уберите или отложите.`]);
   const bad=L.filter(x=>x[0]!=="ok").length;
   const box=document.getElementById("actCheck"); box.innerHTML=`<h2>Проверка акта ${a.no} <span>${bad?bad+" замечаний — акт уйдёт с пометкой":"замечаний нет — можно отправлять"}</span></h2><ul class="alerts">${L.map(([c,t])=>`<li class="${c}">${t}</li>`).join("")}</ul>`; box.hidden=false;
-  box.scrollIntoView({behavior:"smooth",block:"start"});
+  folds();box.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 // ───────── свой персонал ─────────
@@ -1177,7 +1239,7 @@ function setRole(r){
   nav.querySelectorAll("a").forEach(a=>{a.hidden=!R.tools.includes(a.getAttribute("href").slice(1))});
   document.querySelectorAll("#roleMenu button").forEach(b=>b.classList.toggle("on",b.dataset.role===r));
   document.getElementById("roleMenu").hidden=true;
-  if(r==="sub")subcab(); if(r==="client")clientcab(); if(r==="foreman")document.getElementById("fOk").hidden=true;
+  if(r==="sub")subcab(); if(r==="client")clientcab(); if(typeof bell==="function"&&document.getElementById("bellN"))bell(); if(r==="foreman")document.getElementById("fOk").hidden=true;
   document.getElementById("whoBtn").title=R.name+" · "+R.role;
   const h=(location.hash||"").slice(1);
   if(!R.tools.includes(h)) location.hash="#"+R.home; else route();
@@ -1185,7 +1247,7 @@ function setRole(r){
 function roleMenu(){
   const m=document.getElementById("roleMenu");
   m.innerHTML='<div class="cap">Войти как</div>'+Object.entries(ROLES).map(([k,v])=>`<button type="button" data-role="${k}">${v.name}<small>${v.role}</small></button>`).join("");
-  m.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>setRole(b.dataset.role)));
+  m.querySelectorAll("button").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();pickRole(b.dataset.role)}));
   document.getElementById("whoBtn").addEventListener("click",e=>{e.stopPropagation();m.hidden=!m.hidden});
   document.addEventListener("click",e=>{if(!m.contains(e.target))m.hidden=true});
 }
@@ -1211,8 +1273,12 @@ function foreman(){
   document.getElementById("fSave").addEventListener("click",()=>{const r=rows[+sel.value];const q=+document.getElementById("fQty").value||0;const now=new Date();const c=capCheck(r,q);const o=document.getElementById("fOk");o.hidden=false;
     if(c.lvl==="block"){o.className="warnbox";o.textContent="Не записано: правило объекта «Запрещать». Попросите руководителя открыть с причиной.";return}
     TODAY.push({t:now.getHours()+":"+String(now.getMinutes()).padStart(2,"0"),code:r.code,name:r.name.slice(0,40),sys:ss.value,qty:q+" "+r.unit,who:r.who,st:c.lvl==="extra"?"extra":c.lvl==="warn"?"adv":"sent"});table();
+    if(c.lvl==="extra")addExtraFrom(r,Math.round((q-Math.max(0,r.qty-r.sub))*100)/100,ss.value);
+    else{send("pto",`Прораб записал: ${r.code} · ${r.name.slice(0,40)} — ${q} ${r.unit}, ${r.who}, система ${ss.value}`,"journal");if(c.lvl==="warn")send("director",`Аванс под контроль: ${r.code}, ${q} ${r.unit} сверх сданного заказчику — нужна ваша отметка`,"journal")}
     o.className="ok";o.textContent=`Записано · ${r.code} · ${q} ${r.unit} · система ${ss.value}`+(c.lvl==="warn"?" · аванс под контроль":"");});
-  document.getElementById("fExtra").addEventListener("click",()=>{const o=document.getElementById("fOk");o.hidden=false;o.textContent="Допработа: опишите работу, снимите фото — запись уйдёт в «Допработы» со статусом «выявлено».";});
+  document.getElementById("fExtra").addEventListener("click",()=>{const r=rows[+sel.value],q=+document.getElementById("fQty").value||0,o=document.getElementById("fOk");o.hidden=false;o.className="ok";
+    if(q<=0){o.className="warnbox";o.textContent="Укажите объём допработы.";return}
+    addExtraFrom(r,q,ss.value);o.textContent=`Допработа записана: ${r.code}, ${q} ${r.unit} — в «Допработах» со статусом «выявлено», руководитель и ПТО уведомлены.`;});
   document.getElementById("fPhoto").addEventListener("click",()=>{document.getElementById("fPhoto").firstElementChild.textContent="✓ 1 фото";});
   crewHours();
 }
@@ -1229,17 +1295,19 @@ function crewHours(){
   document.getElementById("hSave").onclick=()=>{const miss=hs().filter(x=>!x.value).length,w=document.getElementById("hWarn"),o=document.getElementById("hOk");
     if(miss){w.hidden=false;o.hidden=true;w.textContent=`Не отправлено: у ${miss} чел. не выбрана система. Час без системы не сохраняется.`;return}
     const by={};hs().forEach((x,i)=>by[x.value]=(by[x.value]||0)+(+hh()[i].value||0));const tot=Object.values(by).reduce((a,b)=>a+b,0);
-    w.hidden=true;o.hidden=false;o.textContent=`Отправлено ${tot} ч: `+Object.entries(by).map(([k,v])=>`${k} ${v} ч · ${fmt(v*HOUR_FULL)} ₽`).join("; ")+" — в себестоимость систем.";};
+    w.hidden=true;o.hidden=false;o.textContent=`Отправлено ${tot} ч: `+Object.entries(by).map(([k,v])=>`${k} ${v} ч · ${fmt(v*HOUR_FULL)} ₽`).join("; ")+" — в себестоимость систем.";
+    send("pto",`Часы бригады 1 за 02.11: ${tot} ч — `+Object.entries(by).map(([k,v])=>`${k} ${v} ч`).join(", "),"staff");};
 }
 // субподрядчик
 function subcab(){
   const who="Подрядчик Б";const rs=rows.filter(r=>r.who===who&&r.sub>0);const ss=SYS.filter(x=>x.who===who);
   const pay=sum(ss,x=>x.subPay);const acted=ACTS.filter(a=>a[1]===who).reduce((s,a)=>s+a[4],0);const paid=ACTS.filter(a=>a[1]===who&&a[5].includes("оплачен")).reduce((s,a)=>s+a[4],0);
   document.getElementById("subTiles").innerHTML=[["Принято по моей расценке",fmtM(pay),ss.map(x=>x.s).join(", "),""],["Заактировано",fmtM(acted),ACTS.filter(a=>a[1]===who).length+" акта",""],["Оплачено",fmtM(paid*.92),"на руки: акт − 5 % удержание − 3 % генуслуги","ok"],["Удержание 5 %",fmtM(acted*.05),"возврат после КС-11 + 24 мес.",""],(()=>{const n=ACTS.filter(a=>a[1]===who&&a[5]==="сформирован").length;return ["Ждёт моего подтверждения",n+" акт.",n?"подтвердите или оспорьте":"всё подтверждено",n?"warn":"ok"]})()].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
-  const acts=()=>{document.getElementById("subActs").innerHTML=`<tr><th>№ акта</th><th>Период</th><th class="n">Сумма</th><th>Статус</th><th></th></tr>`+ACTS.filter(a=>a[1]===who).map((a,i)=>`<tr><td class="n" style="text-align:left">${a[0]}</td><td>${a[2]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")||a[5]==="подтверждён"?"ok":a[5]==="сформирован"?"warn":"mut"}">${a[5]}</span></td><td class="acts2">${a[5]==="сформирован"?`<button class="pri conf" data-i="${ACTS.indexOf(a)}" type="button">Подтвердить</button><button class="sec disp" data-i="${ACTS.indexOf(a)}" type="button">Оспорить</button>`:a[5]==="оспорен"?`<span class="who">${a[7]||""}</span>`:""}</td></tr>`).join("");
-    document.querySelectorAll("#subActs .conf").forEach(b=>b.addEventListener("click",()=>{ACTS[+b.dataset.i][5]="подтверждён";subcab();regTable();}));
+  const acts=()=>{document.getElementById("subActs").innerHTML=`<tr><th>№ акта</th><th>Период</th><th class="n">Сумма</th><th>Статус</th><th></th></tr>`+ACTS.filter(a=>a[1]===who).map((a,i)=>`<tr><td class="n" style="text-align:left">${a[0]}</td><td>${a[2]}</td><td class="n">${fmt(a[4])}</td><td><span class="pill ${a[5].startsWith("подписан")||a[5]==="подтверждён"?"ok":a[5]==="сформирован"?"warn":"mut"}">${a[5]}</span></td><td class="acts2"><button class="sec act-btn sdl" data-i="${ACTS.indexOf(a)}" type="button">Скачать</button>${a[5]==="сформирован"?`<button class="pri conf" data-i="${ACTS.indexOf(a)}" type="button">Подтвердить</button><button class="sec disp" data-i="${ACTS.indexOf(a)}" type="button">Оспорить</button>`:a[5]==="оспорен"?`<span class="who">${a[7]||""}</span>`:""}</td></tr>`).join("");
+    document.querySelectorAll("#subActs .sdl").forEach(b=>b.addEventListener("click",()=>{const a=ACTS[+b.dataset.i];renderAct(a[0],a[1],a[2],a[2].startsWith("ноябрь")?.15:.23,"");actDocx()}));
+    document.querySelectorAll("#subActs .conf").forEach(b=>b.addEventListener("click",()=>{const a=ACTS[+b.dataset.i];a[5]="подтверждён";subcab();regTable();send(["director","pto"],`Подрядчик Б подтвердил акт ${a[0]} за ${a[2]} — ${fmt(a[4])} ₽. Можно подписывать`,"acts")}));
     document.querySelectorAll("#subActs .disp").forEach(b=>b.addEventListener("click",()=>{const td=b.parentElement;td.innerHTML=`<input class="inl" placeholder="что не так: позиция, объём" aria-label="Причина"><button class="pri act-btn" type="button">Отправить</button>`;
-      td.querySelector("button").addEventListener("click",()=>{const r=td.querySelector("input").value.trim()||"без комментария";const a=ACTS[+b.dataset.i];a[5]="оспорен";a[7]=r;subcab();regTable();})}))};
+      td.querySelector("button").addEventListener("click",()=>{const r=td.querySelector("input").value.trim()||"без комментария";const a=ACTS[+b.dataset.i];a[5]="оспорен";a[7]=r;subcab();regTable();send(["director","pto"],`Подрядчик Б оспорил акт ${a[0]}: ${r}`,"acts")})}))};
   acts();
   const cur=ACTS.find(a=>a[1]===who&&["сформирован","подтверждён","оспорен"].includes(a[5]))||ACTS.find(a=>a[1]===who);
   const steps=["Объёмы приняты прорабом","Акт сформирован","Подтверждён вами","Подписан АСТЭКС","Оплачен"];
@@ -1258,9 +1326,9 @@ function clientNotes(){
      <td>${x.y1?'<span class="pill ok">✓ подтверждён</span>':'<span class="pill mut">—</span>'}</td><td>${x.y2?'<span class="pill ok">✓ согласована</span>':'<span class="pill mut">—</span>'}</td>
      <td class="acts2">${x.y1?"":`<button class="sec act-btn cl-y1" type="button" data-i="${x.i}">Объём подтверждён</button>`}${x.y2?"":`<button class="pri act-btn cl-y2" type="button" data-i="${x.i}">Оплата согласована</button>`}${x.ans?"":`<button class="sec act-btn cl-no" type="button" data-i="${x.i}">Отклонить</button>`}</td></tr>`}).join("")||`<tr><td colspan="8" style="color:var(--muted)">Уведомлений нет</td></tr>`;
   const today="05.11";
-  document.querySelectorAll("#clNotes .cl-y1").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.y1=true;x.ans=x.ans||today+": объём подтверждён технадзором";clientNotes();extra();tiles()}));
-  document.querySelectorAll("#clNotes .cl-y2").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.y1=true;x.y2=true;x.ans=today+": оплата согласована, готовим ДС";if(x.st<3&&x.dec==="rebill")x.st=3;clientNotes();extra();tiles()}));
-  document.querySelectorAll("#clNotes .cl-no").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.ans=today+": отклонено заказчиком";clientNotes();extra();tiles()}));
+  document.querySelectorAll("#clNotes .cl-y1").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.y1=true;x.ans=x.ans||today+": объём подтверждён технадзором";clientNotes();extra();tiles();send(["director","pto"],`Заказчик подтвердил объём по уведомлению ${x.notice.no}: ${x.t}`,"extra")}));
+  document.querySelectorAll("#clNotes .cl-y2").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.y1=true;x.y2=true;x.ans=today+": оплата согласована, готовим ДС";if(x.st<3&&x.dec==="rebill")x.st=3;clientNotes();extra();tiles();send(["director","pto"],`Заказчик согласовал оплату ${fmt(x.cl)} ₽ по уведомлению ${x.notice.no}: ${x.t}. Готовим ДС`,"extra")}));
+  document.querySelectorAll("#clNotes .cl-no").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.ans=today+": отклонено заказчиком";clientNotes();extra();tiles();send(["director","pto"],`Заказчик отклонил допработу по уведомлению ${x.notice.no}: ${x.t}. Решить: за наш счёт или отказ субподрядчику`,"extra")}));
 }
 function clientcab(){
   const left=T_CONTRACT-T_CLIENT;const weekRate=T_CLIENT*0.24/4.3;const end=new Date(2026,10,2);end.setDate(end.getDate()+Math.round(left/weekRate*7));
@@ -1373,16 +1441,122 @@ function ks3(){
 function ksInit(){const s=document.getElementById("ksSys");s.innerHTML='<option value="">Все системы</option>'+Object.keys(SYS_BUDGET).map(x=>`<option>${x}</option>`).join("");document.getElementById("ks2").addEventListener("click",ks2);document.getElementById("ks3").addEventListener("click",ks3)}
 // ───────── роутинг ─────────
 const VIEWS=["dashboard","journal","contractors","staff","extra","acts","foreman","sub","client"];
-function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h)||!ROLES[ROLE].tools.includes(h))h=ROLES[ROLE].home;
+function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h)||!ROLES[ROLE].tools.includes(h)){h=ROLES[ROLE].home;history.replaceState(null,"",location.pathname+location.search+"#"+h)}
   VIEWS.forEach(v=>{document.getElementById("v-"+v).hidden=v!==h});
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+h))}
 window.addEventListener("hashchange",route);
+// ───────── вход по роли, журнал отправок, переходы по разделам, сворачивание блоков ─────────
+// Демо: код и права проверяются в браузере. В платформе — логин, пароль и 2FA, права проверяет сервер.
+const DEMO_CODE="2026";
+const LOCKED=["director","pto"];
+let UNLOCKED=false;
+const OUTBOX=[]; // кто → кому, что, куда ведёт
+const ROLE_ADDR={director:"Руководитель · Берг М. С.",pto:"ПТО · Костылева Е. Ю.",foreman:"Прораб · Иванов А. В.",sub:"Подрядчик Б",client:"Заказчик · Монолит"};
+const CHANNEL={client:"ЭДО (Диадок / СБИС) и почта технадзора",sub:"почта и ссылка в кабинет субподрядчика",director:"уведомление в системе и Telegram",pto:"уведомление в системе",foreman:"уведомление на телефон прораба",ext:"почта и ссылка в кабинет субподрядчика"};
+const ROLE_RU={director:"Руководитель",pto:"ПТО",foreman:"Прораб",sub:"Субподрядчик",client:"Заказчик"};
+// to: роль или массив ролей; ext — субподрядчик без демо-кабинета (label — его имя)
+function send(to,what,link,label){
+  const now=new Date(), t=String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+  const list=[].concat(to);
+  list.forEach(r=>OUTBOX.unshift({t,from:ROLE,to:r,label:r==="ext"?label:ROLE_ADDR[r],what,link:link||(ROLES[r]?ROLES[r].home:""),read:false}));
+  bell();
+  toast("Отправлено → "+list.map(r=>r==="ext"?label:ROLE_ADDR[r]).join(", "),
+    what+". В платформе: "+[...new Set(list.map(r=>CHANNEL[r]))].join("; ")+". В демо отправка имитируется — получатель видит это во «Входящих» под своей ролью"+(list.includes("ext")?" (у этого субподрядчика в демо нет кабинета — запись в «Отправлено»)":"")+".");
+}
+function sendSub(who,what,link){who==="Подрядчик Б"?send("sub",what,link||"sub"):send("ext",what,"",who)}
+let TOAST_T=0;
+function toast(title,text){const el=document.getElementById("toast");el.innerHTML=`<b>${title}</b><span>${text}</span>`;el.classList.add("on");clearTimeout(TOAST_T);TOAST_T=setTimeout(()=>el.classList.remove("on"),7000)}
+let INBOX_TAB="in";
+function bell(){
+  const n=OUTBOX.filter(x=>x.to===ROLE&&!x.read).length, b=document.getElementById("bellN");
+  b.textContent=n; b.hidden=!n;
+  const box=document.getElementById("inbox"); if(box.hidden) return;
+  const L=INBOX_TAB==="in"?OUTBOX.filter(x=>x.to===ROLE):OUTBOX.filter(x=>x.from===ROLE);
+  box.innerHTML=`<div class="tabs"><button type="button" data-t="in" class="${INBOX_TAB==="in"?"on":""}">Входящие ${n?`<b>${n}</b>`:""}</button><button type="button" data-t="out" class="${INBOX_TAB==="out"?"on":""}">Отправлено</button></div>`+
+   (L.length?L.map((x,i)=>`<div class="it${INBOX_TAB==="in"&&!x.read?" new":""}"><small>${x.t} · ${INBOX_TAB==="in"?"от: "+ROLE_ADDR[x.from]:"кому: "+x.label}</small>${x.what}${INBOX_TAB==="in"&&x.link?`<div><button type="button" class="sec act-btn ib-go" data-i="${OUTBOX.indexOf(x)}">Открыть</button></div>`:""}</div>`).join(""):`<div class="it"><small>${INBOX_TAB==="in"?"Входящих пока нет. Здесь появится всё, что вам отправят другие роли.":"Вы пока ничего не отправляли."}</small></div>`)+
+   `<div class="it"><small>Демо: сообщения живут, пока открыта страница. В платформе — хранятся на сервере и дублируются по каналам.</small></div>`;
+  box.querySelectorAll(".tabs button").forEach(t=>t.addEventListener("click",e=>{e.stopPropagation();INBOX_TAB=t.dataset.t;bell()}));
+  box.querySelectorAll(".ib-go").forEach(g=>g.addEventListener("click",e=>{e.stopPropagation();const x=OUTBOX[+g.dataset.i];x.read=true;box.hidden=true;bell();location.hash="#"+x.link}));
+}
+function inboxInit(){
+  const btn=document.getElementById("bellBtn"),box=document.getElementById("inbox");
+  btn.addEventListener("click",e=>{e.stopPropagation();box.hidden=!box.hidden;if(!box.hidden){INBOX_TAB="in";bell();OUTBOX.filter(x=>x.to===ROLE).forEach(x=>x.read=true);setTimeout(()=>{const b=document.getElementById("bellN");b.hidden=true},0)}});
+  box.addEventListener("click",e=>e.stopPropagation());
+  document.addEventListener("click",()=>{box.hidden=true});
+}
+// роль: руководитель и ПТО — только по коду
+function lockMarks(){document.querySelectorAll("#roleMenu button[data-role]").forEach(b=>{const s=b.querySelector("small");s.textContent=ROLES[b.dataset.role].role+(LOCKED.includes(b.dataset.role)&&!UNLOCKED?" · по коду":"")})}
+function pickRole(r){
+  if(!LOCKED.includes(r)||UNLOCKED){setRole(r);bell();return}
+  const m=document.getElementById("roleMenu"); let f=m.querySelector(".mcode"); if(!f){f=document.createElement("div");f.className="mcode";m.appendChild(f)}
+  f.innerHTML=`<label for="mCode">${ROLES[r].role}: код доступа</label><div class="qrow"><input id="mCode" type="password" inputmode="numeric" autocomplete="off"><button class="pri" type="button">Войти</button></div><div class="who" id="mErr" hidden style="color:var(--bad)">Неверный код — роль закрыта</div>`;
+  const go=()=>{if(f.querySelector("input").value.trim()===DEMO_CODE){UNLOCKED=true;f.remove();lockMarks();setRole(r);bell()}else f.querySelector("#mErr").hidden=false};
+  f.querySelector("button").addEventListener("click",e=>{e.stopPropagation();go()});f.querySelector("input").addEventListener("keydown",e=>{if(e.key==="Enter")go()});f.addEventListener("click",e=>e.stopPropagation());f.querySelector("input").focus();
+}
+function gate(){
+  const q=new URLSearchParams(location.search);
+  if(navigator.webdriver&&!q.has("gate")){UNLOCKED=true;lockMarks();return} // автотесты и скриншоты — без экрана входа
+  const g=document.getElementById("gate");
+  g.innerHTML=`<div class="gbox"><div class="gbrand">СМР·КОНТРОЛЬ</div><h2>Кто входит?</h2><p class="sub" style="margin:0">Каждый видит только своё. Руководитель и ПТО — по коду доступа; заказчик, субподрядчик и прораб к ним не попадут.</p>
+   <div class="groles">${Object.entries(ROLES).map(([k,v])=>`<button type="button" data-role="${k}"><b>${ROLE_RU[k]}</b><small>${v.name}${LOCKED.includes(k)?" · по коду":""}</small></button>`).join("")}</div>
+   <div class="gcode" hidden><label for="gCode">Код доступа</label><div class="qrow"><input id="gCode" type="password" inputmode="numeric" autocomplete="off"><button class="pri" id="gGo" type="button">Войти</button></div><div class="warnbox" id="gErr" hidden>Неверный код. Без кода — только кабинеты заказчика, субподрядчика и прораба.</div></div>
+   <p class="note">Демо: код проверяется в браузере. В рабочей платформе здесь вход по логину и паролю с двухфакторной проверкой, а права каждой роли проверяет сервер.</p></div>`;
+  g.hidden=false; document.body.classList.add("gated");
+  let pick=null;
+  const enter=r=>{g.hidden=true;document.body.classList.remove("gated");lockMarks();setRole(r);location.hash="#"+ROLES[r].home;bell()};
+  g.querySelectorAll(".groles button").forEach(b=>b.addEventListener("click",()=>{pick=b.dataset.role;g.querySelectorAll(".groles button").forEach(x=>x.classList.toggle("on",x===b));
+    if(LOCKED.includes(pick)){g.querySelector(".gcode").hidden=false;document.getElementById("gErr").hidden=true;document.getElementById("gCode").focus()}else{UNLOCKED=false;enter(pick)}}));
+  const tryCode=()=>{if(document.getElementById("gCode").value.trim()===DEMO_CODE){UNLOCKED=true;enter(pick)}else document.getElementById("gErr").hidden=false};
+  document.getElementById("gGo").addEventListener("click",tryCode);document.getElementById("gCode").addEventListener("keydown",e=>{if(e.key==="Enter")tryCode()});
+}
+// сворачивание: у каждого блока с заголовком — стрелка; клик по заголовку тоже сворачивает
+function folds(){
+  document.querySelectorAll("main .panel").forEach(p=>{if(p.querySelector(":scope > .fold"))return;const h=p.querySelector(":scope > h2");if(!h)return;
+    const b=document.createElement("button");b.type="button";b.className="fold";b.title="Свернуть / развернуть";b.setAttribute("aria-label","Свернуть или развернуть блок");
+    b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    b.addEventListener("click",e=>{e.stopPropagation();p.classList.toggle("folded")});p.prepend(b);p.classList.add("foldable");
+    h.addEventListener("click",e=>{if(e.target.closest("button,a,select,input"))return;p.classList.toggle("folded")})});
+}
+// быстрые переходы по разделам длинных экранов
+const SUBNAV={dashboard:[["Показатели","#tiles"],["Системы","#sysTable"],["Баланс по субподрядчикам","#balChart"],["Требует решения","#alerts"],["Динамика","#monthChart"],["Прогноз","#forecast"],["Маржа по слоям","#layers"],["Деньги 30/60/90","#cash"]],
+ contractors:[["Показатели","#cTiles"],["Паспорт денег","#cChain"],["Удержания","#cRet"],["Договор","#cDog"],["Условия оплаты","#cPay"],["Позиции","#cTable"]],
+ staff:[["Показатели","#sTiles"],["ФОТ по месяцам","#sChart"],["Разнесение по системам","#sSys"],["Проверки табеля","#sAlerts"],["Сдельная","#sPiece"],["Люди","#sTable"]],
+ acts:[["Документы заказчику","#ksSys"],["Правило закрытия","#ruleSeg"],["Комплектность","#chk"],["Реестр актов","#aReg"],["Акт","#act"]],
+ extra:[["Показатели","#xTiles"],["Реестр допработ","#xTable"]]};
+function subnavs(){
+  Object.entries(SUBNAV).forEach(([v,items])=>{const sec=document.getElementById("v-"+v);if(!sec||sec.querySelector(".subnav"))return;
+    const bar=document.createElement("nav");bar.className="subnav";bar.setAttribute("aria-label","Разделы экрана");
+    bar.innerHTML=items.map(([l,s])=>`<button type="button" data-s="${s}">${l}</button>`).join("")+`<span class="gap"></span><button type="button" class="fa" data-a="1">Свернуть всё</button><button type="button" class="fa" data-a="0">Развернуть всё</button>`;
+    (sec.querySelector(".tz")||sec.querySelector(".sub")||sec.querySelector("h1")).after(bar);
+    bar.querySelectorAll("button[data-s]").forEach(b=>b.addEventListener("click",()=>{const el=document.querySelector(b.dataset.s);if(!el)return;const p=el.closest(".panel");if(p)p.classList.remove("folded");if(el.id==="act")el.hidden=false;
+      const tgt=p||el;const y=tgt.getBoundingClientRect().top+scrollY-48-bar.offsetHeight-10;scrollTo({top:Math.max(0,y),behavior:"smooth"})}));
+    bar.querySelectorAll(".fa").forEach(b=>b.addEventListener("click",()=>sec.querySelectorAll(".panel.foldable").forEach(p=>p.classList.toggle("folded",b.dataset.a==="1"))));
+  });
+}
+// кнопки прямо у акта
+function actBarSync(){const a=ACT_STATE;const el=document.getElementById("actBarNo");if(a&&el)el.textContent=`Акт № ${a.no} · ${a.who} · ${a.mon}`}
+function actBars(){
+  const dl=()=>{actDocx()};
+  document.getElementById("aDocx2").addEventListener("click",dl);document.getElementById("aDocx3").addEventListener("click",dl);
+  document.getElementById("aCheck2").addEventListener("click",checkAct);
+  const f=document.getElementById("aFold");f.addEventListener("click",()=>{const a=document.getElementById("act");a.hidden=!a.hidden;document.getElementById("actBar2").hidden=a.hidden;f.textContent=a.hidden?"Развернуть акт":"Свернуть акт"});
+  actBarSync();
+}
+// допработа, выявленная на объекте, — сразу в реестр
+function addExtraFrom(r,q,sys){
+  const sumv=Math.round(q*r.rate);
+  EXTRA.push({t:`Сверх сметы: ${r.code} · ${r.name.slice(0,48)}, ${q} ${r.unit}`,who:r.who,sys:sys||r.sys,sum:sumv,cl:Math.round(sumv*1.12),st:0,d:"05.11",init:"прораб · на объекте",inDog:"уточнить",notice:null,ans:"",y1:false,y2:false,dec:""});
+  extra();tiles();
+  send(["director","pto"],`Прораб: допработа ДР-${String(EXTRA.length).padStart(3,"0")} — ${r.code}, ${q} ${r.unit}, ≈ ${fmt(sumv)} ₽ по цене субподрядчика. Нужно решение и уведомление заказчика`,"extra");
+}
+function uxInit(){folds();subnavs();inboxInit();actBars();lockMarks();bell();gate()}
+
 // init
 tiles();sysTable();balChart();alerts();monthChart();forecast();layers();
 document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<option>${s}</option>`).join("");
 ["fSys","fState","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",jTable));jTable();phone();
 document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="Подрядчик Б";
 document.getElementById("cSel").addEventListener("change",contractor);contractor();
-staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();ksInit();document.getElementById("xlsAll").addEventListener("click",exportAll);setRole("director");
+staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();ksInit();document.getElementById("xlsAll").addEventListener("click",exportAll);setRole("director");uxInit();
 </script>
 </body></html>
