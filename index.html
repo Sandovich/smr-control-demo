@@ -111,6 +111,14 @@ button:focus-visible,select:focus-visible,input:focus-visible,nav a:focus-visibl
 .phone label{display:block;color:var(--muted);font-weight:600;margin:10px 0 4px}
 .phone input,.phone select{width:100%}
 .phone .hint{color:var(--muted);margin-top:4px}
+.terms{margin:-4px 0 12px;color:var(--fg2);font-size:.92em}
+.warnbox:not(.phone .warnbox){margin-top:10px;background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad-line);border-radius:var(--r);padding:8px 10px}
+.okbox{margin-top:10px;background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-line);border-radius:var(--r);padding:8px 10px}
+.chain{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.chain .ci{border-left:3px solid var(--line);padding:2px 0 2px 10px;min-width:0}.chain .ci .l{color:var(--muted);font-weight:600}.chain .ci .v{font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}.chain .ci .d{color:var(--muted)}
+table.mini td,table.mini th{padding:4px 8px}
+.qrow{display:flex;gap:6px;align-items:stretch}.qrow input{flex:1 1 0;width:auto!important;min-width:0}.qrow button{flex:0 0 auto;white-space:nowrap;width:auto!important}
+.fgrid>div,.jgrid>div{min-width:0}
+.warnbox.soft{background:var(--warn-bg,#fff7e0)!important;color:var(--warn)!important;border-color:var(--warn-line,#f0d48a)!important}
 .phone .warnbox{margin-top:10px;background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad-line);border-radius:var(--r);padding:8px 10px;}
 .phone .ok{margin-top:10px;background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-line);border-radius:var(--r);padding:8px 10px;}
 .phone button.pri{width:100%;margin-top:12px;justify-content:center}
@@ -398,12 +406,13 @@ th{font-weight:600}
 <!-- ───────── СВОДКА ───────── -->
 <section class="view" id="v-dashboard">
   <h1>Сводная панель руководителя</h1>
-  <p class="sub">Договор по СМР против того, что сдано заказчику и закрыто субподрядчикам. Красное — деньги ушли подрядчику раньше, чем пришли от заказчика.</p>
+  <p class="sub">Договор по СМР против того, что сдано заказчику и принято у субподрядчиков. Красное — деньги ушли подрядчику раньше, чем пришли от заказчика.</p>
+  <p class="terms">Статусы объёма везде одинаковые: <b>принято прорабом</b> → <b>заактировано</b> (акт субподрядчику) → <b>оплачено</b>. Заказчику: <b>сдано по КС-2</b> → <b>оплачено по КС-3</b>.</p>
   <div class="tiles" id="tiles"></div>
   <div class="grid2">
     <div class="panel">
       <h2>Выполнение по системам <span>% от договора СМР</span></h2>
-      <div class="legend"><span><b style="background:hsl(125,50%,45%)"></b>сдано заказчику (КС-2)</span><span><b style="background:hsl(360,70%,50%)"></b>закрыто подрядчику, но не сдано</span><span><b style="background:hsl(200,8%,88%)"></b>остаток по договору</span></div>
+      <div class="legend"><span><b style="background:hsl(125,50%,45%)"></b>сдано заказчику (КС-2)</span><span><b style="background:hsl(360,70%,50%)"></b>принято у подрядчика, но не сдано</span><span><b style="background:hsl(200,8%,88%)"></b>остаток по договору</span></div>
       <div class="wrap"><table id="sysTable"></table></div>
     </div>
     <div>
@@ -419,7 +428,7 @@ th{font-weight:600}
   </div>
   <div class="grid2">
     <div class="panel">
-      <h2>Динамика по месяцам <span>сдано заказчику / закрыто подрядчикам, млн ₽</span></h2>
+      <h2>Динамика по месяцам <span>сдано заказчику / принято у подрядчиков, млн ₽</span></h2>
       <div id="monthChart"></div>
     </div>
     <div class="panel">
@@ -428,10 +437,15 @@ th{font-weight:600}
       <p class="note">Прогноз пересчитывается каждый понедельник и уходит руководителю в Telegram одной картинкой.</p>
     </div>
   </div>
+  <div class="panel" style="margin-bottom:16px">
+    <h2>Маржа по слоям и свой ФОТ <span>заработано на сегодня, ₽ без НДС</span></h2>
+    <div class="wrap"><table id="layers"></table></div>
+    <p class="note" id="layersNote"></p>
+  </div>
   <div class="panel">
     <h2>Деньги на 30 / 60 / 90 дней <span>поступления по КС-3 минус оплаты субподрядчикам и ФОТ, ₽ без НДС</span></h2>
     <div class="wrap"><table id="cash"></table></div>
-    <p class="note">Поступления — подписанные и ожидаемые КС-3 по графику оплаты договора (отсрочка заказчика 30 дней). Оплаты — подтверждённые акты субподрядчиков (отсрочка 15 дней) и ФОТ своих. Возврат удержаний — по срокам договоров. В демо поступления условные, ФОТ — по табелю октября.</p>
+    <p class="note"><b>Поступления здесь — только СМР-часть договора, а ФОТ своих — весь.</b> Поэтому минус — не убыток объекта, а дыра СМР-части: поступления по поставке и ПНР подключаются из договора и Синтеки в фазе 1. Поступления — подписанные и ожидаемые КС-3 по графику оплаты договора (отсрочка заказчика 30 дней). Оплаты — подтверждённые акты субподрядчиков (отсрочка 15 дней) и ФОТ своих. Возврат удержаний — по срокам договоров. В демо поступления условные, ФОТ — по табелю октября.</p>
   </div>
   <div class="toolbar" style="margin-top:16px"><button class="sec" id="xlsAll" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Выгрузить все данные в Excel</button><span class="note" style="margin:0">Смета, журнал, субподрядчики, акты, допработы, персонал — отдельными листами. Ваши данные можно забрать в любой момент.</span></div>
 </section>
@@ -458,7 +472,7 @@ th{font-weight:600}
         <label for="pWho">Исполнитель</label>
         <select id="pWho"></select>
         <label for="pQty">Объём</label>
-        <input id="pQty" type="number" inputmode="decimal" value="0">
+        <div class="qrow"><input id="pQty" type="number" inputmode="decimal" value="0"><button class="sec" id="pRestBtn" type="button">Закрыть остаток</button></div>
         <div class="hint" id="pMoney"></div>
         <label for="pDate">Дата</label>
         <input id="pDate" type="date" value="2026-11-02">
@@ -477,6 +491,7 @@ th{font-weight:600}
   <p class="sub">Один клик по фамилии — всё, что он сделал: в метрах и штуках, в деньгах по его расценке и по сметной, что заактировано и что должны.</p>
   <div class="toolbar"><label for="cSel">Исполнитель</label><select id="cSel"></select></div>
   <div class="tiles" id="cTiles"></div>
+  <div class="panel" style="margin-bottom:14px"><h2>Паспорт денег <span>по цене субподрядчика, ₽ без НДС</span></h2><div class="chain" id="cChain"></div></div>
   <div class="grid2">
     <div>
     <div class="panel"><h2>Гарантийные удержания <span>по договору субподряда</span></h2><div class="wrap"><table id="cRet"></table></div><p class="note">Ставка и срок возврата — из договора. Возврат удержания — отдельным документом после окончания гарантийного срока или по КС-11.</p></div>
@@ -525,7 +540,7 @@ th{font-weight:600}
       <label for="fSysSel">Система</label>
       <select id="fSysSel"></select>
       <label for="fQty">Объём</label>
-      <input id="fQty" type="number" inputmode="decimal" value="40">
+      <div class="qrow"><input id="fQty" type="number" inputmode="decimal" value="40"><button class="sec" id="fRestBtn" type="button">Закрыть остаток</button></div>
       <div class="hint" id="fMoney"></div>
       <label>Фото</label>
       <div class="photo" id="fPhoto"><span>+ Снять</span><span class="hint">обязательно для скрытых работ</span></div>
@@ -534,8 +549,16 @@ th{font-weight:600}
       <button class="pri" id="fSave" type="button">Записать</button>
       <button class="sec" id="fExtra" type="button">Допработа сверх сметы</button>
     </div>
+    <div>
+    <div class="panel" style="margin-bottom:14px"><h2>Часы бригады за день <span>бригада 1 · 2 ноября</span></h2>
+      <div class="toolbar" style="margin-bottom:8px"><button class="sec" id="hYest" type="button">Как вчера</button><select id="hAll" aria-label="Система для всех"></select><button class="sec" id="hApply" type="button">Применить ко всем</button></div>
+      <div class="wrap"><table id="hTable"></table></div>
+      <div id="hWarn" class="warnbox" hidden></div><div id="hOk" class="okbox" hidden></div>
+      <button class="pri" id="hSave" type="button" style="margin-top:10px">Отправить часы</button>
+      <p class="note">Час без системы не сохраняется — тогда ФОТ ложится в себестоимость системы. Исправить после отправки — только с причиной: видно кто, когда, было/стало. Самозанятые сюда не вносятся: по ним акт «объём × расценка» и чек.</p></div>
     <div class="panel"><h2>Внесено сегодня <span id="fTodayCap">2 ноября</span></h2><div class="wrap"><table id="fToday"></table></div>
       <p class="note">Записи с меткой «ожидает сети» отправятся сами. Исправить запись можно до конца дня, дальше — через ПТО.</p></div>
+    </div>
   </div>
 </section>
 
@@ -570,7 +593,7 @@ th{font-weight:600}
   <h1>Допработы: вне утверждённой сметы</h1>
   <p class="sub">Всё, что подрядчик сделал сверх сметы, лежит здесь, а не в журнале КС. Пока не принято решение, оно не попадает в акт.</p>
   <div class="tiles" id="xTiles"></div>
-  <div class="panel"><h2>Допработы <span id="xCount"></span></h2><div class="seg" id="xSeg"></div><div class="wrap"><table id="xTable"></table></div><p class="note">Статус двигается кнопкой в строке: выявлено → согласовано внутри → выставлено заказчику → принято (ДС). В бюджет и в акт допработа попадает только после «принято».</p></div>
+  <div class="panel"><h2>Допработы <span id="xCount"></span></h2><div class="seg" id="xSeg"></div><ul class="alerts" id="xMsg" hidden style="margin:8px 0"></ul><ul class="alerts" id="xMsg" hidden style="margin:8px 0"></ul><div class="wrap"><table id="xTable"></table></div><p class="note">Статус двигается кнопкой в строке: выявлено → согласовано внутри → выставлено заказчику → принято (ДС). В бюджет и в акт допработа попадает только после «принято».</p></div>
 </section>
 
 <!-- ───────── АКТЫ ───────── -->
@@ -581,6 +604,7 @@ th{font-weight:600}
     <select id="aWho"></select>
     <select id="aMon"></select>
     <button class="pri" id="aMake">Сформировать акт</button>
+    <button class="sec" id="aCheck" type="button">Проверить акт</button>
     <button class="sec" id="aDocx" title="Word: A4, Times New Roman 12, поля 20/10/20/20 мм — ГОСТ Р 7.0.97-2016"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Скачать Word</button>
     <span class="note" style="margin:0">→ строка в реестре, номер в журнал, уведомление субподрядчику; акт в Word — по кнопке</span>
   </div>
@@ -589,8 +613,12 @@ th{font-weight:600}
     <button class="sec" id="ks2" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>КС-2</button>
     <button class="sec" id="ks3" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>КС-3</button>
     <span class="note" style="margin:0">КС-2 — по позициям сметы из принятых заказчиком объёмов за период; КС-3 — нарастающим итогом по системам, НДС 22 %.</span></div></div>
+  <div class="panel" style="margin-bottom:14px"><h2>Правило закрытия субподрядчику <span>настройка объекта · меняет руководитель</span></h2>
+    <div class="toolbar" style="margin:0"><div class="seg" id="ruleSeg"></div><label for="ruleTol">допуск сверх сданного заказчику</label><select id="ruleTol"><option value="0">0 %</option><option value="0.05">5 %</option><option value="0.1" selected>10 %</option><option value="0.15">15 %</option></select></div>
+    <p class="note" id="ruleNote"></p></div>
   <div class="panel" style="margin-bottom:14px"><h2>Комплектность перед актом <span id="chkCap"></span></h2><div class="chk" id="chk"></div><p class="note">Акт не уходит субподрядчику, пока чек-лист не закрыт. Документы с истекающим сроком подсвечиваются за 30 дней.</p></div>
   <div class="panel" style="margin-bottom:14px"><h2>Реестр актов</h2><div class="wrap"><table id="aReg"></table></div></div>
+  <div class="panel" id="actCheck" hidden style="margin-bottom:14px"></div>
   <div class="act" id="act"></div>
 </section>
 </main>
@@ -636,14 +664,33 @@ const SYS = Object.keys(SYS_BUDGET).map(s=>{const b=SYS_BUDGET[s],[c,p]=SYS_PROG
 const T_CONTRACT=sum(SYS,x=>x.b), T_CLIENT=sum(SYS,x=>x.client), T_SUB=sum(SYS,x=>x.sub), T_SUBPAY=sum(SYS,x=>x.subPay);
 const T_SKEW=sum(SYS,x=>Math.max(0,x.sub-x.client));
 const planMargin=.18 /* плановая маржинальность СМР из бюджета */, factMargin=1-T_SUBPAY/T_SUB;
-const EXTRA=[
- {t:"Перенос 14 оповещателей СОУЭ из-за изменения планировки 7–9 эт.",who:"Подрядчик Д",sys:"СОУЭ",sum:184000,st:0,d:"28.10",old:1},
- {t:"Штробление под кабель АПС по монолиту, 212 м.п. (не было в ВОР)",who:"Подрядчик Б",sys:"АПС",sum:127200,st:0,d:"24.10",old:1},
- {t:"Доп. лоток 300×50 на паркинге, 86 м.п.",who:"Подрядчик Б",sys:"ККСС",sum:64500,st:1,d:"17.10"},
- {t:"Замена короба 25×60 на 40×60 по требованию заказчика, 120 м.п.",who:"Подрядчик А",sys:"АСКУЭ",sum:38400,st:2,d:"09.10"},
- {t:"Демонтаж/монтаж датчиков после отделки, 44 шт.",who:"Подрядчик В",sys:"АСКУВТ",sum:52800,st:3,d:"02.10"},
- {t:"Прокладка радиофидера по кровле, 140 м.п.",who:"Подрядчик Е",sys:"Радио",sum:91000,st:2,d:"29.09"},
+// правило закрытия субподрядчику — настройка объекта: free — свободно, warn — предупреждать, block — запрещать; tol — допуск сверх сданного заказчику
+const RULE={mode:"warn",tol:.10};
+const RULE_L={free:"Свободно",warn:"Предупреждать",block:"Запрещать"};
+const OBJ={start:new Date(2026,4,1),today:new Date(2026,10,2),end:new Date(2027,4,31)}; // старт — май 2026 (первый табель)
+// два потолка по строке: остаток договора и сдано заказчику + допуск
+function capCheck(r,q){
+  const restC=r.qty-r.sub, lim=r.client*(1+RULE.tol)-r.sub, u=r.unit, f=v=>(Math.round(v*100)/100).toLocaleString("ru-RU");
+  if(q>restC) return {lvl:"extra",msg:`Больше остатка по смете на ${f(q-Math.max(0,restC))} ${u} — уйдёт в «Допработы» на решение, в акт не попадёт.`};
+  if(RULE.mode!=="free"&&q>lim){const over=q-Math.max(0,lim);
+    return RULE.mode==="block"
+     ?{lvl:"block",msg:`Запрещено правилом объекта: сдано заказчику ${f(r.client)} ${u}, принято у подрядчика ${f(r.sub)} ${u}, допуск ${Math.round(RULE.tol*100)} %. Сверх лимита ${f(over)} ${u} — записать после КС-2 или с отметкой руководителя и причиной.`}
+     :{lvl:"warn",msg:`Сверх сданного заказчику (+${Math.round(RULE.tol*100)} %) на ${f(over)} ${u}. Запишется как «аванс под контроль»: в акт — только с отметкой руководителя.`}}
+  return {lvl:"ok",msg:""};
+}
+const EXTRA=[ // sum — стоит нам (цена субподрядчика), cl — выставим заказчику; notice — уведомление по ст. 743 ГК; y1 — объём подтверждён технадзором, y2 — оплата согласована заказчиком
+ {t:"Перенос 14 оповещателей СОУЭ из-за изменения планировки 7–9 эт.",who:"Подрядчик Д",sys:"СОУЭ",sum:184000,cl:206100,st:0,d:"28.10",old:1,init:"заказчик · изменение планировки",inDog:"вне договора",notice:null,ans:"",y1:false,y2:false,dec:""},
+ {t:"Штробление под кабель АПС по монолиту, 212 м.п. (не было в ВОР)",who:"Подрядчик Б",sys:"АПС",sum:127200,cl:142500,st:0,d:"24.10",old:1,init:"проект · нет в ВОР",inDog:"спорно",notice:{d:"25.10",no:"исх. 211"},ans:"",y1:false,y2:false,dec:""},
+ {t:"Доп. лоток 300×50 на паркинге, 86 м.п.",who:"Подрядчик Б",sys:"ККСС",sum:64500,cl:72200,st:1,d:"17.10",init:"проект · изменение трассы",inDog:"вне договора",notice:{d:"18.10",no:"исх. 205"},ans:"22.10: запросил ЛСР",y1:true,y2:false,dec:"rebill"},
+ {t:"Замена короба 25×60 на 40×60 по требованию заказчика, 120 м.п.",who:"Подрядчик А",sys:"АСКУЭ",sum:38400,cl:43000,st:2,d:"09.10",init:"заказчик · письмо № 77",inDog:"вне договора",notice:{d:"09.10",no:"письмо заказчика № 77"},ans:"09.10: требование заказчика",y1:true,y2:false,dec:"rebill"},
+ {t:"Демонтаж/монтаж датчиков после отделки, 44 шт.",who:"Подрядчик В",sys:"АСКУВТ",sum:52800,cl:59100,st:3,d:"02.10",init:"заказчик · график отделки",inDog:"вне договора",notice:{d:"02.10",no:"исх. 190"},ans:"ДС № 3 от 16.10",y1:true,y2:true,dec:"rebill"},
+ {t:"Прокладка радиофидера по кровле, 140 м.п.",who:"Подрядчик Е",sys:"Радио",sum:91000,cl:101900,st:2,d:"29.09",init:"генподрядчик · изменение трассы",inDog:"спорно",notice:{d:"30.09",no:"исх. 188"},ans:"07.10: готовы рассмотреть",y1:true,y2:false,dec:"rebill"},
 ];
+const noDec=()=>EXTRA.filter(x=>x.st<3&&!x.dec);
+const X_TODAY=new Date(2026,10,5), DEC_L={"":"— решение —",rebill:"Перевыставить заказчику",own:"За наш счёт",reject:"Отказ субподрядчику"};
+const dmy=d=>{const [a,b]=d.split(".").map(Number);return new Date(2026,b-1,a)}, ago=d=>Math.round((X_TODAY-dmy(d))/864e5);
+// срок по ст. 743 ГК: уведомить заказчика и ждать ответа 10 дней, без ответа — приостановить
+function t743(x){if(x.ans)return ["ok","ответ: "+x.ans];if(!x.notice)return ["bad","не уведомлён · "+ago(x.d)+" дн."];const n=ago(x.notice.d);return n>10?["bad",`${x.notice.no} от ${x.notice.d} · ${n} дн. без ответа — приостановить`]:["warn",`${x.notice.no} от ${x.notice.d} · ждём ответа, осталось ${10-n} дн.`]}
 const EX_ST=["Выявлено","Согласовано внутри","Выставлено заказчику","Принято заказчиком (ДС)"];
 // ───────── свой персонал: табель «Публицист 11», октябрь 2026 (обезличено; часы и деньги настоящие) ─────────
 // [роль, форма оплаты, ставка ₽/ч, часы, дни, зарплата, премия, тип премии, наличные, часы на других объектах]
@@ -671,11 +718,14 @@ const STAFF=[
  ["Монтажник 16","часы",720,0,0,0,0,"",0,154],
 ];
 const FOT_MONTHS=[[1.2e6,false],[1.5e6,false],[1.8e6,false],[1948362,true],[2.3e6,false],[2624248,true]]; // [сумма, по табелю?]
-const NDFL=.87, VZNOSY=.30; // ÷0,87 — как в СВОДНОЙ АСТЭКС; 30 % — страховые из листа «Константы»
+const NDFL=.87, VZNOSY=.30, TRAVMA=.002; // ÷0,87 — как в СВОДНОЙ АСТЭКС; 30 % — страховые из листа «Константы» (строительства нет в льготах МСП, распоряжение 4125-р); травматизм — минимальный тариф 0,2 %, уточнить по основному ОКВЭД
 const S_H=sum(STAFF,s=>s[3]), S_ZP=sum(STAFF,s=>s[5]), S_PR=sum(STAFF,s=>s[6]), S_CASH=sum(STAFF,s=>s[8]), S_FOT=S_ZP+S_PR;
 const MONT=STAFF.filter(s=>s[2]>0), M_H=sum(MONT,s=>s[3]), M_FOT=sum(MONT,s=>s[5]+s[6]);
-const HOUR=M_FOT/M_H, HOUR_FULL=HOUR/NDFL*(1+VZNOSY);
+const HOUR=M_FOT/M_H, HOUR_FULL=HOUR/NDFL*(1+VZNOSY+TRAVMA), LOAD=(1+VZNOSY+TRAVMA)/NDFL; // нагрузка на «чистые» из табеля
 const FOT_TOTAL=sum(FOT_MONTHS,m=>m[0]);
+// маржа по слоям: СМР-субподряд считаем, свой ФОТ — с нагрузкой; поставка и ПНР — из Синтеки/договора (в демо нет данных)
+const M_SUB=T_SUB-T_SUBPAY, FOT_FULL=FOT_TOTAL*LOAD, UNCOV=Math.max(0,FOT_FULL-M_SUB);
+const TIME_PCT=(OBJ.today-OBJ.start)/(OBJ.end-OBJ.start);
 const ACTS=[
  ["А-2026-11-08","Подрядчик Б","ноябрь 2026","АПС, АПВ, ККСС",612300,"сформирован"],
  ["А-2026-10-07","Подрядчик Б","октябрь 2026","АПС, АПВ, ККСС",1261400,"подписан"],
@@ -690,26 +740,28 @@ function tiles(){
   const t=[
    ["Договор СМР",fmtM(T_CONTRACT),"15 систем, без НДС",""],
    ["Сдано заказчику",fmtM(T_CLIENT),pct(T_CLIENT/T_CONTRACT)+" договора",""],
-   ["Закрыто подрядчикам",fmtM(T_SUB),"по сметным расценкам",""],
-   ["Перекос закрытия",fmtM(T_SKEW),"закрыто, но не сдано заказчику","bad"],
-   ["Маржа СМР план / факт",Math.round(planMargin*100)+" / "+pct(factMargin),factMargin<planMargin?"ниже плана на "+pct(planMargin-factMargin):"в плане",factMargin<planMargin?"warn":"ok"],
-   ["Допработы без решения",fmtM(sum(EXTRA.filter(x=>x.st<2),x=>x.sum)),EXTRA.filter(x=>x.st<2).length+" позиции","warn"],
+   ["Принято у подрядчиков",fmtM(T_SUB),"по сметным расценкам",""],
+   ["Перекос закрытия",fmtM(T_SKEW),"принято у подрядчиков, но не сдано заказчику","bad"],
+   ["Маржа СМР план / факт",Math.round(planMargin*100)+" / "+pct(factMargin),factMargin<planMargin?"потеря маржи "+Math.round((planMargin-factMargin)*100)+" п. п. · без своего ФОТ":"в плане · без своего ФОТ",factMargin<planMargin?"warn":"ok"],
+   ["Непокрытый ФОТ",fmtM(UNCOV),"свой ФОТ май–окт. с налогами − маржа СМР · чем покрыт: поставка или ПНР?","bad"],
+   ["Допработы без решения",fmtM(sum(noDec(),x=>x.sum)),noDec().length+" поз. · не попадут в акт","warn"],
    ["ФОТ своих, октябрь",fmtM(S_FOT),"+"+fmtM(S_CASH)+" наличных · без привязки к системам","bad"],
   ];
   const F={"Договор СМР":"Сумма «СМР предбюджет» по 15 системам из сметы договора, без НДС",
    "Сдано заказчику":"Σ объёмов, принятых заказчиком по КС-2 × сметная расценка",
-   "Закрыто подрядчикам":"Σ объёмов, принятых у субподрядчиков × сметная расценка",
-   "Перекос закрытия":"Σ по позициям: max(0, закрыто подрядчику − сдано заказчику) × сметная расценка",
-   "Маржа СМР план / факт":"План — из бюджета договора. Факт = 1 − (к оплате субподрядчикам по их расценкам ÷ закрыто по сметным)",
-   "Допработы без решения":"Σ допработ в статусах «выявлено» и «согласовано внутри»",
+   "Принято у подрядчиков":"Σ объёмов, принятых у субподрядчиков × сметная расценка",
+   "Перекос закрытия":"Σ по позициям: max(0, принято у подрядчика − сдано заказчику) × сметная расценка",
+   "Маржа СМР план / факт":"План — из бюджета договора. Факт = 1 − (к оплате субподрядчикам по их расценкам ÷ принято по сметным). Свой ФОТ сюда не входит — он в «Непокрытом ФОТ» и в «Марже по слоям». Разбор — при потере больше 2 п. п. за месяц",
+   "Непокрытый ФОТ":"Свой ФОТ май–октябрь (август и октябрь по табелю, остальное оценка) × нагрузка (÷ 0,87 × 1,302) минус маржа СМР по субподряду (принято по сметным − к оплате субам). Наличные не включены",
+   "Допработы без решения":"Σ допработ по цене субподрядчика, по которым не выбрано: перевыставить заказчику, за наш счёт или отказ",
    "ФОТ своих, октябрь":"Табель за октябрь: зарплата + премии; наличные отдельно"};
-  const D={"Сдано заказчику":["▲","+"+fmtM(T_CLIENT*0.24/4.3)+" за неделю","ok"],"Закрыто подрядчикам":["▲","+"+fmtM(T_SUB*0.23/4.3)+" за неделю",""],
+  const D={"Сдано заказчику":["▲","+"+fmtM(T_CLIENT*0.24/4.3)+" за неделю","ok"],"Принято у подрядчиков":["▲","+"+fmtM(T_SUB*0.23/4.3)+" за неделю",""],
    "Перекос закрытия":["▲","+"+fmtM(T_SKEW*0.12)+" за неделю","bad"],"Допработы без решения":["▲","+1 позиция за неделю","warn"]};
   document.getElementById("tiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}<button type="button" class="q" title="${F[l]||""}" aria-label="Как считается">?</button></div><div class="v">${v}</div><div class="d">${d}</div>${D[l]?`<div class="delta ${D[l][2]}">${D[l][0]} ${D[l][1]}</div>`:""}</div>`).join("");
   document.querySelectorAll("#tiles .q").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const t=b.closest(".tile");let f=t.querySelector(".formula");if(f){f.remove();return}f=document.createElement("div");f.className="formula";f.textContent=b.title;t.appendChild(f)}));
 }
 function sysTable(){
-  const h=`<tr><th>Система</th><th class="n">Договор</th><th>Прогресс</th><th class="n">Сдано</th><th class="n">Закрыто</th><th>Статус</th></tr>`;
+  const h=`<tr><th>Система</th><th class="n">Договор</th><th>Прогресс</th><th class="n">Сдано</th><th class="n">Принято</th><th>Статус</th></tr>`;
   const b=SYS.map(x=>{const skew=x.sub-x.client;const st=skew>x.b*.05?`<span class="pill bad">перекос ${fmt(skew)}</span>`:skew>x.b*.01?`<span class="pill warn">+${fmt(skew)}</span>`:`<span class="pill ok">в балансе</span>`;
    return `<tr><td><b>${x.s}</b><br><span style="color:var(--muted);">${x.who}</span></td><td class="n">${fmt(x.b)}</td><td><div class="bar"><i class="s" style="width:${x.sub/x.b*100}%"></i><i class="c" style="width:${x.client/x.b*100}%"></i></div></td><td class="n">${pct(x.client/x.b)}</td><td class="n">${pct(x.sub/x.b)}</td><td>${st}</td></tr>`}).join("");
   document.getElementById("sysTable").innerHTML=h+b+`<tr class="tot"><td>Итого</td><td class="n">${fmt(T_CONTRACT)}</td><td></td><td class="n">${pct(T_CLIENT/T_CONTRACT)}</td><td class="n">${pct(T_SUB/T_CONTRACT)}</td><td></td></tr>`;
@@ -727,16 +779,17 @@ function balChart(){
     g+=`<rect x="${L}" y="${y+15}" width="${sc(v.c)-L}" height="9" fill="var(--client)"/>`;
     if(skew>v.s*.08) g+=`<text x="${sc(v.s)+6}" y="${y+13}" style="fill:var(--bad);font-weight:600">+${fmt(skew)}</text>`;
   });
-  g+=`</svg><div class="legend"><span><b style="background:var(--sub);opacity:.55"></b>закрыто подрядчику</span><span><b style="background:var(--client)"></b>сдано заказчику</span><span style="color:var(--bad)">красным — разница, ₽</span></div>`;
+  g+=`</svg><div class="legend"><span><b style="background:var(--sub);opacity:.55"></b>принято у подрядчика</span><span><b style="background:var(--client)"></b>сдано заказчику</span><span style="color:var(--bad)">красным — разница, ₽</span></div>`;
   document.getElementById("balChart").innerHTML=g;
 }
 function alerts(){
   const a=[
-   ["bad",`<b>Подрядчик Б · ККСС</b>: закрыто ${pct(SYS_PROG["ККСС"][1])} при сданных заказчику ${pct(SYS_PROG["ККСС"][0])}. Перекос ${fmt(SYS.find(x=>x.s==="ККСС").sub-SYS.find(x=>x.s==="ККСС").client)} ₽. Акт за ноябрь — только после КС-2 по лоткам.`],
+   ["bad",`<b>Подрядчик Б · ККСС</b>: принято ${pct(SYS_PROG["ККСС"][1])} при сданных заказчику ${pct(SYS_PROG["ККСС"][0])}. Перекос ${fmt(SYS.find(x=>x.s==="ККСС").sub-SYS.find(x=>x.s==="ККСС").client)} ₽. Акт за ноябрь — только после КС-2 по лоткам.`],
    ["bad",`<b>Подрядчик Б · АПС, АПВ</b>: расценка подрядчика 90 % от сметной, маржа по системам ${pct(1-SUB_RATE["Подрядчик Б"])} при плане ${pct(planMargin)}. Пересмотреть расценку или ДС с заказчиком.`],
    ["warn",`<b>Допработы 311 200 ₽</b> без решения больше 5 дней (СОУЭ, АПС). Перевыставить заказчику или отказать.`],
    ["warn",`<b>СВН</b>: выполнено 20 % при плане 45 % на 1 ноября. Отставание 7 недель, Подрядчик В.`],
-   ["bad",`<b>Свои монтажники · ${fmtM(S_FOT)} ₽ за октябрь</b> (${STAFF.length} человек, ${fmt(S_H)} ч) без привязки к системам. По файлу штатным записаны только СДЛ и АДСП — себестоимость АПС, ККСС, СОВ занижена. Нужна отметка системы в табеле.`],
+   ["bad",`<b>Непокрытый ФОТ ${fmtM(UNCOV)}</b>: свой ФОТ май–октябрь с налогами ${fmtM(FOT_FULL)} при марже СМР ${fmtM(M_SUB)}. ${STAFF.length} человек, ${fmt(S_H)} ч в октябре — без привязки к системам. Чем покрыт — поставкой или ПНР? Нужна отметка системы в табеле.`],
+   ["bad",`<b>ДР-002 · АПС, штробление 127 200 ₽</b>: уведомление исх. 211 от 25.10, ответа нет 11 дней. По ст. 743 ГК — приостановить работы, иначе право на оплату под вопросом.`],
    ["ok",`<b>СКЗ, АДСП</b>: сданы заказчику на 80–90 %, баланс сходится, можно закрывать гарантийные удержания по графику.`],
   ];
   document.getElementById("alerts").innerHTML=a.map(([c,t])=>`<li class="${c}">${t}</li>`).join("");
@@ -754,8 +807,20 @@ function monthChart(){
   g+=`<path d="${path(1)}" fill="none" stroke="var(--sub)" stroke-width="2"/><path d="${path(0)}" fill="none" stroke="var(--client)" stroke-width="2.5"/>`;
   pts.forEach((p,i)=>{g+=`<circle cx="${x(i)}" cy="${y(p[0])}" r="3" fill="var(--client)"/><circle cx="${x(i)}" cy="${y(p[1])}" r="3" fill="var(--sub)"/>`});
   g+=`<text x="${x(5)+8}" y="${y(pts[5][1])+4}" text-anchor="start" style="fill:var(--sub);font-weight:600">${fmtM(T_SUB)}</text><text x="${x(5)+8}" y="${y(pts[5][0])+4}" text-anchor="start" style="fill:var(--client);font-weight:600">${fmtM(T_CLIENT)}</text></svg>`;
-  g+=`<div class="legend"><span><b style="background:var(--client)"></b>сдано заказчику, нарастающим</span><span><b style="background:var(--sub)"></b>закрыто подрядчикам</span></div>`;
+  g+=`<div class="legend"><span><b style="background:var(--client)"></b>сдано заказчику, нарастающим</span><span><b style="background:var(--sub)"></b>принято у подрядчиков</span></div>`;
+  const sk=pts.map(p=>p[1]-p[0]);
+  g+=`<div class="wrap" style="margin-top:8px"><table class="mini"><tr><th>Перекос нарастающим</th>${MONTHS.map(m=>`<th class="n">${m}</th>`).join("")}</tr><tr><td>млн ₽</td>${sk.map(v=>`<td class="n">${(v/1e6).toLocaleString("ru-RU",{minimumFractionDigits:2,maximumFractionDigits:2})}</td>`).join("")}</tr><tr><td>за месяц</td>${sk.map((v,i)=>`<td class="n" style="color:${i&&v-sk[i-1]>0?"var(--bad)":"var(--ok)"}">${i?(v-sk[i-1]>=0?"+":"−")+Math.abs((v-sk[i-1])/1e6).toLocaleString("ru-RU",{minimumFractionDigits:2,maximumFractionDigits:2}):"—"}</td>`).join("")}</tr></table></div><p class="note">Дыра растёт каждый месяц — правило закрытия «Предупреждать» или «Запрещать» останавливает её рост с первого акта.</p>`;
   document.getElementById("monthChart").innerHTML=g;
+}
+function layers(){
+  const r=(a,b,c,d,cls="")=>`<tr class="${cls}"><td>${a}</td><td class="n">${b}</td><td class="n">${c}</td><td class="n">${d}</td></tr>`;
+  document.getElementById("layers").innerHTML=`<tr><th>Слой</th><th class="n">Заработано</th><th class="n">Себестоимость</th><th class="n">Маржа</th></tr>`+
+   r("Поставка оборудования и материалов",'<span class="pill mut">из Синтеки</span>','<span class="pill mut">из Синтеки</span>','<span class="pill mut">фаза 1</span>')+
+   r("ПНР",'<span class="pill mut">нет строки</span>','<span class="pill mut">—</span>','<span class="pill mut">вопрос 4</span>')+
+   r("СМР · субподряд (принято по сметным / к оплате субам)",fmt(T_SUB),fmt(T_SUBPAY),fmt(M_SUB)+" · "+pct(M_SUB/T_SUB))+
+   r("Свой ФОТ май–октябрь с налогами",'—',fmt(FOT_FULL),fmtS(-FOT_FULL))+
+   r("Итог СМР со своим ФОТ",'',`<span style="color:var(--muted)">наличные не включены</span>`,`<b style="color:var(--bad)">${fmtS(M_SUB-FOT_FULL)}</b>`,"tot");
+  document.getElementById("layersNote").innerHTML=`По смете почти все системы отданы субподрядчикам (коэффициент 0,78–0,90), своими числятся только СДЛ и АДСП. Свой ФОТ за полгода больше маржи СМР на <b>${fmtM(UNCOV)}</b> — его фактически оплачивает маржа поставки или ПНР. Как распределять ФОТ — настройка объекта: по отметке системы в табеле (точно), по позициям СМР/ПНР или в «общие условия объекта». Нужно от АСТЭКС: что делают свои 21 человек, где по замыслу маржа объекта, есть ли ПНР отдельной строкой. Август и октябрь — по табелю, остальные месяцы — оценка.`;
 }
 function forecast(){
   const weekRate=T_CLIENT*0.24/4.3; const left=T_CONTRACT-T_CLIENT; const weeks=left/weekRate;
@@ -766,8 +831,9 @@ function forecast(){
    ["Осталось сдать по договору",fmt(left)+" ₽"],
    ["Окончание при текущем темпе",end.toLocaleDateString("ru-RU")+` <span class="pill ${end>plan?"bad":"ok"}">${end>plan?"позже плана на "+Math.round((end-plan)/864e5/7)+" нед.":"в срок"}</span>`],
    ["Срок по договору","31.05.2027"],
+   ["Выполнено / прошло срока",pct(T_CLIENT/T_CONTRACT)+" / "+pct(TIME_PCT)+` <span class="pill ${T_CLIENT/T_CONTRACT<TIME_PCT-.02?"warn":"ok"}">${T_CLIENT/T_CONTRACT<TIME_PCT-.02?"отстаём":"идём по сроку"}</span>`],
    ["Нужный темп, чтобы успеть",fmt(left/((plan-new Date(2026,10,2))/6048e5))+" ₽ / нед."],
-   ["Прогноз маржи СМР по объекту",fmt(T_CONTRACT*factMargin)+" ₽ ("+pct(factMargin)+") при плане "+fmt(T_CONTRACT*planMargin)+" ₽"],
+   ["Прогноз маржи СМР по субподряду",fmt(T_CONTRACT*factMargin)+" ₽ ("+pct(factMargin)+") при плане "+fmt(T_CONTRACT*planMargin)+" ₽ · без своего ФОТ"],
   ];
   document.getElementById("forecast").innerHTML=rows.map(([a,b])=>`<tr><td>${a}</td><td class="n" style="white-space:normal">${b}</td></tr>`).join("");
 }
@@ -789,12 +855,14 @@ function phone(){
   sel.value=rows.findIndex(r=>r.sys==="ККСС");
   document.getElementById("pWho").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");
   const upd=()=>{const r=rows[+sel.value];document.getElementById("pWho").value=r.who;
-    const rest=r.qty-r.sub;document.getElementById("pRest").textContent=`По смете ${r.qty} ${r.unit} · закрыто ${r.sub} · остаток ${Math.max(0,rest).toFixed(rest%1?1:0)} ${r.unit}`;
+    const rest=r.qty-r.sub;document.getElementById("pRest").textContent=`По смете ${r.qty} ${r.unit} · принято ${r.sub} · остаток ${Math.max(0,rest).toFixed(rest%1?1:0)} ${r.unit}`;
     const q=+document.getElementById("pQty").value||0;document.getElementById("pMoney").textContent=`× ${fmt(r.rate)} ₽ (расценка исполнителя) = ${fmt(q*r.rate)} ₽ · по смете ${fmt(q*r.ps)} ₽`;
-    const w=document.getElementById("pWarn");if(q>rest){w.hidden=false;w.textContent=`Больше остатка по смете на ${(q-rest).toFixed(1)} ${r.unit}. Запись уйдёт в «Допработы» на согласование, в акт не попадёт.`}else w.hidden=true;
+    const w=document.getElementById("pWarn"),c=capCheck(r,q);w.hidden=c.lvl==="ok";w.textContent=c.msg;w.className="warnbox"+(c.lvl==="warn"?" soft":"");
     document.getElementById("pOk").hidden=true};
   sel.addEventListener("change",upd);document.getElementById("pQty").addEventListener("input",upd);
-  document.getElementById("pSave").addEventListener("click",()=>{document.getElementById("pOk").hidden=false});
+  document.getElementById("pRestBtn").addEventListener("click",()=>{const r=rows[+sel.value];document.getElementById("pQty").value=Math.max(0,Math.round((r.qty-r.sub)*100)/100);upd()});
+  document.getElementById("pSave").addEventListener("click",()=>{const r=rows[+sel.value],c=capCheck(r,+document.getElementById("pQty").value||0);const o=document.getElementById("pOk");o.hidden=false;
+    o.textContent=c.lvl==="block"?"Не записано: правило объекта. Нужна отметка руководителя с причиной.":c.lvl==="warn"?"Записано как «аванс под контроль» · ждёт отметки руководителя.":c.lvl==="extra"?"Записано в «Допработы» со статусом «выявлено».":"Записано. Запись #1 842 · в акт за ноябрь.";o.className=c.lvl==="block"?"warnbox":"ok"});
   document.getElementById("pQty").value=40;upd();
 }
 
@@ -804,19 +872,26 @@ function contractor(){
   const rs=rows.filter(r=>r.who===who);const ss=SYS.filter(x=>x.who===who);
   const closed=sum(ss,x=>x.sub),pay=sum(ss,x=>x.subPay),client=sum(ss,x=>x.client);
   const acted=ACTS.filter(a=>a[1]===who).reduce((s,a)=>s+a[4],0);const hold=acted*.05;
-  const t=[["Закрыто по сметным расценкам",fmtM(closed),ss.map(x=>x.s).join(", "),""],["К оплате по его расценке",fmtM(pay),"средняя "+pct(SUB_RATE[who])+" от сметной",""],
-   ["Сдано заказчику по его системам",fmtM(client),closed>client*1.05?"закрыто больше, чем сдано":"в балансе",closed>client*1.05?"bad":"ok"],
+  const t=[["Принято у него (по сметным)",fmtM(closed),ss.map(x=>x.s).join(", "),""],["К оплате по его расценке",fmtM(pay),"средняя "+pct(SUB_RATE[who])+" от сметной",""],
+   ["Сдано заказчику по его системам",fmtM(client),closed>client*1.05?"принято больше, чем сдано":"в балансе",closed>client*1.05?"bad":"ok"],
    ["Заактировано",fmtM(acted),ACTS.filter(a=>a[1]===who).length+" акта",""],["Гарантийное удержание 5 %",fmtM(hold),"по актам · возврат после КС-11 + 24 мес.",""],["Маржа по подрядчику",pct(1-SUB_RATE[who]),(1-SUB_RATE[who])<planMargin?"ниже плана":"в плане",(1-SUB_RATE[who])<planMargin?"warn":"ok"]];
+  const paidA=ACTS.filter(a=>a[1]===who&&a[5].includes("оплачен")).reduce((s,a)=>s+a[4],0), exW=EXTRA.filter(x=>x.who===who);
+  const rej=Object.values(window.ACT_DEC||{}).reduce((n,d)=>n+Object.values(d).filter(v=>v.t!=="ok").length,0);
+  const C=[["Принято прорабом",pay,"по его расценке"],["Заактировано",acted,ACTS.filter(a=>a[1]===who).length+" акта"],["Оплачено на руки",paidA*.92,"акт − 5 % − 3 %"],
+    ["Должны мы",ACTS.filter(a=>a[1]===who&&a[5]==="подписан").reduce((s,a)=>s+a[4],0)*.92,"по подписанным актам, не оплачено"],["Принято, не заактировано",pay-acted,"ждёт актов"],["Удержано",acted*.05,"возврат после КС-11 + 24 мес."],
+    ["Допработы",sum(exW,x=>x.sum),exW.length+" поз. · без решения "+exW.filter(x=>x.st<3&&!x.dec).length],["Отклонено строк",rej,"в актах: частично / отложено"]];
+  document.getElementById("cChain").innerHTML=C.map(([l,v,d],i)=>`<div class="ci"><div class="l">${l}</div><div class="v">${i===7?v:fmt(v)}</div><div class="d">${d}</div></div>`).join("");
   document.getElementById("cTiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
   document.getElementById("cTitle").innerHTML=`${who} · позиции <span>физобъёмы и деньги</span>`;
   const myActs=ACTS.filter(a=>a[1]===who);
   document.getElementById("cRet").innerHTML=`<tr><th>Акт</th><th>Период</th><th class="n">Сумма</th><th class="n">Удержано 5 %</th><th>Возврат</th></tr>`+myActs.map(a=>`<tr><td class="n" style="text-align:left">${a[0]}</td><td>${a[2]}</td><td class="n">${fmt(a[4])}</td><td class="n">${fmt(a[4]*.05)}</td><td>после КС-11 + 24 мес.</td></tr>`).join("")+`<tr class="tot"><td colspan="3">Удержано всего</td><td class="n">${fmt(sum(myActs,a=>a[4]*.05))}</td><td></td></tr>`;
   const P=(CHK[who]||CHK.default).concat([["Допуск СРО действует","ok","до 30.06.2027"],["Самозанятые в бригаде: статус НПД и чеки (риск переквалификации)","ok","проверено в «Мой налог»"]]);
   const blocked=P.filter(x=>x[1]!=="ok").length;
-  document.getElementById("cPay").innerHTML=P.map(x=>`<div class="chki ${x[1]}"><span class="dot"></span><span>${x[0]}</span><span class="who">${x[2]}</span></div>`).join("")+`<div class="chki ${blocked?"warn":"ok"}" style="border-bottom:0"><span class="dot"></span><b>${blocked?"Оплата на паузе: "+blocked+" усл.":"Оплата разрешена"}</b></div>`;
+  document.getElementById("cPay").innerHTML=P.map(x=>`<div class="chki ${x[1]}"><span class="dot"></span><span>${x[0]}</span><span class="who">${x[2]}</span></div>`).join("")+`<div class="chki ${blocked?"warn":"ok"}" style="border-bottom:0"><span class="dot"></span><b>${blocked?"Оплата на паузе с 01.11: "+P.filter(x=>x[1]!=="ok").map(x=>x[0]+" ("+x[2]+")").join("; "):"Оплата разрешена"}</b></div>`;
   const dn=`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`, v=SUB_VAT[who]||["22 %","общая система","с 01.01.2026"];
   document.getElementById("cDog").innerHTML=`<tr><th>Условие</th><th>Значение</th><th>Как применяется</th></tr>`+[
    ["Договор",`№ ${dn} от 14.05.2026`,"номер и дата — в шапке каждого акта"],
+   ["Сумма договора",fmt(sum(SYS.filter(x=>x.who===who),x=>x.b*SUB_RATE[who]))+" ₽",`уменьшить ниже заактированного (${fmt(ACTS.filter(a=>a[1]===who).reduce((s,a)=>s+a[4],0))} ₽) нельзя; правка действует только на будущие акты`],
    ["Договорной коэффициент",SUB_RATE[who].toFixed(2).replace(".",","),`цена в акте = расценка сметы заказчика × ${SUB_RATE[who].toFixed(2).replace(".",",")}, п. 3.2`],
    ["Гарантийное удержание","5 %","отдельной строкой в акте, возврат после КС-11 + 24 мес."],
    ["Генподрядные услуги","3 %","отдельной строкой в акте, п. 4.6"],
@@ -828,8 +903,18 @@ function contractor(){
 
 // ───────── допработы ─────────
 function extra(){
-  const open=EXTRA.filter(x=>x.st<2),out=EXTRA.filter(x=>x.st===2),ok=EXTRA.filter(x=>x.st===3);
-  document.getElementById("xTiles").innerHTML=[["Без решения",fmt(sum(open,x=>x.sum))+" ₽",open.length+" поз. · старше 5 дней: "+open.filter(x=>x.old).length,"bad"],["Выставлено заказчику",fmt(sum(out,x=>x.sum))+" ₽",out.length+" поз. · ждём ответа","warn"],["Принято заказчиком (ДС)",fmt(sum(ok,x=>x.sum))+" ₽","ушло в версию сметы","ok"],["Всего допработ за объект",fmt(sum(EXTRA,x=>x.sum))+" ₽",pct(sum(EXTRA,x=>x.sum)/T_CONTRACT)+" от договора СМР",""]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  const open=noDec(),out=EXTRA.filter(x=>x.st===2),ok=EXTRA.filter(x=>x.st===3);
+  const late=EXTRA.filter(x=>x.st<3&&t743(x)[0]==="bad"), cl=sum(EXTRA,x=>x.cl), cost=sum(EXTRA,x=>x.sum);
+  const hang=EXTRA.filter(x=>x.st<3), b30=hang.filter(x=>ago(x.d)<=30).length, b60=hang.filter(x=>ago(x.d)>30&&ago(x.d)<=60).length, b90=hang.filter(x=>ago(x.d)>60).length;
+  const ch744=cl/T_CONTRACT;
+  document.getElementById("xTiles").innerHTML=[
+   ["Без решения",fmt(sum(open,x=>x.sum))+" ₽",open.length+" поз. по цене субподрядчика · не попадут в акт","bad"],
+   ["Выставлено заказчику",fmt(sum(out,x=>x.cl))+" ₽",out.length+" поз. · ждём ответа","warn"],
+   ["Принято заказчиком (ДС)",fmt(sum(ok,x=>x.cl))+" ₽","ушло в версию сметы","ok"],
+   ["Срок ст. 743 нарушен",late.length+" поз.",late.length?"не уведомлён или 10 дней без ответа":"все уведомлены вовремя",late.length?"bad":"ok"],
+   ["Маржа на допработах",fmt(cl-cost)+" ₽",`заказчику ${fmt(cl)} − субам ${fmt(cost)} · ${pct((cl-cost)/cl)}`,""],
+   ["Изменения к договору",(ch744*100).toLocaleString("ru-RU",{maximumFractionDigits:1})+" %",`из 10 % по ст. 744 · висят: до 30 дн. ${b30} · 30–60 ${b60} · > 60 ${b90}`,ch744>.08?"warn":""]
+  ].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
   const F=window.X_FILTER??-1;
   const segs=[[-1,"Все"],[0,EX_ST[0]],[1,EX_ST[1]],[2,EX_ST[2]],[3,"Принято (ДС)"]];
   document.getElementById("xSeg").innerHTML=segs.map(([k,l])=>`<button type="button" data-k="${k}" class="${k===F?"on":""}">${l} <b>${k<0?EXTRA.length:EXTRA.filter(x=>x.st===k).length}</b></button>`).join("");
@@ -837,14 +922,27 @@ function extra(){
   const list=EXTRA.map((x,i)=>({...x,i})).filter(x=>F<0||x.st===F);
   const pill=st=>`<span class="pill ${st<2?"bad":st===2?"warn":"ok"}">${EX_ST[st]}</span>`;
   const NEXT=["Согласовать","Выставить заказчику","Принято заказчиком",""];
-  document.getElementById("xTable").innerHTML=`<tr><th>№</th><th>Дата</th><th>Что сделано</th><th>Система</th><th>Исполнитель</th><th class="n">Сумма, ₽</th><th>Версия</th><th>Статус</th><th>У кого</th><th class="n">Дней</th><th></th></tr>`+
-   list.map(x=>`<tr><td class="n" style="text-align:left">ДР-${String(x.i+1).padStart(3,"0")}</td><td>${x.d}</td><td>${x.t}</td><td>${x.sys}</td><td>${x.who}</td><td class="n" id="xs${x.i}">${fmt(x.sum)}</td><td><span class="pill mut" title="${(x.hist||[]).map(h=>"v"+h.rev+": "+fmt(h.sum)+" ₽ · "+h.d).join("\n")||"первая версия"}">v${x.rev||1}</span>${x.hist&&x.hist.length?`<div class="who">было ${fmt(x.hist[x.hist.length-1].sum)}</div>`:""}</td><td>${pill(x.st)}</td><td>${["Берг М. С.","ПТО","Заказчик","—"][x.st]}</td><td class="n">${x.st<3?(()=>{const [d,m]=x.d.split(".").map(Number);const n=Math.round((new Date(2026,10,5)-new Date(2026,m-1,d))/864e5);return n>5?`<span class="pill bad">${n}</span>`:n})():""}</td><td class="acts2">${x.st<3?`<button class="sec act-btn rev-btn" type="button" data-i="${x.i}">Уточнить</button>`:""}${NEXT[x.st]?`<button class="sec act-btn" type="button" data-i="${x.i}">${NEXT[x.st]}</button>`:""}</td></tr>`).join("")+
-   `<tr class="tot"><td colspan="5">Итого по показанным</td><td class="n">${fmt(sum(list,x=>x.sum))}</td><td colspan="5"></td></tr>`;
+  const yes=(v,l)=>`<span class="pill ${v?"ok":"mut"}">${v?"✓":"—"} ${l}</span>`;
+  document.getElementById("xTable").innerHTML=`<tr><th>№</th><th>Дата</th><th>Что сделано</th><th>Система · исполнитель</th><th class="n">Стоит нам</th><th class="n">Заказчику</th><th class="n">Маржа</th><th>Срок ст. 743</th><th>Согласие заказчика</th><th>Решение</th><th>Статус</th><th></th></tr>`+
+   list.map(x=>{const t=t743(x);const n=ago(x.d);return `<tr><td class="n" style="text-align:left">ДР-${String(x.i+1).padStart(3,"0")}</td><td>${x.d}</td><td>${x.t}<div class="who">инициатор: ${x.init} · ${x.inDog}</div></td><td>${x.sys}<div class="who">${x.who}</div></td><td class="n"><span id="xs${x.i}">${fmt(x.sum)}</span><div class="who"><span class="pill mut" title="${(x.hist||[]).map(h=>"v"+h.rev+": "+fmt(h.sum)+" ₽ · "+h.d).join(", ")||"первая версия"}">v${x.rev||1}</span>${x.hist&&x.hist.length?" было "+fmt(x.hist[x.hist.length-1].sum):""}</div></td><td class="n">${fmt(x.cl)}</td><td class="n">${fmt(x.cl-x.sum)}</td>
+     <td style="min-width:170px"><span class="pill ${t[0]}" style="white-space:normal">${t[1]}</span>${!x.notice&&x.st<3?`<div style="margin-top:4px"><button class="pri act-btn ntf-btn" type="button" data-i="${x.i}">Уведомить заказчика</button></div>`:""}</td>
+     <td style="white-space:nowrap">${yes(x.y1,"объём")}<br>${yes(x.y2,"оплата")}</td>
+     <td>${x.st<3?`<select class="dec-sel" style="max-width:170px" data-i="${x.i}" aria-label="Решение по допработе">${Object.entries(DEC_L).map(([k,l])=>`<option value="${k}"${x.dec===k?" selected":""}>${l}</option>`).join("")}</select>${x.dec?"":'<div class="who" style="color:var(--bad)">без решения — не в акте</div>'}`:DEC_L[x.dec]}</td>
+     <td>${pill(x.st)}<div class="who">${["у Берг М. С.","у ПТО","у заказчика","—"][x.st]}${x.st<3?" · "+(n>5?`<b style="color:var(--bad)">${n} дн.</b>`:n+" дн."):""}</div></td><td class="acts2">${x.st<3?`<button class="sec act-btn rev-btn" type="button" data-i="${x.i}">Уточнить</button>`:""}${NEXT[x.st]?`<button class="sec act-btn nx-btn" type="button" data-i="${x.i}">${NEXT[x.st]}</button>`:""}</td></tr>`}).join("")+
+   `<tr class="tot"><td colspan="4">Итого по показанным</td><td class="n">${fmt(sum(list,x=>x.sum))}</td><td class="n">${fmt(sum(list,x=>x.cl))}</td><td class="n">${fmt(sum(list,x=>x.cl-x.sum))}</td><td colspan="5"></td></tr>`;
+  const msg=(t,c="bad")=>{const m=document.getElementById("xMsg");m.innerHTML=`<li class="${c}">${t}</li>`;m.hidden=false};
   document.querySelectorAll("#xTable .rev-btn").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.i,x=EXTRA[i],td=document.getElementById("xs"+i);
     td.innerHTML=`<input type="number" class="inl" value="${x.sum}" aria-label="Новая сумма"><button class="pri act-btn" type="button">Сохранить</button>`;
-    td.querySelector("button").addEventListener("click",()=>{const v=+td.querySelector("input").value||x.sum;(x.hist=x.hist||[]).push({rev:x.rev||1,sum:x.sum,d:x.d});x.rev=(x.rev||1)+1;x.sum=v;x.d="05.11";extra();tiles()})}));
+    td.querySelector("button").addEventListener("click",()=>{const v=+td.querySelector("input").value||x.sum;(x.hist=x.hist||[]).push({rev:x.rev||1,sum:x.sum,d:x.d});x.rev=(x.rev||1)+1;x.cl=Math.round(x.cl*v/x.sum);x.sum=v;x.d="05.11";extra();tiles()})}));
+  document.querySelectorAll("#xTable .ntf-btn").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];x.notice={d:"05.11",no:"исх. "+(214+ +b.dataset.i)};extra();msg(`Уведомление ${x.notice.no} от 05.11 ушло заказчику по ЭДО: что выявлено, фото, сумма ${fmt(x.cl)} ₽, срок ответа 10 дней (ст. 743 ГК). Доставка подтверждена.`,"ok")}));
+  document.querySelectorAll("#xTable .dec-sel").forEach(sl=>sl.addEventListener("change",()=>{EXTRA[+sl.dataset.i].dec=sl.value;extra()}));
   document.getElementById("xCount").textContent=list.length+" из "+EXTRA.length;
-  document.querySelectorAll("#xTable .act-btn:not(.rev-btn)").forEach(b=>b.addEventListener("click",()=>{const x=EXTRA[+b.dataset.i];if(x.st<3)x.st++;extra();tiles()}));
+  document.querySelectorAll("#xTable .nx-btn").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.i,x=EXTRA[i],no="ДР-"+String(i+1).padStart(3,"0");
+    if(x.st===0&&!x.dec){msg(`${no}: сначала решение — перевыставить заказчику, за наш счёт или отказ субподрядчику.`);return}
+    if(x.st===1&&x.dec!=="rebill"){msg(`${no}: выставить заказчику можно только с решением «Перевыставить заказчику».`);return}
+    if(x.st===1&&!x.notice){msg(`${no}: сначала уведомите заказчика — без уведомления по ст. 743 ГК право на оплату теряется.`);return}
+    if(x.st===2){x.y1=true;x.y2=true}
+    if(x.st<3)x.st++;extra();tiles()}));
 }
 
 // ───────── акты ─────────
@@ -855,7 +953,12 @@ function regTable(){
 let ACT_STATE=null;
 function renderAct(no, who, mon, share, note){
   const rs=rows.filter(r=>r.who===who&&r.sub>0).slice(0,9);
-  const q0=r=>(r.unit==="шт"||r.unit==="компл")?Math.max(1,Math.round(r.sub*share)):Math.round(r.sub*share*100)/100;
+  const isPc=r=>r.unit==="шт"||r.unit==="компл", rnd=(r,v)=>isPc(r)?Math.round(v):Math.round(v*100)/100;
+  const raw=r=>isPc(r)?Math.max(1,Math.round(r.sub*share)):Math.round(r.sub*share*100)/100;
+  const signed=(ACTS.find(a=>a[0]===no)||[])[5]||""; const live=!signed.startsWith("подписан");
+  const OV={}; // строки сверх сданного заказчику: {over, cut}
+  rs.forEach(r=>{const allow=r.client*(1+RULE.tol)-(r.sub-raw(r)); const over=raw(r)-Math.max(0,allow); if(RULE.mode!=="free"&&over>0.005) OV[r.code]={over:rnd(r,over),cut:live&&RULE.mode==="block"}});
+  const q0=r=>OV[r.code]&&OV[r.code].cut?Math.max(0,rnd(r,raw(r)-OV[r.code].over)):raw(r);
   const DEC=(window.ACT_DEC=window.ACT_DEC||{})[no]||(window.ACT_DEC[no]={});
   const q=r=>{const d=DEC[r.code];if(!d||d.t==="ok")return q0(r);if(d.t==="defer")return 0;return d.q};
   const tot=sum(rs,r=>q(r)*r.rate);const deferred=rs.filter(r=>DEC[r.code]&&DEC[r.code].t==="defer"),partial=rs.filter(r=>DEC[r.code]&&DEC[r.code].t==="part");
@@ -864,12 +967,13 @@ function renderAct(no, who, mon, share, note){
   document.getElementById("act").innerHTML=`${note?`<div class="alerts" style="margin-bottom:14px;font-family:var(--sans)"><li class="ok">${note}</li></div>`:""}<h2>АКТ № ${no} о приёмке выполненных работ</h2><div style="text-align:center;">за период с 01.${mi}.${yr} по ${last}.${mi}.${yr}</div>
   <div class="meta"><div><b>Заказчик (Генподрядчик):</b> ООО «АСТЭКС»</div><div><b>Подрядчик:</b> ${who}</div><div><b>Объект:</b> ЖК «Публицист 11»</div><div><b>Договор субподряда:</b> № СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026 от 14.05.2026</div></div>
   <div class="wrap"><table><tr><th>№</th><th>Шифр сметы</th><th>Наименование работ</th><th>Ед.</th><th>Кол-во</th><th>Цена, ₽</th><th>Сумма, ₽</th><th class="dec">Решение</th></tr>
-  ${rs.map((r,i)=>{const d=DEC[r.code]||{t:"ok"};return `<tr class="${d.t==="defer"?"deferred":""}"><td style="text-align:center">${i+1}</td><td style="text-align:center">${r.code}</td><td>${r.name}${d.t!=="ok"?`<div class="who">${d.t==="part"?"принято частично":"отложено"}${d.why?" · "+d.why:""}${d.t==="part"?" · подано "+q0(r):""}</div>`:""}</td><td style="text-align:center">${r.unit}</td><td class="n">${q(r)}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(q(r)*r.rate)}</td><td class="dec"><select data-code="${r.code}" aria-label="Решение по позиции"><option value="ok"${d.t==="ok"?" selected":""}>Принять</option><option value="part"${d.t==="part"?" selected":""}>Частично</option><option value="defer"${d.t==="defer"?" selected":""}>Отложить</option></select>${d.t!=="ok"?`<input class="inl" data-code="${r.code}" placeholder="причина" value="${d.why||""}" aria-label="Причина">`:""}${d.t==="part"?`<input class="inl qty" type="number" data-code="${r.code}" value="${d.q}" aria-label="Принято">`:""}</td></tr>`}).join("")}
+  ${rs.map((r,i)=>{const d=DEC[r.code]||{t:"ok"};return `<tr class="${d.t==="defer"?"deferred":""}"><td style="text-align:center">${i+1}</td><td style="text-align:center">${r.code}</td><td>${r.name}${OV[r.code]?`<div class="who" style="color:${OV[r.code].cut?"var(--bad)":"var(--warn)"}">${OV[r.code].cut?"сверх сданного заказчику "+OV[r.code].over+" "+r.unit+" — перенесено в «аванс под контроль»":"сверх сданного заказчику "+OV[r.code].over+" "+r.unit+(live?" — нужна отметка руководителя":" — подписан до правила")}</div>`:""}${d.t!=="ok"?`<div class="who">${d.t==="part"?"принято частично":"отложено"}${d.why?" · "+d.why:""}${d.t==="part"?" · подано "+q0(r):""}</div>`:""}</td><td style="text-align:center">${r.unit}</td><td class="n">${q(r)}</td><td class="n">${fmt(r.rate)}</td><td class="n">${fmt(q(r)*r.rate)}</td><td class="dec"><select data-code="${r.code}" aria-label="Решение по позиции"><option value="ok"${d.t==="ok"?" selected":""}>Принять</option><option value="part"${d.t==="part"?" selected":""}>Частично</option><option value="defer"${d.t==="defer"?" selected":""}>Отложить</option></select>${d.t!=="ok"?`<input class="inl" data-code="${r.code}" placeholder="причина" value="${d.why||""}" aria-label="Причина">`:""}${d.t==="part"?`<input class="inl qty" type="number" data-code="${r.code}" value="${d.q}" aria-label="Принято">`:""}</td></tr>`}).join("")}
   <tr><td colspan="6" style="text-align:right"><b>Итого без НДС</b></td><td class="n"><b>${fmtS(tot)}</b></td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Гарантийное удержание 5 %</td><td class="n">${fmtS(-tot*.05)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right">Генподрядные услуги 3 % (п. 4.6 договора субподряда)</td><td class="n">${fmtS(-tot*.03)}</td><td class="dec"></td></tr><tr><td colspan="6" style="text-align:right"><b>К оплате без НДС</b></td><td class="n"><b>${fmtS(tot*.92)}</b></td><td class="dec"></td></tr></table></div>
   ${deferred.length||partial.length?`<p class="note">${deferred.length?`Отложено ${deferred.length} поз. на сумму ${fmt(sum(deferred,r=>q0(r)*r.rate))} ₽ — перейдут в акт следующего периода. `:""}${partial.length?`Частично принято ${partial.length} поз. — остаток ${fmt(sum(partial,r=>(q0(r)-q(r))*r.rate))} ₽ переносится.`:""} Субподрядчик видит причину в своём кабинете.</p>`:""}
   <p style="margin:10px 0 0">В демо загружены 90 из 585 позиций сметы, поэтому на экране первые ${rs.length} строк из ${all}, а сумма меньше суммы акта в реестре (там — по всем позициям). Объёмы приняты по журналу выполнения за ${mon}, подтверждены прорабом ${last}.${mi}.${yr}. Работы вне сметы попадают в акт только после решения в «Допработах».</p>
   <div class="sig"><div>Сдал: ${who} ______________</div><div>Принял: ООО «АСТЭКС», представитель по доверенности ______________</div></div>`;
-  ACT_STATE={no,who,mon,rs:rs.filter(r=>q(r)>0),q,tot,mi,yr,last,all,contract:`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`};
+  window.ACT_OV=OV;
+  ACT_STATE={no,who,mon,rs:rs.filter(r=>q(r)>0),q,tot,mi,yr,last,all,ov:OV,live,contract:`СП-${String(SUBS.indexOf(who)+1).padStart(2,"0")}/2026`};
   const rerender=()=>renderAct(no,who,mon,share,note);
   document.querySelectorAll("#act select[data-code]").forEach(sel=>sel.addEventListener("change",()=>{const r=rs.find(x=>x.code===sel.dataset.code);DEC[sel.dataset.code]=sel.value==="ok"?{t:"ok"}:sel.value==="part"?{t:"part",q:Math.round(q0(r)/2*100)/100,why:""}:{t:"defer",why:""};rerender()}));
   document.querySelectorAll("#act input.qty").forEach(inp=>inp.addEventListener("change",()=>{DEC[inp.dataset.code].q=+inp.value||0;rerender()}));
@@ -971,6 +1075,32 @@ function acts(){
     document.getElementById("act").scrollIntoView({behavior:"smooth",block:"start"});
   });
   document.getElementById("aDocx").addEventListener("click",actDocx);
+  document.getElementById("aCheck").addEventListener("click",checkAct);
+  ruleUI();
+}
+function ruleUI(){
+  const seg=document.getElementById("ruleSeg");
+  seg.innerHTML=Object.entries(RULE_L).map(([k,l])=>`<button type="button" data-k="${k}" class="${RULE.mode===k?"on":""}">${l}</button>`).join("");
+  seg.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{RULE.mode=b.dataset.k;ruleUI();rerenderAct()}));
+  const t=document.getElementById("ruleTol");t.value=String(RULE.tol);t.onchange=()=>{RULE.tol=+t.value;ruleUI();rerenderAct()};
+  document.getElementById("ruleNote").innerHTML={free:"Принимается любой объём в пределах сметы. Перекос виден на сводной, но не останавливает акт.",
+    warn:`Объём сверх сданного заказчику (+${Math.round(RULE.tol*100)} %) принимается как <b>«аванс под контроль»</b>: строка в акте помечена, в акт уходит только с отметкой руководителя.`,
+    block:`Объём сверх сданного заказчику (+${Math.round(RULE.tol*100)} %) <b>не попадает в акт</b>: строка урезается до лимита, остаток ждёт КС-2. Открыть может только руководитель с причиной — пишется в журнал.`}[RULE.mode]+
+    " Второй потолок всегда — остаток по договору субподряда: сверх него запись уходит в «Допработы».";
+}
+function rerenderAct(){const a=ACT_STATE;if(!a||a.base)return;const share=a.mon.startsWith("ноябрь")?.15:.23;renderAct(a.no,a.who,a.mon,share,"")}
+// проверка акта перед отправкой — как экспертиза в Smeta.ru
+function checkAct(){
+  const a=ACT_STATE;if(!a)return; const who=a.who; const L=[];
+  const ov=Object.keys(a.ov||{}); const cut=ov.filter(k=>a.ov[k].cut).length;
+  L.push(ov.length?[cut?"warn":"bad",`<b>Сверх сданного заказчику: ${ov.length} строк.</b> ${cut?"Урезаны правилом «Запрещать» — остаток ждёт КС-2.":!a.live?"Акт подписан до правила — строки учтены в перекосе, новые акты пойдут по правилу.":RULE.mode==="warn"?"Нужна отметка руководителя по каждой строке, иначе акт не уйдёт.":"Учтено в перекосе."}`]:["ok","<b>Все строки в пределах сданного заказчику</b> (+ допуск)."]);
+  const ch=(CHK[who]||CHK.default).filter(x=>x[1]!=="ok"); L.push(ch.length?["warn","<b>Комплектность:</b> "+ch.map(x=>x[0]+" — "+x[2]).join("; ")+"."]:["ok","<b>Комплектность</b> закрыта: объёмы, фото, исполнительная, доверенность, сертификаты, договор."]);
+  const dup=ACTS.filter(x=>x[1]===who&&x[2]===a.mon).length; L.push(dup>1?["bad",`<b>За ${a.mon} у «${who}» ${dup} акта</b> — проверьте двойное закрытие.`]:["ok",`<b>Двойного закрытия нет:</b> объёмы этого акта зарезервированы и в другой акт не попадут, пока он не подписан или не отменён.`]);
+  const ex=EXTRA.filter(x=>x.who===who&&x.st<2); L.push(ex.length?["warn",`<b>Допработы без решения у «${who}»: ${ex.length}</b> на ${fmt(sum(ex,x=>x.sum))} ₽ — в акт не включены.`]:["ok","<b>Допработ без решения нет.</b>"]);
+  const zero=a.rs.filter(r=>a.q(r)<=0).length; if(zero)L.push(["warn",`<b>${zero} строк с нулевым объёмом</b> — уберите или отложите.`]);
+  const bad=L.filter(x=>x[0]!=="ok").length;
+  const box=document.getElementById("actCheck"); box.innerHTML=`<h2>Проверка акта ${a.no} <span>${bad?bad+" замечаний — акт уйдёт с пометкой":"замечаний нет — можно отправлять"}</span></h2><ul class="alerts">${L.map(([c,t])=>`<li class="${c}">${t}</li>`).join("")}</ul>`; box.hidden=false;
+  box.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 // ───────── свой персонал ─────────
@@ -979,7 +1109,7 @@ function staff(){
   const t=[
    ["ФОТ за октябрь",fmtM(S_FOT),`зарплата ${fmtM(S_ZP)} + премии ${fmtM(S_PR)} · ${STAFF.length} чел. · ${fmt(S_H)} ч`,""],
    ["Наличные мимо сводной",fmt(S_CASH)+" ₽",`«плюс 10 %» в табеле: ${fmt(S_CASH/0.9)} ₽ (посчитано как ÷ 0,9)`,"warn"],
-   ["Час монтажника",fmt(HOUR)+" ₽",`полный ${fmt(HOUR_FULL)} ₽ с НДФЛ и взносами ${Math.round(VZNOSY*100)} %`,""],
+   ["Час монтажника",fmt(HOUR)+" ₽",`полный ${fmt(HOUR_FULL)} ₽: НДФЛ, взносы ${Math.round(VZNOSY*100)} % + травматизм ${(TRAVMA*100).toLocaleString("ru-RU")} % (уточнить ОКВЭД); наличные — отдельно, без взносов`,""],
    ["ФОТ май – октябрь",fmtM(FOT_TOTAL),"август и октябрь по табелю, остальное оценка",""],
    ["Часы без системы",pct(1),"весь табель — по объекту целиком","bad"],
    ["На нескольких объектах",multi+" чел.","часы в том же месяце на других листах","warn"],
@@ -1000,8 +1130,8 @@ function staff(){
   const tot=sum(SYS,x=>x.client);
   const list=SYS.map(x=>({s:x.s,share:x.client/tot})).sort((a,b)=>b.share-a.share);
   document.getElementById("sSys").innerHTML=`<tr><th>Система</th><th class="n">Доля</th><th class="n">ФОТ, ₽</th><th class="n">С налогами</th></tr>`+
-   list.map(x=>`<tr><td>${x.s}</td><td class="n">${pct(x.share)}</td><td class="n">${fmt(S_FOT*x.share)}</td><td class="n">${fmt(S_FOT*x.share/NDFL*(1+VZNOSY))}</td></tr>`).join("")+
-   `<tr class="tot"><td>Итого</td><td class="n">100 %</td><td class="n">${fmt(S_FOT)}</td><td class="n">${fmt(S_FOT/NDFL*(1+VZNOSY))}</td></tr>`;
+   list.map(x=>`<tr><td>${x.s}</td><td class="n">${pct(x.share)}</td><td class="n">${fmt(S_FOT*x.share)}</td><td class="n">${fmt(S_FOT*x.share*LOAD)}</td></tr>`).join("")+
+   `<tr class="tot"><td>Итого</td><td class="n">100 %</td><td class="n">${fmt(S_FOT)}</td><td class="n">${fmt(S_FOT*LOAD)}</td></tr>`;
   // проверки табеля
   const a=[
    ["bad",`<b>${fmt(S_H)} ч без системы.</b> Весь табель внесён по объекту целиком — ни один час нельзя отнести к АПС, ККСС или СОВ.`],
@@ -1010,11 +1140,13 @@ function staff(){
    ["warn",`<b>${multi} человек на нескольких объектах.</b> У троих сумма часов за день по объектам больше 8 (10, 11 и 13 ч) — переработка или дубль.`],
    ["warn",`<b>Премия-добивка у 9 монтажников:</b> формула «фиксированная сумма − зарплата». Договорённость на сумму в месяц, часы и ставка условны — для стоимости часа это надо знать.`],
    ["warn",`<b>Директор проектов и кладовщик без ставки:</b> 176 ч и 0 ₽. Оклады ИТР объекта в себестоимости не видны.`],
+   ["warn",`<b>Самозанятые — не в табель.</b> По ним только акт «объём × расценка» и чек: ФНС прямо называет признаком трудовых отношений распределение по объектам «по производственной необходимости». Индикатор Роструда (приказ 685н, с 10.01.2026): больше 35 самозанятых, у каждого доход от компании больше 35 тыс. ₽/мес, дольше 3 месяцев и доля дохода от 75 %. Сколько самозанятых в бригадах — нет данных (вопрос АСТЭКС).`],
+   ["warn",`<b>Правка табеля задним числом</b> сейчас не видна. В инструменте — только с причиной: кто, когда, было/стало.`],
    ["ok",`<b>Зарплата и премии в СВОДНОЙ</b> сходятся с листами до рубля: ${fmt(S_FOT)} ₽.`],
   ];
   document.getElementById("sAlerts").innerHTML=a.map(([c,t])=>`<li class="${c}">${t}</li>`).join("");
   // таблица людей
-  const h=`<tr><th>№</th><th>Роль</th><th>Оплата</th><th class="n">Ставка</th><th class="n">Часы</th><th class="n">Дни</th><th class="n">Зарплата</th><th class="n">Премия</th><th class="n">Наличные</th><th class="n">Итого</th><th class="n">÷ 0,87</th><th class="n">Другие объекты</th></tr>`;
+  const h=`<tr><th>№</th><th>Роль</th><th>Оплата</th><th class="n">Ставка</th><th class="n">Часы</th><th class="n">Дни</th><th class="n">Зарплата</th><th class="n">Премия</th><th class="n">Наличные</th><th class="n">Итого</th><th class="n">Белая часть до НДФЛ (÷ 0,87)</th><th class="n">Другие объекты</th></tr>`;
   const b=STAFF.map((s,i)=>{const tot=s[5]+s[6]+s[8];
    return `<tr><td class="n" style="text-align:left">${i+1}</td><td><b>${s[0]}</b></td><td>${s[1]}${s[7]?` <span class="pill ${s[7]==="добивка"?"warn":"mut"}">${s[7]}</span>`:""}</td><td class="n">${s[2]?fmt(s[2]):"—"}</td><td class="n">${s[3]}</td><td class="n">${s[4]}</td><td class="n">${fmt(s[5])}</td><td class="n">${s[6]?fmt(s[6]):""}</td><td class="n">${s[8]?`<span style="color:var(--warn);font-weight:600">${fmt(s[8])}</span>`:""}</td><td class="n">${fmt(tot)}</td><td class="n">${fmt((s[5]+s[6])/NDFL)}</td><td class="n">${s[9]?`<span class="pill warn">+${s[9]} ч</span>`:""}</td></tr>`}).join("");
   document.getElementById("sTable").innerHTML=h+b+`<tr class="tot"><td colspan="4">Итого</td><td class="n">${S_H}</td><td></td><td class="n">${fmt(S_ZP)}</td><td class="n">${fmt(S_PR)}</td><td class="n">${fmt(S_CASH)}</td><td class="n">${fmt(S_FOT+S_CASH)}</td><td class="n">${fmt(S_FOT/NDFL)}</td><td></td></tr>`;
@@ -1062,19 +1194,37 @@ const TODAY=[
 function foreman(){
   const sel=document.getElementById("fPos");sel.innerHTML=rows.map((r,i)=>`<option value="${i}">${r.code} · ${r.name.slice(0,44)}</option>`).join("");sel.value=rows.findIndex(r=>r.sys==="ККСС");
   const ss=document.getElementById("fSysSel");ss.innerHTML=Object.keys(SYS_BUDGET).map(s=>`<option>${s}</option>`).join("");
-  const upd=()=>{const r=rows[+sel.value];ss.value=r.sys;const rest=r.qty-r.sub;document.getElementById("fRest").textContent=`По смете ${r.qty} ${r.unit} · закрыто ${r.sub} · остаток ${Math.max(0,rest).toFixed(rest%1?1:0)} ${r.unit}`;
+  const upd=()=>{const r=rows[+sel.value];ss.value=r.sys;const rest=r.qty-r.sub;document.getElementById("fRest").textContent=`По смете ${r.qty} ${r.unit} · принято ${r.sub} · остаток ${Math.max(0,rest).toFixed(rest%1?1:0)} ${r.unit}`;
     const q=+document.getElementById("fQty").value||0;document.getElementById("fMoney").textContent=`${r.who} · × ${fmt(r.rate)} ₽ = ${fmt(q*r.rate)} ₽`;
-    const w=document.getElementById("fWarn");if(q>rest){w.hidden=false;w.textContent=`Больше остатка на ${(q-rest).toFixed(1)} ${r.unit} — уйдёт в «Допработы» на решение, в акт не попадёт.`}else w.hidden=true;document.getElementById("fOk").hidden=true};
+    const w=document.getElementById("fWarn"),c=capCheck(r,q);w.hidden=c.lvl==="ok";w.textContent=c.msg;w.className="warnbox"+(c.lvl==="warn"?" soft":"");document.getElementById("fOk").hidden=true};
   sel.addEventListener("change",upd);document.getElementById("fQty").addEventListener("input",upd);upd();
-  const table=()=>{document.getElementById("fToday").innerHTML=`<tr><th>Время</th><th>Позиция</th><th>Система</th><th class="n">Объём</th><th>Исполнитель</th><th>Статус</th></tr>`+TODAY.map(x=>`<tr><td class="n" style="text-align:left">${x.t}</td><td>${x.code!=="—"?x.code+" · ":""}${x.name}</td><td>${x.sys}</td><td class="n">${x.qty}</td><td>${x.who}</td><td>${x.st==="sent"?'<span class="pill ok">в журнале</span>':x.st==="queue"?'<span class="pill queue">ожидает сети</span>':'<span class="pill warn">допработа · на решении</span>'}</td></tr>`).join("");
+  const table=()=>{document.getElementById("fToday").innerHTML=`<tr><th>Время</th><th>Позиция</th><th>Система</th><th class="n">Объём</th><th>Исполнитель</th><th>Статус</th></tr>`+TODAY.map(x=>`<tr><td class="n" style="text-align:left">${x.t}</td><td>${x.code!=="—"?x.code+" · ":""}${x.name}</td><td>${x.sys}</td><td class="n">${x.qty}</td><td>${x.who}</td><td>${x.st==="sent"?'<span class="pill ok">в журнале</span>':x.st==="queue"?'<span class="pill queue">ожидает сети</span>':x.st==="adv"?'<span class="pill warn">аванс под контроль</span>':'<span class="pill warn">допработа · на решении</span>'}</td></tr>`).join("");
     const q=TODAY.filter(x=>x.st==="queue").length;
     document.getElementById("fTiles").innerHTML=[["Записей сегодня",TODAY.length,"по журналу и допработам",""],["Ожидают сети",q,q?"отправятся сами":"всё отправлено",q?"warn":"ok"],["Допработ на решении",TODAY.filter(x=>x.st==="extra").length,"с фото","warn"],["Мои системы","15","объект «Публицист 11»",""]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("")};
   table();
-  document.getElementById("fSave").addEventListener("click",()=>{const r=rows[+sel.value];const q=+document.getElementById("fQty").value||0;const now=new Date();
-    TODAY.push({t:now.getHours()+":"+String(now.getMinutes()).padStart(2,"0"),code:r.code,name:r.name.slice(0,40),sys:ss.value,qty:q+" "+r.unit,who:r.who,st:q>r.qty-r.sub?"extra":"sent"});table();
-    const o=document.getElementById("fOk");o.hidden=false;o.textContent=`Записано · ${r.code} · ${q} ${r.unit} · система ${ss.value}`;});
+  document.getElementById("fRestBtn").addEventListener("click",()=>{const r=rows[+sel.value];document.getElementById("fQty").value=Math.max(0,Math.round((r.qty-r.sub)*100)/100);upd()});
+  document.getElementById("fSave").addEventListener("click",()=>{const r=rows[+sel.value];const q=+document.getElementById("fQty").value||0;const now=new Date();const c=capCheck(r,q);const o=document.getElementById("fOk");o.hidden=false;
+    if(c.lvl==="block"){o.className="warnbox";o.textContent="Не записано: правило объекта «Запрещать». Попросите руководителя открыть с причиной.";return}
+    TODAY.push({t:now.getHours()+":"+String(now.getMinutes()).padStart(2,"0"),code:r.code,name:r.name.slice(0,40),sys:ss.value,qty:q+" "+r.unit,who:r.who,st:c.lvl==="extra"?"extra":c.lvl==="warn"?"adv":"sent"});table();
+    o.className="ok";o.textContent=`Записано · ${r.code} · ${q} ${r.unit} · система ${ss.value}`+(c.lvl==="warn"?" · аванс под контроль":"");});
   document.getElementById("fExtra").addEventListener("click",()=>{const o=document.getElementById("fOk");o.hidden=false;o.textContent="Допработа: опишите работу, снимите фото — запись уйдёт в «Допработы» со статусом «выявлено».";});
   document.getElementById("fPhoto").addEventListener("click",()=>{document.getElementById("fPhoto").firstElementChild.textContent="✓ 1 фото";});
+  crewHours();
+}
+// часы бригады: вчерашние системы — из журнала прораба (демо)
+const CREW=[["Монтажник 03","АПС"],["Монтажник 04","АПС"],["Монтажник 05","ККСС"],["Монтажник 06","ККСС"],["Монтажник 07","СОВ"]];
+function crewHours(){
+  const opts=`<option value="">— система —</option>`+Object.keys(SYS_BUDGET).map(x=>`<option>${x}</option>`).join("");
+  document.getElementById("hAll").innerHTML=opts;
+  document.getElementById("hTable").innerHTML=`<tr><th>Человек</th><th>Система</th><th class="n">Часы</th></tr>`+CREW.map(([n],i)=>`<tr><td>${n}</td><td><select class="hs" data-i="${i}" aria-label="Система">${opts}</select></td><td class="n"><input class="inl hh" type="number" inputmode="decimal" value="8" aria-label="Часы" style="width:64px"></td></tr>`).join("");
+  const hs=()=>[...document.querySelectorAll("#hTable .hs")], hh=()=>[...document.querySelectorAll("#hTable .hh")];
+  const hide=()=>{document.getElementById("hWarn").hidden=true;document.getElementById("hOk").hidden=true};
+  document.getElementById("hYest").onclick=()=>{hs().forEach((x,i)=>x.value=CREW[i][1]);hide()};
+  document.getElementById("hApply").onclick=()=>{const v=document.getElementById("hAll").value;if(v)hs().forEach(x=>x.value=v);hide()};
+  document.getElementById("hSave").onclick=()=>{const miss=hs().filter(x=>!x.value).length,w=document.getElementById("hWarn"),o=document.getElementById("hOk");
+    if(miss){w.hidden=false;o.hidden=true;w.textContent=`Не отправлено: у ${miss} чел. не выбрана система. Час без системы не сохраняется.`;return}
+    const by={};hs().forEach((x,i)=>by[x.value]=(by[x.value]||0)+(+hh()[i].value||0));const tot=Object.values(by).reduce((a,b)=>a+b,0);
+    w.hidden=true;o.hidden=false;o.textContent=`Отправлено ${tot} ч: `+Object.entries(by).map(([k,v])=>`${k} ${v} ч · ${fmt(v*HOUR_FULL)} ₽`).join("; ")+" — в себестоимость систем.";};
 }
 // субподрядчик
 function subcab(){
@@ -1110,11 +1260,11 @@ async function saveFile(name,blob){
 }
 // ───────── деньги 30/60/90 и выгрузка ─────────
 function cash(){
-  const inc=[T_CLIENT*.23,T_CLIENT*.24,T_CLIENT*.22], out=[T_SUBPAY*.22,T_SUBPAY*.25,T_SUBPAY*.23], fot=[S_FOT,S_FOT*1.05,S_FOT*1.05], ret=[0,0,T_SUBPAY*.05*.2];
+  const inc=[T_CLIENT*.23,T_CLIENT*.24,T_CLIENT*.22], out=[T_SUBPAY*.22,T_SUBPAY*.25,T_SUBPAY*.23], fot=[S_FOT*LOAD,S_FOT*LOAD*1.05,S_FOT*LOAD*1.05], ret=[0,0,T_SUBPAY*.05*.2];
   let bal=0; const cols=["30 дней","60 дней","90 дней"];
   const r=(l,a,c="")=>`<tr class="${c}"><td>${l}</td>${a.map(v=>`<td class="n">${fmt(v)}</td>`).join("")}</tr>`;
   const net=inc.map((v,i)=>v-out[i]-fot[i]-ret[i]); const cum=net.map(v=>bal+=v);
-  document.getElementById("cash").innerHTML=`<tr><th>Статья</th>${cols.map(c=>`<th class="n">${c}</th>`).join("")}</tr>`+r("Поступления от заказчика по КС-3",inc)+r("Оплаты субподрядчикам по актам",out.map(v=>-v))+r("ФОТ своих",fot.map(v=>-v))+r("Возврат удержаний субподрядчикам",ret.map(v=>v?-v:0))+
+  document.getElementById("cash").innerHTML=`<tr><th>Статья</th>${cols.map(c=>`<th class="n">${c}</th>`).join("")}</tr>`+r("Поступления от заказчика по КС-3",inc)+r("Оплаты субподрядчикам по актам",out.map(v=>-v))+r("ФОТ своих с налогами (÷ 0,87 × 1,302)",fot.map(v=>-v))+r("Возврат удержаний субподрядчикам",ret.map(v=>v?-v:0))+
     `<tr class="tot"><td>Чистый поток</td>${net.map(v=>`<td class="n" style="color:${v<0?"var(--bad)":"var(--ok)"}">${fmt(v)}</td>`).join("")}</tr>`+
     `<tr><td>Накопленный остаток</td>${cum.map(v=>`<td class="n">${v<0?`<span class="pill bad">${fmt(v)}</span>`:fmt(v)}</td>`).join("")}</tr>`;
 }
@@ -1208,7 +1358,7 @@ function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+h))}
 window.addEventListener("hashchange",route);
 // init
-tiles();sysTable();balChart();alerts();monthChart();forecast();
+tiles();sysTable();balChart();alerts();monthChart();forecast();layers();
 document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<option>${s}</option>`).join("");
 ["fSys","fState","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",jTable));jTable();phone();
 document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="Подрядчик Б";
