@@ -131,15 +131,44 @@ table.mini td,table.mini th{padding:4px 8px}
 .inbox .it .act-btn{margin-top:6px}
 .toast{position:fixed;right:16px;bottom:16px;max-width:min(440px,calc(100vw - 32px));background:hsl(200,8%,12%);color:#fff;border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow2);z-index:60;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;line-height:1.4}
 .toast.on{opacity:1;transform:none}.toast b{display:block;margin-bottom:4px}.toast span{color:rgba(255,255,255,.8)}
-#gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
-.gbox{background:var(--panel);border-radius:var(--r);box-shadow:var(--shadow2);padding:24px;max-width:580px;width:100%}
-.gbox h2{margin:0 0 6px;font-size:22px;font-weight:600}
-.gbrand{font-weight:700;letter-spacing:.5px;color:var(--accent);margin-bottom:10px}
-.groles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:16px 0}
-.groles button{display:flex;flex-direction:column;align-items:flex-start;height:auto;padding:12px;border:1px solid var(--line);background:var(--panel);border-radius:var(--r);cursor:pointer;text-align:left;color:var(--fg);gap:2px}
-.groles button.on,.groles button:hover{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
-.groles small{color:var(--muted);font-weight:400}
-.gcode label{display:block;font-weight:600;margin-bottom:4px}
+#gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;overflow:auto}
+.gside{flex:0 0 44%;max-width:560px;background:hsl(200,10%,11%);color:#fff;padding:40px 48px;display:flex;flex-direction:column;gap:28px}
+.gbrand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.6px;font-size:15px;white-space:nowrap}
+.gbrand i{width:28px;height:28px;border-radius:6px;background:var(--accent);display:grid;place-items:center;font-style:normal;font-size:13px;color:#fff}
+.gproj{font-size:13px;color:rgba(255,255,255,.6);white-space:nowrap}
+#gate .gside h1{display:block;font-size:30px;line-height:36px;font-weight:600;margin:auto 0 0;letter-spacing:-.3px;padding:0;border:0;min-height:0}#gate .gside h1::before{display:none}
+.gside ul{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.gside li{display:flex;gap:12px;align-items:flex-start;color:rgba(255,255,255,.82);line-height:21px;font-size:14px}
+.gside li svg{flex:0 0 18px;width:18px;height:18px;margin-top:2px;stroke:var(--accent);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.gside .gfoot{margin-top:auto;font-size:12px;line-height:17px;color:rgba(255,255,255,.45)}
+.gmain{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+.gbox{width:100%;max-width:440px}
+.gbox h2{margin:0 0 6px;font-size:26px;line-height:32px;font-weight:600;letter-spacing:-.2px}
+.gbox .gsub{margin:0 0 20px;color:var(--muted);font-size:14px;line-height:20px}
+.groles{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden}
+.groles button{display:flex;align-items:center;gap:12px;width:100%;height:auto;min-height:64px;padding:10px 14px;border:0;border-top:1px solid var(--line2);background:var(--panel);cursor:pointer;text-align:left;color:var(--fg);border-radius:0;box-shadow:none;transition:background .12s}
+.groles button:first-child{border-top:0}
+.groles button:hover{background:var(--soft2)}
+.groles button.on{background:hsl(19,100%,97%);box-shadow:inset 3px 0 0 var(--accent)}
+.groles button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.gav{flex:0 0 38px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;letter-spacing:.3px}
+.gtx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.gt1{display:flex;align-items:baseline;gap:8px;min-width:0;white-space:nowrap}
+.gt1 b{font-size:15px;font-weight:600;flex:0 0 auto}
+.gt1 span{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;min-width:0}
+.gt2{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gend{flex:0 0 auto;display:flex;align-items:center;gap:6px;color:var(--muted2)}
+.glock{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--fg2);background:var(--soft);border-radius:999px;padding:3px 8px;white-space:nowrap}
+.glock svg,.gend>svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gend>svg{width:18px;height:18px}
+.gcode{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.gcode label{display:block;font-weight:600;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcode .qrow input{font-size:20px;letter-spacing:8px;text-align:center;height:44px}
+.gcode .qrow button{height:44px;padding:0 20px;white-space:nowrap}
+.gcode .warnbox{margin:10px 0 0}
+.gnote{margin:18px 0 0;font-size:12px;line-height:17px;color:var(--muted)}
+@media (max-width:900px){#gate{flex-direction:column}.gside{flex:0 0 auto;max-width:none;padding:20px 16px;gap:6px}#gate .gside h1,.gside ul,.gside .gfoot{display:none}.gmain{align-items:flex-start;padding:24px 16px}.gbox h2{font-size:22px;line-height:28px}}
+@media (max-width:480px){.glock{padding:4px}.glock em{display:none}}
 body.gated{overflow:hidden}
 .mcode{padding:8px 14px 10px;border-top:1px solid var(--line)}.mcode label{display:block;font-weight:600;margin-bottom:4px}
 .tz{font-size:12px;line-height:17px;color:var(--muted);margin:-6px 0 10px;max-width:120ch}.tz b{color:var(--fg2);font-weight:600}
@@ -1497,15 +1526,21 @@ function gate(){
   const q=new URLSearchParams(location.search);
   if(navigator.webdriver&&!q.has("gate")){UNLOCKED=true;lockMarks();return} // автотесты и скриншоты — без экрана входа
   const g=document.getElementById("gate");
-  g.innerHTML=`<div class="gbox"><div class="gbrand">СМР·КОНТРОЛЬ</div><h2>Кто входит?</h2><p class="sub" style="margin:0">Каждый видит только своё. Руководитель и ПТО — по коду доступа; заказчик, субподрядчик и прораб к ним не попадут.</p>
-   <div class="groles">${Object.entries(ROLES).map(([k,v])=>`<button type="button" data-role="${k}"><b>${ROLE_RU[k]}</b><small>${v.name}${LOCKED.includes(k)?" · по коду":""}</small></button>`).join("")}</div>
-   <div class="gcode" hidden><label for="gCode">Код доступа</label><div class="qrow"><input id="gCode" type="password" inputmode="numeric" autocomplete="off"><button class="pri" id="gGo" type="button">Войти</button></div><div class="warnbox" id="gErr" hidden>Неверный код. Без кода — только кабинеты заказчика, субподрядчика и прораба.</div></div>
-   <p class="note">Демо: код проверяется в браузере. В рабочей платформе здесь вход по логину и паролю с двухфакторной проверкой, а права каждой роли проверяет сервер.</p></div>`;
+  const ok='<svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>';
+  const GATE_INFO={director:["БМ","hsl(19,100%,45%)","Деньги, маржа и решения"],pto:["КЕ","hsl(210,55%,42%)","Журнал КС, акты, допработы"],foreman:["ИА","hsl(150,40%,34%)","Объёмы и часы бригады за день"],sub:["ПБ","hsl(265,30%,46%)","Свои объёмы, акты и оплаты"],client:["М","hsl(200,8%,35%)","Ход работ и уведомления"]};
+  g.innerHTML=`<aside class="gside"><div><div class="gbrand"><i>СК</i>СМР·КОНТРОЛЬ</div><div class="gproj">Публицист 11 · АСТЭКС → Монолит</div></div>
+   <h1>Деньги объекта — по каждой позиции</h1>
+   <ul><li>${ok}<span>Сдано → заактировано → оплачено</span></li><li>${ok}<span>Субподрядчику не закрыть больше, чем принял заказчик</span></li><li>${ok}<span>Каждый видит только своё: роли и права разделены</span></li></ul>
+   <div class="gfoot">Демо-версия. Данные условные, отправки между ролями имитируются.</div></aside>
+   <div class="gmain"><div class="gbox"><h2>Кто входит?</h2><p class="gsub">Руководитель и ПТО входят по коду</p>
+   <div class="groles" role="list">${Object.entries(ROLES).map(([k,v])=>{const [ini,col,what]=GATE_INFO[k];return `<button type="button" role="listitem" data-role="${k}"><span class="gav" style="background:${col}">${ini}</span><span class="gtx"><span class="gt1"><b>${ROLE_RU[k]}</b><span>${v.name}</span></span><span class="gt2">${what}</span></span><span class="gend">${LOCKED.includes(k)?'<span class="glock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><em style="font-style:normal">код</em></span>':''}<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></button>`}).join("")}</div>
+   <div class="gcode" hidden><label for="gCode" id="gLbl">Код доступа</label><div class="qrow"><input id="gCode" type="password" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="••••"><button class="pri" id="gGo" type="button">Войти</button></div><div class="warnbox" id="gErr" hidden>Неверный код. Без кода доступны кабинеты заказчика, субподрядчика и прораба.</div></div>
+   <p class="gnote">В демо код проверяется в браузере. В рабочей платформе — логин, пароль и двухфакторная проверка, права каждой роли проверяет сервер.</p></div></div>`;
   g.hidden=false; document.body.classList.add("gated");
   let pick=null;
   const enter=r=>{g.hidden=true;document.body.classList.remove("gated");lockMarks();setRole(r);location.hash="#"+ROLES[r].home;bell()};
   g.querySelectorAll(".groles button").forEach(b=>b.addEventListener("click",()=>{pick=b.dataset.role;g.querySelectorAll(".groles button").forEach(x=>x.classList.toggle("on",x===b));
-    if(LOCKED.includes(pick)){g.querySelector(".gcode").hidden=false;document.getElementById("gErr").hidden=true;document.getElementById("gCode").focus()}else{UNLOCKED=false;enter(pick)}}));
+    if(LOCKED.includes(pick)){g.querySelector(".gcode").hidden=false;document.getElementById("gLbl").textContent=ROLE_RU[pick]+" · код доступа";document.getElementById("gErr").hidden=true;document.getElementById("gCode").focus()}else{UNLOCKED=false;enter(pick)}}));
   const tryCode=()=>{if(document.getElementById("gCode").value.trim()===DEMO_CODE){UNLOCKED=true;enter(pick)}else document.getElementById("gErr").hidden=false};
   document.getElementById("gGo").addEventListener("click",tryCode);document.getElementById("gCode").addEventListener("keydown",e=>{if(e.key==="Enter")tryCode()});
 }
