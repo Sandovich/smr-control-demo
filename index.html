@@ -531,14 +531,15 @@ th{font-weight:600}
 #payTable{min-width:1100px}
 /* шапка: десять инструментов должны помещаться на любой ширине */
 @media (max-width:1620px){.top .stamp{display:none}}
-@media (max-width:1500px){.top nav a svg{display:none}.top nav a{padding-left:11px;padding-right:11px}}
-@media (max-width:1260px){
+@media (max-width:1560px){.top nav a{padding-left:9px;padding-right:9px;gap:6px}}   /* значки остаются всегда; место берём из отступов */
+@media (max-width:1400px){
   .top{height:auto;flex-wrap:wrap}
   .top .dd{display:none}
   .top .sp{margin-left:auto}
   .top nav{order:10;flex-basis:100%;margin:0;border-left:0;border-top:1px solid rgba(255,255,255,.12);height:44px}
-  .top nav a{height:44px;padding:0 12px}
+  .top nav a{height:44px;padding:0 8px;gap:6px}
   .top nav a.on::before{left:0;right:0;height:3px}
+}
 }
 /*/PLUS-CSS*/
 </style></head><body>
