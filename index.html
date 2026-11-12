@@ -572,6 +572,9 @@ th{font-weight:600}
   .chki{flex-wrap:wrap;min-width:0}
   .chki>*{min-width:0;overflow-wrap:anywhere}
 }
+/* закреплённый кабинет: в меню пользователя только имя и «Выйти» */
+.rolemenu.pinned .me{display:flex;flex-direction:column;padding:7px 14px 9px;font-weight:600;border-bottom:1px solid var(--line2);margin-bottom:4px}
+.rolemenu.pinned .me small{font-weight:400;color:var(--muted);font-size:12px;line-height:16px}
 /*/PLUS-CSS*/
 </style></head><body>
 
@@ -1791,7 +1794,7 @@ function gate(){
    <p class="gnote">В демо код проверяется в браузере. В рабочей платформе — логин, пароль и двухфакторная проверка, права каждой роли проверяет сервер.</p></div></div>`;
   g.hidden=false; document.body.classList.add("gated");
   let pick=null;
-  const enter=r=>{g.hidden=true;document.body.classList.remove("gated");lockMarks();setRole(r);location.hash="#"+ROLES[r].home;bell()};
+  const enter=r=>{g.hidden=true;document.body.classList.remove("gated");lockMarks();setRole(r);location.hash="#"+ROLES[r].home;bell();pinRole(r)};
   g.querySelectorAll(".groles button").forEach(b=>b.addEventListener("click",()=>{pick=b.dataset.role;g.querySelectorAll(".groles button").forEach(x=>x.classList.toggle("on",x===b));
     if(LOCKED.includes(pick)){g.querySelector(".gcode").hidden=false;document.getElementById("gLbl").textContent=ROLE_RU[pick]+" · код доступа";document.getElementById("gErr").hidden=true;document.getElementById("gCode").focus()}else{UNLOCKED=false;enter(pick)}}));
   const tryCode=()=>{if(document.getElementById("gCode").value.trim()===DEMO_CODE){UNLOCKED=true;enter(pick)}else document.getElementById("gErr").hidden=false};
@@ -2083,6 +2086,19 @@ function plusInit(){work();forecast2();whatIfInit();payInit();aiInit();estimateI
   document.querySelectorAll(".view table").forEach(t=>{if(t.closest(".wrap"))return;const w=document.createElement("div");w.className="wrap";t.parentNode.insertBefore(w,t);w.appendChild(t)});
   let _view=null; window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(h!==_view&&VIEWS.includes(h)){_view=h;scrollTo(0,0)}});
   const _setRole=setRole; setRole=function(r){_setRole(r);aiChips();aiHello()}}
+
+// Вошёл через экран входа — кабинет закреплён: в правом верхнем углу только «кто я» и «Выйти», чужие кабинеты не выбрать и по адресу не открыть.
+let PINNED=null;
+function pinRole(r){
+  PINNED=r; const m=document.getElementById("roleMenu"), R=ROLES[r];
+  m.classList.add("pinned");
+  m.innerHTML=`<div class="cap">Вы вошли как</div><div class="me">${R.name}<small>${R.role}</small></div><button type="button" id="logoutBtn">Выйти<small>вернуться на экран входа</small></button>`;
+  m.querySelector("#logoutBtn").addEventListener("click",e=>{e.stopPropagation();const u=new URL(location.href);u.hash="";location.replace(u.href);location.reload()});
+  if(!pinRole.on){pinRole.on=true;
+    const _sr=setRole; setRole=function(x){if(PINNED&&x!==PINNED)return;_sr(x)};
+    const _pk=pickRole; pickRole=function(x){if(PINNED)return;_pk(x)};
+    addEventListener("hashchange",()=>{if(!PINNED)return;const h=(location.hash||"").slice(1).split("?")[0];if(h&&!ROLES[PINNED].tools.includes(h))location.hash="#"+ROLES[PINNED].home})}
+}
 // ═════════ СТОП-КРАН ОПЛАТЫ (пилот, 11.11): перед оплатой субподрядчику — шесть проверок и решение ═════════
 // Кто из заказчика ещё не заплатил за сданное по системам подрядчика (доля акта) — в платформе придёт из 1С
 const CLIENT_UNPAID={"Подрядчик Д":[1,"КС-3 за октябрь по СОУЭ не оплачен, срок 15.11"],"Подрядчик В":[.3,"КС-3 за октябрь по СВН оплачен частично"]};
