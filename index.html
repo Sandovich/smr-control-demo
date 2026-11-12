@@ -541,6 +541,37 @@ th{font-weight:600}
   .top nav a.on::before{left:0;right:0;height:3px}
 }
 }
+/* ── телефон: всё стоит на месте ── */
+.subnav{top:var(--hdr,48px)}                                   /* строка разделов — под настоящей высотой шапки */
+.top nav,.subnav{overflow-y:hidden;touch-action:pan-x;overscroll-behavior:contain}  /* меню двигается только вбок */
+.top nav a{flex:0 0 auto}
+@media (max-width:900px){
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  input:not([type=checkbox]):not([type=range]),select,textarea{font-size:16px!important}  /* iPhone увеличивает страницу при нажатии на поле мельче 16 */
+  button:not(.q){min-height:36px}
+  .phone,.phone2{max-width:none!important;width:100%!important;margin:0!important}   /* «Внести объём» — на всю ширину экрана */
+  .top{position:sticky;top:0;z-index:20}
+}
+/* ── телефон, второй проход: таблицы и графики внутри своей плашки, шапка не ездит ── */
+.subnav{top:var(--hdr,48px)!important}
+@media (max-width:1400px){.top nav{align-items:stretch}.top nav a{height:auto!important;min-height:0;box-sizing:border-box}}
+@media (max-width:900px){
+  .wrap{margin-left:0!important;margin-right:0!important;padding-left:0!important;padding-right:0!important;max-width:100%;-webkit-overflow-scrolling:touch}   /* вынос −16 при полях 12 выталкивал таблицу за рамку */
+  .panel,.phone,.act,.card{overflow:hidden}
+  #balChart,#monthChart,#sChart,#pChart{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #balChart svg,#monthChart svg,#sChart svg,#pChart svg{width:560px!important;max-width:none!important;height:auto!important}   /* график в читаемом размере, листается вбок */
+  input,select,textarea{min-width:0;max-width:100%;box-sizing:border-box}
+  input[type=date]{-webkit-appearance:none;appearance:none;display:block;width:100%;min-height:36px;text-align:left}
+  .legend{flex-wrap:wrap}
+}
+/* телефон: длинное значение в плитке переносится, а не раздвигает страницу; список проверок не шире плашки */
+@media (max-width:900px){
+  .tile .v{white-space:normal;overflow-wrap:break-word}
+  .tile{overflow:hidden}
+  .chk{grid-template-columns:minmax(0,1fr)!important}
+  .chki{flex-wrap:wrap;min-width:0}
+  .chki>*{min-width:0;overflow-wrap:anywhere}
+}
 /*/PLUS-CSS*/
 </style></head><body>
 
@@ -1788,7 +1819,7 @@ function subnavs(){
     bar.innerHTML=items.map(([l,s])=>`<button type="button" data-s="${s}">${l}</button>`).join("")+`<span class="gap"></span><button type="button" class="fa" data-a="1">Свернуть всё</button><button type="button" class="fa" data-a="0">Развернуть всё</button>`;
     (sec.querySelector(".tz")||sec.querySelector(".sub")||sec.querySelector("h1")).after(bar);
     bar.querySelectorAll("button[data-s]").forEach(b=>b.addEventListener("click",()=>{const el=document.querySelector(b.dataset.s);if(!el)return;const p=el.closest(".panel");if(p)p.classList.remove("folded");if(el.id==="act")el.hidden=false;
-      const tgt=p||el;const y=tgt.getBoundingClientRect().top+scrollY-48-bar.offsetHeight-10;scrollTo({top:Math.max(0,y),behavior:"smooth"})}));
+      const tgt=p||el;const y=tgt.getBoundingClientRect().top+scrollY-document.querySelector(".top").offsetHeight-bar.offsetHeight-10;scrollTo({top:Math.max(0,y),behavior:"smooth"})}));
     bar.querySelectorAll(".fa").forEach(b=>b.addEventListener("click",()=>sec.querySelectorAll(".panel.foldable").forEach(p=>p.classList.toggle("folded",b.dataset.a==="1"))));
   });
 }
@@ -2044,6 +2075,12 @@ function estimateInit(){
 }
 function aiHello(){document.getElementById("aiLog").innerHTML=`<div class="msg ai"><span>ИИ-агент</span>${ROLE==="director"?"Доброе утро. За неделю прогноз по «Публицисту 11» ухудшился — главное в перекосе по ККСС. Спросите, что важно, или нажмите вопрос выше.":"Здравствуйте. Отвечаю в пределах вашей роли: позиции, допработы, расценки субподрядчиков, загрузка людей."}</div>`}
 function plusInit(){work();forecast2();whatIfInit();payInit();aiInit();estimateInit();
+  // шапка: её настоящая высота — для прилипающей строки разделов; активный пункт меню всегда на виду
+  const top=document.querySelector(".top"),hdr=()=>document.documentElement.style.setProperty("--hdr",top.offsetHeight+"px");hdr();addEventListener("resize",hdr);if(window.ResizeObserver)new ResizeObserver(hdr).observe(top);
+  const navSee=()=>{const n=document.getElementById("nav"),a=n.querySelector("a.on");if(!a)return;const r=a.getBoundingClientRect(),q=n.getBoundingClientRect();if(r.left<q.left+8||r.right>q.right-8)n.scrollLeft+=r.left-q.left-(q.width-r.width)/2};
+  addEventListener("hashchange",()=>setTimeout(navSee,30));setTimeout(navSee,400);
+  // любая таблица — внутри своей прокручиваемой рамки (на телефоне не вылезает за плашку)
+  document.querySelectorAll(".view table").forEach(t=>{if(t.closest(".wrap"))return;const w=document.createElement("div");w.className="wrap";t.parentNode.insertBefore(w,t);w.appendChild(t)});
   let _view=null; window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(h!==_view&&VIEWS.includes(h)){_view=h;scrollTo(0,0)}});
   const _setRole=setRole; setRole=function(r){_setRole(r);aiChips();aiHello()}}
 // ═════════ СТОП-КРАН ОПЛАТЫ (пилот, 11.11): перед оплатой субподрядчику — шесть проверок и решение ═════════
