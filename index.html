@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>СМР-Контроль Публицист 11</title>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>СМР-Контроль Публицист 11</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
@@ -459,6 +459,88 @@ th{font-weight:600}
 .chki .who{white-space:nowrap}
 #v-sub .grid2{grid-template-columns:1fr}
 #subActs td:nth-child(2){white-space:nowrap}
+/*PLUS-CSS*/
+/* добавлено 11.11 */
+.wi{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-bottom:12px}
+.wi label{display:flex;flex-direction:column;gap:4px;font-weight:600;color:var(--fg2)}
+.wi label b{color:var(--fg)}
+.wi input[type=range]{width:100%;accent-color:var(--accent)}
+.digest p{margin:0 0 8px;max-width:900px}
+.digest .dhead{color:var(--muted);font-weight:600}
+.aigrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;align-items:start}
+.aichat{display:flex;flex-direction:column;gap:10px;min-height:560px}
+.aiq{display:flex;flex-wrap:wrap;gap:6px}
+.chip{height:auto;min-height:32px;padding:6px 10px;border:1px solid var(--line);background:var(--panel);border-radius:16px;font-weight:400;text-align:left}
+.chip:hover{border-color:var(--accent);background:var(--soft2)}
+.ailog{flex:1;display:flex;flex-direction:column;gap:10px;max-height:640px;overflow:auto;padding:4px 2px}
+.msg{max-width:92%;padding:10px 12px;border-radius:8px;line-height:20px}
+.msg>span{display:block;font-size:12px;line-height:16px;color:var(--muted);font-weight:600;margin-bottom:2px}
+.msg.me{align-self:flex-end;background:var(--blue-bg);border:1px solid hsl(218,75%,88%)}
+.msg.ai{align-self:flex-start;background:var(--soft2);border:1px solid var(--line)}
+.msg .think{color:var(--muted);animation:aiPulse 1s ease-in-out infinite}
+@keyframes aiPulse{50%{opacity:.4}}
+@media (prefers-reduced-motion:reduce){.msg .think{animation:none}}
+.msg .src{margin-top:8px;font-size:12px;line-height:16px;color:var(--muted)}
+.msg .src i{font-style:normal;border-bottom:1px dotted var(--muted2)}
+.aitb{margin-top:8px}
+.prop{margin-top:10px;padding:10px;border:1px solid var(--warn-line);background:var(--warn-bg);border-left:4px solid var(--warn-mark);border-radius:var(--r)}
+.prop .pb{display:flex;gap:8px;margin-top:8px;align-items:center}
+.aiform{display:flex;gap:8px}
+.aiform input{flex:1;min-width:0;height:36px}
+.aisteps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.eform{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:12px}
+.eform label{display:flex;flex-direction:column;gap:4px;font-weight:600;color:var(--fg2)}
+.eform input{height:36px;min-width:0}
+.esys{display:flex;flex-wrap:wrap;gap:6px}
+.ck{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:var(--r);padding:4px 8px;cursor:pointer}
+@media (max-width:900px){.aigrid{grid-template-columns:1fr}.aichat{min-height:0}.ailog{max-height:none}}
+@media (max-width:560px){.wi,.eform{grid-template-columns:1fr}.msg{max-width:100%}}
+/* экран входа — в общей шкале шрифтов 24/32 · 14/20 · 12/16 */
+.gbrand{font-size:14px;line-height:20px}.gbrand i{font-size:12px;line-height:16px}
+.gproj{font-size:12px;line-height:16px}
+#gate .gside h1{font-size:24px;line-height:32px;letter-spacing:0}
+.gside li{font-size:14px;line-height:20px}.gside li svg{margin-top:1px}
+.gside .gfoot,.gnote{font-size:12px;line-height:16px}
+.gbox h2{font-size:24px;line-height:32px;letter-spacing:0;margin-bottom:4px}
+.gbox{max-width:460px}
+.groles button{font-weight:400;padding:12px 16px;min-height:64px}
+.gav{flex-basis:40px;width:40px;height:40px;font-size:12px;line-height:16px}
+.gt1 b,.gt1 span{font-size:14px;line-height:20px}.gt1 span{font-weight:400}
+.gt2{font-size:12px;line-height:16px;font-weight:400}
+.glock{font-size:12px;line-height:16px}
+.gcode label{font-size:14px;line-height:20px}
+.gcode .qrow input{font-size:14px;line-height:20px;letter-spacing:6px;height:36px}.gcode .qrow button{height:36px;padding:0 16px}
+@media (max-width:900px){.gbox h2{font-size:24px;line-height:32px}}
+/* остатки вне шкалы */
+.tz{line-height:16px}.terms,.terms *{font-size:12px;line-height:16px}
+.tile .q{font-size:12px;line-height:16px}
+/* плитки показателей: одинаковый вес подписи, изменение за неделю прижато к низу */
+.tile{display:flex;flex-direction:column}
+.tile .d,.tile.bad .d,.tile.warn .d,.tile.ok .d{font-weight:400;color:var(--fg2)}
+.tile .delta{margin-top:auto;padding-top:6px}
+.tile .formula{order:9}
+
+/* стоп-кран оплаты */
+#payTable th.pc,#payTable td.pc{text-align:center;padding-left:4px;padding-right:4px;white-space:nowrap}
+#payTable th.pc{font-weight:600}
+.pdot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--ok)}
+.pdot.warn{background:var(--warn-mark)}.pdot.bad{background:var(--bad)}
+#payTable tr[data-no]{cursor:pointer}#payTable tr.sel td{background:hsl(19,100%,97%)}#payTable tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+#payTable .mut{color:var(--muted);font-size:12px;line-height:16px}
+#payTable td.pa{text-align:right;white-space:nowrap}
+#payTable{min-width:1100px}
+/* шапка: десять инструментов должны помещаться на любой ширине */
+@media (max-width:1620px){.top .stamp{display:none}}
+@media (max-width:1500px){.top nav a svg{display:none}.top nav a{padding-left:11px;padding-right:11px}}
+@media (max-width:1260px){
+  .top{height:auto;flex-wrap:wrap}
+  .top .dd{display:none}
+  .top .sp{margin-left:auto}
+  .top nav{order:10;flex-basis:100%;margin:0;border-left:0;border-top:1px solid rgba(255,255,255,.12);height:44px}
+  .top nav a{height:44px;padding:0 12px}
+  .top nav a.on::before{left:0;right:0;height:3px}
+}
+/*/PLUS-CSS*/
 </style></head><body>
 
 <header class="top">
@@ -471,7 +553,13 @@ th{font-weight:600}
     <a href="#contractors"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Субподрядчики</a>
     <a href="#staff"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M14 20a4 4 0 0 1 7 0"/></svg>Свой персонал</a>
     <a href="#extra"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Допработы</a>
-    <a href="#acts"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6z M14 3v6h6"/></svg>Акты</a>
+    <a href="#acts"><svg viewBox="0 0 24 24"><path d="M6 3h9l5 5v13H6z M14 3v6h6"/></svg>Акты</a><!--PLUS-NAV-->
+<a href="#pay"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg>Оплаты</a>
+    <a href="#forecast"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M7 14l4-4 3 3 5-6"/></svg>Прогноз</a>
+    <a href="#estimate"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h3"/></svg>Предсметы</a>
+    <a href="#ai"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z M18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9z"/></svg>ИИ-агент</a>
+<!--/PLUS-NAV-->
+
   </nav>
   <span class="sp"><span class="period">май – октябрь 2026 · без НДС</span><span class="stamp">демо</span><button class="bell" id="bellBtn" type="button" aria-label="Входящие и отправленные" title="Входящие и отправленные"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z M10 20a2 2 0 0 0 4 0"/></svg><b id="bellN" hidden>0</b></button><div class="rolemenu inbox" id="inbox" hidden></div><button class="who" id="whoBtn" type="button" aria-haspopup="true"><span class="av"></span><span class="whoName" id="whoName">Берг М. С.<small id="whoRole">руководитель</small></span></button><div class="rolemenu" id="roleMenu" hidden><div class="cap">Войти как</div></div></span>
 </header>
@@ -602,10 +690,143 @@ th{font-weight:600}
     <ul class="alerts" id="sAlerts"></ul>
   </div>
   <div class="panel" style="margin-bottom:16px"><h2>Сдельная оплата из закрытых позиций <span>бригада — по объёмам, принятым прорабом, а не «по запискам»</span></h2><div class="wrap"><table id="sPiece"></table></div><p class="note">Расценка сдельной — за единицу позиции сметы. Сумма за месяц считается сама из журнала фактов; спорный объём виден по дате и фото. Самозанятым — акт на результат, не табель.</p></div>
+<!--PLUS-WORK-->
+<div class="panel" style="margin-bottom:16px"><h2>Монтажники: сделка и почасовка <span>каждый человек привязан к работе и объёму · сколько стоит единица своими и у субподрядчика</span></h2><div class="wrap"><table id="sWork"></table></div><p class="note" id="sWorkNote"></p></div>
+<!--/PLUS-WORK-->
   <div class="panel"><h2>Люди на объекте <span>октябрь 2026 · 21 человек</span></h2><div class="wrap"><table id="sTable"></table></div></div>
 </section>
 
 <!-- ───────── КАБИНЕТ ПРОРАБА ───────── -->
+<!--PLUS-VIEWS-->
+<!-- ───────── ПРОГНОЗ И «ЧТО ЕСЛИ» ───────── -->
+<section class="view" id="v-forecast" hidden>
+  <h1>Прогноз экономики объекта</h1>
+  <p class="sub">Куда идёт объект, если всё останется как сейчас. Пересчёт каждый понедельник: темп сдачи, перекос закрытия, свой ФОТ. Ниже можно подвигать срок, темп и цены и сразу увидеть, что станет с деньгами.</p>
+  <p class="tz"><b>Новое по их запросу · еженедельный мониторинг и прогноз</b> — сделано: прогноз результата СМР на конец объекта, история прогноза по неделям, «что если» по четырём рычагам, сводка недели одним файлом.</p>
+  <div class="tiles" id="pTiles"></div>
+  <div class="grid2">
+    <div class="panel">
+      <h2>Прогноз на конец объекта по неделям <span>как менялся ответ «чем закончим» · млн ₽</span></h2>
+      <div id="pChart"></div>
+    </div>
+    <div class="panel">
+      <h2>Что если <span>подвигайте — пересчёт сразу</span></h2>
+      <div class="wi" id="wiBox">
+        <label>Сдвиг срока <b id="wiDv">0 мес.</b><input type="range" id="wiD" min="0" max="6" step="1" value="0"></label>
+        <label>Темп сдачи заказчику <b id="wiPv">как сейчас</b><input type="range" id="wiP" min="-30" max="30" step="5" value="0"></label>
+        <label>Рост цен субподрядчиков <b id="wiGv">0 %</b><input type="range" id="wiG" min="0" max="15" step="1" value="0"></label>
+        <label>Перевести на свои бригады <b id="wiSv">0 %</b><input type="range" id="wiS" min="0" max="50" step="5" value="0"></label>
+      </div>
+      <div class="wrap"><table id="wiTable"></table></div>
+      <p class="note" id="wiNote"></p>
+    </div>
+  </div>
+  <div class="panel" style="margin-bottom:14px">
+    <h2>Неделя за неделей <span>сентябрь – ноябрь 2026 · недели внутри месяца — условное деление месячных цифр</span></h2>
+    <div class="wrap"><table id="pWeeks"></table></div>
+  </div>
+  <div class="panel">
+    <h2>Сводка недели для руководителя <span>собирается сама в понедельник 8:00 и уходит в Telegram и на почту</span></h2>
+    <div id="pDigest" class="digest"></div>
+    <div class="toolbar" style="margin-top:12px"><button class="pri" type="button" id="pDigestPdf">Скачать сводку (Word)</button><button class="sec" type="button" id="pDigestAsk">Спросить ИИ-агента про эту неделю</button></div>
+  </div>
+</section>
+
+<!-- ───────── ПОМОЩНИК ───────── -->
+<section class="view" id="v-ai" hidden>
+  <h1>ИИ-агент руководителя</h1>
+  <p class="sub">Спрашивайте обычными словами. Цифры считает программа — те же, что на сводной. ИИ-агент их объясняет, показывает, откуда взял, и предлагает действия. Сам ничего не меняет: каждое действие — только после вашего «Подтвердить».</p>
+  <p class="tz"><b>Новое · ИИ-агент</b> — сделано: вопросы словами, ответ с таблицей и источниками, предложения с подтверждением, журнал действий ИИ-агента. В демо ответы собраны заранее на цифрах демо. В платформе вопрос понимает языковая модель на сервере компании — данные наружу не уходят, а считает всегда программа.</p>
+  <div class="aigrid">
+    <div class="panel aichat">
+      <div class="aiq" id="aiChips"></div>
+      <div class="ailog" id="aiLog" aria-live="polite"></div>
+      <form class="aiform" id="aiForm"><input id="aiIn" type="text" autocomplete="off" placeholder="Например: где мы теряем деньги?"><button class="pri" type="submit">Спросить</button></form>
+    </div>
+    <div>
+      <div class="panel" style="margin-bottom:14px">
+        <h2>Как устроен ИИ-агент <span>почему ему можно верить</span></h2>
+        <ol class="aisteps">
+          <li><b>Данные</b> — Синтека, 1С, КС-2 от строителей, журнал прораба, табель. Одна база.</li>
+          <li><b>Расчёт</b> — программа по формулам, которые можно проверить кнопкой «?».</li>
+          <li><b>ИИ-агент</b> — читает только готовые расчёты и объясняет словами.</li>
+          <li><b>Человек</b> — подтверждает каждое действие. Всё пишется в журнал.</li>
+        </ol>
+        <p class="note">ИИ-агент видит ровно то же, что и роль, от имени которой спрашивают: субподрядчик не узнает маржу, заказчик — себестоимость.</p>
+      </div>
+      <div class="panel">
+        <h2>Журнал ИИ-агента <span>что предложил и кто решил</span></h2>
+        <div class="wrap"><table id="aiJournal"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── ПРЕДСМЕТЫ ───────── -->
+<section class="view" id="v-estimate" hidden>
+  <h1>Предсмета нового объекта</h1>
+  <p class="sub">Прежде чем подписать договор — прикинуть СМР по 15 системам, свой ФОТ и маржу по фактам «Публициста 11». ИИ-агент проверяет комплектность: какой системы не хватает и что обычно забывают.</p>
+  <p class="tz"><b>Новое · модуль предсмет</b> — сделано: расчёт по аналогу, проверка комплектности, поиск позиций в базе с расценками. Нужно от АСТЭКС: ваш файл предсметы (6 листов, ≈ 3 000 строк) — подставим ваши формулы вместо расчёта по аналогу.</p>
+  <div class="grid2">
+    <div class="panel">
+      <h2>Новый объект <span>что знаем на входе</span></h2>
+      <div class="eform">
+        <label>Название<input id="eName" value="ЖК «Новый», корпус 1"></label>
+        <label>Площадь, м²<input id="eArea" type="number" value="52000" step="1000"></label>
+        <label>Срок СМР, мес.<input id="eMon" type="number" value="14" min="3" max="36"></label>
+        <label>Площадь «Публициста 11», м² <span class="pill warn">допущение</span><input id="eRef" type="number" value="38000" step="1000"></label>
+      </div>
+      <div class="esys" id="eSys"></div>
+    </div>
+    <div class="panel">
+      <h2>ИИ-агент проверил комплектность <span>правила можно дописывать самим</span></h2>
+      <ul class="alerts" id="eChecks"></ul>
+    </div>
+  </div>
+  <div class="tiles" id="eTiles" style="margin-top:14px"></div>
+  <div class="panel" style="margin-bottom:14px">
+    <h2>СМР по системам <span>по аналогу «Публицист 11», ₽ без НДС · оборудование и материалы — из Синтеки</span></h2>
+    <div class="wrap"><table id="eTable"></table></div>
+  </div>
+  <div class="panel">
+    <h2>Поиск позиции в базе <span>90 позиций демо · в платформе — вся база всех объектов</span></h2>
+    <div class="toolbar"><input id="eQ" type="search" placeholder="лоток, аккумулятор, панель вызова…" style="flex:1 1 260px"></div>
+    <div class="wrap"><table id="eFind"></table></div>
+  </div>
+</section>
+
+
+<!-- ───────── СТОП-КРАН ОПЛАТЫ ───────── -->
+<section class="view" id="v-pay" hidden>
+  <h1>Оплаты · стоп-кран</h1>
+  <p class="sub">Перед каждой оплатой субподрядчику программа сама проверяет шесть вещей и говорит: платить, придержать или нельзя — и почему. Ни один рубль не уходит раньше времени.</p>
+  <p class="tz"><b>Новое · стоп-кран оплаты (пилот)</b> — сделано: очередь актов на оплату, шесть проверок по каждому акту, сумма «к оплате» и «придержать», согласование одной кнопкой, готовый текст субподрядчику, журнал решений. В платформе оплаты заказчика и субподрядчикам придут из 1С.</p>
+  <div class="tiles" id="payTiles"></div>
+  <div class="panel" style="margin-bottom:14px">
+    <h2>Очередь на оплату <span>нажмите на строку — ниже разбор по акту · наведите на точку — что проверено</span></h2>
+    <div class="wrap"><table id="payTable"></table></div>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h2 id="payDetailT">Разбор по акту</h2>
+      <div class="chk" id="payDetail"></div>
+      <p class="note" id="payMsg"></p>
+    </div>
+    <div>
+      <div class="panel" style="margin-bottom:14px">
+        <h2>Правила стоп-крана <span>задаёт руководитель</span></h2>
+        <label class="ck" style="margin-bottom:8px"><input type="checkbox" id="payAfter">Платим субподрядчику после оплаты заказчиком</label>
+        <p class="note" id="payRule"></p>
+        <p class="note">Правило «после оплаты заказчиком» работает, только если оно записано в договоре субподряда. Гарантийное удержание — 5 % по договору.</p>
+      </div>
+      <div class="panel">
+        <h2>Журнал решений <span>кто, когда и что согласовал</span></h2>
+        <div class="wrap"><table id="payLog"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/PLUS-VIEWS-->
 <section class="view" id="v-foreman" hidden>
   <h1>Мой день · прораб</h1>
   <p class="sub">Телефон прораба: внести объём за четыре касания, посмотреть, что внесено сегодня, отправить допработу с фото. Без связи записи копятся и уходят, когда появится сеть.</p>
@@ -1251,8 +1472,8 @@ function staff(){
 
 // ───────── личные кабинеты ─────────
 const ROLES={
-  director:{name:"Берг М. С.",role:"руководитель",home:"dashboard",tools:["dashboard","journal","contractors","staff","extra","acts"]},
-  pto:{name:"Костылева Е. Ю.",role:"ПТО",home:"journal",tools:["journal","contractors","staff","extra","acts"]},
+  director:{name:"Берг М. С.",role:"руководитель",home:"dashboard",tools:["dashboard","journal","contractors","staff","extra","acts","pay","forecast","estimate","ai"]},
+  pto:{name:"Костылева Е. Ю.",role:"ПТО",home:"journal",tools:["journal","contractors","staff","extra","acts","pay","estimate","ai"]},
   foreman:{name:"Иванов А. В.",role:"прораб",home:"foreman",tools:["foreman","journal","extra"]},
   sub:{name:"Подрядчик Б",role:"субподрядчик",home:"sub",tools:["sub"]},
   client:{name:"Монолит",role:"заказчик",home:"client",tools:["client"]},
@@ -1469,7 +1690,7 @@ function ks3(){
 }
 function ksInit(){const s=document.getElementById("ksSys");s.innerHTML='<option value="">Все системы</option>'+Object.keys(SYS_BUDGET).map(x=>`<option>${x}</option>`).join("");document.getElementById("ks2").addEventListener("click",ks2);document.getElementById("ks3").addEventListener("click",ks3)}
 // ───────── роутинг ─────────
-const VIEWS=["dashboard","journal","contractors","staff","extra","acts","foreman","sub","client"];
+const VIEWS=["dashboard","journal","contractors","staff","extra","acts","pay","forecast","estimate","ai","foreman","sub","client"];
 function route(){let h=(location.hash||"#dashboard").slice(1);if(!VIEWS.includes(h)||!ROLES[ROLE].tools.includes(h)){h=ROLES[ROLE].home;history.replaceState(null,"",location.pathname+location.search+"#"+h)}
   VIEWS.forEach(v=>{document.getElementById("v-"+v).hidden=v!==h});
   document.querySelectorAll("#nav a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+h))}
@@ -1555,7 +1776,9 @@ function folds(){
 // быстрые переходы по разделам длинных экранов
 const SUBNAV={dashboard:[["Показатели","#tiles"],["Системы","#sysTable"],["Баланс по субподрядчикам","#balChart"],["Требует решения","#alerts"],["Динамика","#monthChart"],["Прогноз","#forecast"],["Маржа по слоям","#layers"],["Деньги 30/60/90","#cash"]],
  contractors:[["Показатели","#cTiles"],["Паспорт денег","#cChain"],["Удержания","#cRet"],["Договор","#cDog"],["Условия оплаты","#cPay"],["Позиции","#cTable"]],
- staff:[["Показатели","#sTiles"],["ФОТ по месяцам","#sChart"],["Разнесение по системам","#sSys"],["Проверки табеля","#sAlerts"],["Сдельная","#sPiece"],["Люди","#sTable"]],
+ staff:[["Показатели","#sTiles"],["ФОТ по месяцам","#sChart"],["Разнесение по системам","#sSys"],["Проверки табеля","#sAlerts"],["Сдельная","#sPiece"],["Сделка и почасовка","#sWork"],["Люди","#sTable"]],
+ pay:[["Показатели","#payTiles"],["Очередь на оплату","#payTable"],["Разбор по акту","#payDetail"],["Правила","#payAfter"],["Журнал решений","#payLog"]],
+ forecast:[["Показатели","#pTiles"],["По неделям","#pChart"],["Что если","#wiBox"],["Неделя за неделей","#pWeeks"],["Сводка недели","#pDigest"]],
  acts:[["Документы заказчику","#ksSys"],["Правило закрытия","#ruleSeg"],["Комплектность","#chk"],["Реестр актов","#aReg"],["Акт","#act"]],
  extra:[["Показатели","#xTiles"],["Реестр допработ","#xTable"]]};
 function subnavs(){
@@ -1585,6 +1808,325 @@ function addExtraFrom(r,q,sys){
   send(["director","pto"],`Прораб: допработа ДР-${String(EXTRA.length).padStart(3,"0")} — ${r.code}, ${q} ${r.unit}, ≈ ${fmt(sumv)} ₽ по цене субподрядчика. Нужно решение и уведомление заказчика`,"extra");
 }
 function uxInit(){folds();subnavs();inboxInit();actBars();lockMarks();bell();gate()}
+/*PLUS-JS*/
+// ═════════ ДОБАВЛЕНО 11.11: монтажники сделка/почасовка, прогноз и «что если», ИИ-агент, предсметы ═════════
+
+// ───── монтажники: кто, что, сколько, по какой оплате ─────
+const PIECE_RATE={"32.1":85,"32.2":25,"23.1":1800,"23.3":120,"35.1":950,"32.3":110,"23.2":350,"35.5":300};
+const NORM={"32.1":1.4,"32.2":4,"23.1":.12,"23.3":3,"35.1":.3,"32.3":1.4,"23.2":.6,"35.5":.9}; // норма выработки, ед. в час (демо)
+// [кто, оплата, шифр, объём, часы]
+const WORK=[
+ ["Монтажник 03","сделка","32.1",60,46],["Монтажник 04","сделка","32.1",70,52],["Монтажник 05","сделка","32.2",160,38],
+ ["Монтажник 06","сделка","23.1",6,54],["Монтажник 07","сделка","23.3",32,12],
+ ["Монтажник 01","почасовая","35.1",4,14],["Монтажник 02","почасовая","35.5",10,12],["Монтажник 09","почасовая","23.2",8,16],["Монтажник 10","почасовая","32.3",20,14],
+];
+const STAFF_BY=Object.fromEntries(STAFF.map(s=>[s[0],s]));
+function workRows(){return WORK.map(([who,pay,code,q,h])=>{const r=rows.find(x=>x.code===code);const st=STAFF_BY[who];
+  const paid=pay==="сделка"?q*PIECE_RATE[code]:h*st[2]; const full=paid*LOAD; const unit=full/q; const sub=r.rate;
+  const prod=q/h, norm=NORM[code];
+  return {who,pay,code,name:r.name,sys:r.sys,unitN:r.unit,q,h,paid,full,unit,sub,ps:r.ps,prod,norm,subWho:r.who}})}
+function work(){
+  const W=workRows(), el=document.getElementById("sWork"); if(!el)return;
+  el.innerHTML=`<tr><th>Кто</th><th>Оплата</th><th>Система · работа</th><th class="n">Объём</th><th class="n">Часы</th><th class="n">Начислено</th><th class="n">С налогами</th><th class="n">Своими за ед.</th><th class="n">Субподрядчику за ед.</th><th class="n">Выработка / норма</th></tr>`+
+   W.map(w=>{const d=w.unit/w.sub-1, pr=w.prod/w.norm;
+    return `<tr><td><b>${w.who}</b></td><td><span class="pill ${w.pay==="сделка"?"ok":"mut"}">${w.pay}</span></td><td>${w.sys} · ${w.code} ${w.name.slice(0,34)}</td><td class="n">${w.q} ${w.unitN}</td><td class="n">${w.h}</td><td class="n">${fmt(w.paid)}</td><td class="n">${fmt(w.full)}</td>
+     <td class="n"><b style="color:${d>0?"var(--bad)":"var(--ok)"}">${fmt(w.unit)}</b></td><td class="n">${fmt(w.sub)}</td><td class="n"><span class="pill ${pr<.8?"bad":pr<1?"warn":"ok"}">${pct(pr)}</span></td></tr>`}).join("");
+  const piece=W.filter(w=>w.pay==="сделка"), hour=W.filter(w=>w.pay!=="сделка");
+  const pS=sum(piece,w=>w.full)/sum(piece,w=>w.sub*w.q), hS=sum(hour,w=>w.full)/sum(hour,w=>w.sub*w.q);
+  const worst=[...hour].sort((a,b)=>b.unit/b.sub-a.unit/a.sub)[0];
+  document.getElementById("sWorkNote").innerHTML=`<b>Вывод:</b> на сделке свои обходятся в <b>${pct(pS)}</b> от цены субподрядчика за ту же работу, на почасовке — в <b>${pct(hS)}</b>. Дороже всех — ${worst.who}: ${worst.name.slice(0,30)} за ${fmt(worst.unit)} ₽ при цене субподрядчика ${fmt(worst.sub)} ₽. Правило для почасовиков: прораб отмечает в телефоне работу и систему — тогда часы ложатся в себестоимость позиции, а не висят на объекте. Выработка — к норме, которую задаёт ПТО. Объёмы в примере условные: настоящие появятся, когда прораб начнёт отмечать работу.`;
+  OWN_VS_SUB=pS; OWN_RATIO=sum(piece,w=>w.full)/sum(piece,w=>w.ps*w.q);
+}
+let OWN_RATIO=.45, OWN_VS_SUB=.54; // OWN_RATIO — доля от сметной цены СМР, OWN_VS_SUB — от цены субподрядчика
+
+// ───── прогноз ─────
+const FOT_MON_FULL=2624248*LOAD; // свой ФОТ в месяц с налогами — по октябрьскому табелю
+const WEEK_RATE=T_CLIENT*0.24/4.3;
+function eac(o={}){
+  const d=o.d||0,p=o.p||0,g=o.g||0,s=o.s||0;
+  const left=T_CONTRACT-T_CLIENT;           // осталось сдать заказчику — от этого срок
+  const leftSub=T_CONTRACT-T_SUB;           // осталось принять у субподрядчиков — от этого маржа остатка
+  const rate=WEEK_RATE*(1+p);
+  const monthsLeft=left/rate/4.345+d;
+  const subK=(1-factMargin)*(1+g); // доля цены субподрядчика от сметной на остаток
+  const marginLeft=leftSub*(1-s)*(1-subK)+leftSub*s*(1-OWN_RATIO);
+  const m=M_SUB+marginLeft;
+  const fot=FOT_FULL+FOT_MON_FULL*monthsLeft;
+  const end=new Date(OBJ.today);end.setDate(end.getDate()+Math.round(monthsLeft*30.44));
+  return {left,leftSub,monthsLeft,m,fot,res:m-fot,end};
+}
+const WEEKS=["07.09","14.09","21.09","28.09","05.10","12.10","19.10","26.10","02.11"];
+function weekHistory(){
+  // история прогноза: последняя неделя = нынешний расчёт eac(), раньше — чуть лучше (перекос рос постепенно)
+  const B=eac(), need=-B.res, OFF=[-.13,-.115,-.10,-.095,-.07,-.05,-.04,-.015,0], n=WEEKS.length;
+  return WEEKS.map((w,i)=>{const f=.53+.47*(i+1)/n, fp=.53+.47*i/n;
+    const cl=T_CLIENT*f, su=T_SUB*f*(1+(T_SUB/T_CLIENT-1)*(f-1)*.6);
+    const PACE=[.92,1.06,.97,1.11,.9,1.05,1.0,.96,1.03]; const wk=T_CLIENT*(f-fp)*PACE[i], wsub=T_SUB*(f-fp)*(1+.25*(i/n))*PACE[(i+3)%n];
+    const fm=planMargin-(planMargin-factMargin)*Math.min(1,(i+2)/n);
+    return {w,wk,wsub,skew:i===n-1?T_SKEW:Math.max(0,su-cl)*(T_SKEW/Math.max(1,T_SUB-T_CLIENT)),fm,res:-need*(1+OFF[i])}})
+}
+let WI={d:0,p:0,g:0,s:0};
+function forecast2(){
+  const B=eac(), H=weekHistory(), last=H[H.length-1], prev=H[H.length-2];
+  const t=[
+   ["Окончание при нынешнем темпе",B.end.toLocaleDateString("ru-RU"),B.end<=OBJ.end?"раньше срока договора 31.05.2027":"позже срока договора","ok"],
+   ["Маржа СМР на конец",fmtM(B.m),"субподряд, по нынешнему факту "+pct(factMargin)+" вместо "+pct(planMargin),""],
+   ["Свой ФОТ на конец",fmtM(B.fot),fmtM(FOT_MON_FULL)+" в месяц с налогами","bad"],
+   ["Должны покрыть поставка и ПНР",fmtM(-B.res),"без этого объект в минусе — проверить маржу поставки в Синтеке","bad"],
+   ["Каждый месяц задержки",fmtM(FOT_MON_FULL),"свой ФОТ продолжает идти, а выручка — нет","warn"],
+   ["Прогноз за неделю",(last.res<prev.res?"хуже на ":"лучше на ")+fmtM(Math.abs(last.res-prev.res)),"главная причина — перекос по ККСС у подрядчика Б",last.res<prev.res?"bad":"ok"],
+  ];
+  document.getElementById("pTiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  // график: результат СМР со своим ФОТ по неделям (минус = сколько надо покрыть)
+  const W=680,Hh=230,L=52,Bm=30,T=16,R=70,vals=H.map(h=>-h.res/1e6),mx=Math.ceil(Math.max(...vals)/5)*5+5,mn=Math.floor(Math.min(...vals)/5)*5-5;
+  const x=i=>L+(W-L-R)*i/(H.length-1), y=v=>T+(Hh-T-Bm)*(1-(v-mn)/(mx-mn));
+  let g=`<svg viewBox="0 0 ${W} ${Hh}" width="${W}" style="max-width:100%;height:auto;display:block" role="img" aria-label="Прогноз по неделям">`;
+  for(let v=mn;v<=mx;v+=5)g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${v}</text>`;
+  g+=`<polyline fill="none" stroke="var(--bad)" stroke-width="2.5" points="${vals.map((v,i)=>x(i)+","+y(v)).join(" ")}"/>`;
+  vals.forEach((v,i)=>{g+=`<circle cx="${x(i)}" cy="${y(v)}" r="3.5" fill="var(--bad)"/><text x="${x(i)}" y="${Hh-10}" text-anchor="middle">${H[i].w}</text>`});
+  g+=`<text x="${x(H.length-1)+8}" y="${y(vals[vals.length-1])+4}" style="fill:var(--bad);font-weight:700">${vals[vals.length-1].toFixed(1)}</text></svg>`;
+  g+=`<div class="legend"><span><b style="background:var(--bad)"></b>сколько должны покрыть поставка и ПНР, млн ₽ — растёт, значит дела хуже</span></div>`;
+  document.getElementById("pChart").innerHTML=g;
+  // недели
+  document.getElementById("pWeeks").innerHTML=`<tr><th>Неделя с</th><th class="n">Сдано заказчику</th><th class="n">Принято у субов</th><th class="n">Перекос нарастающим</th><th class="n">Маржа СМР</th><th class="n">Надо покрыть на конец</th><th>Сигнал</th></tr>`+
+   H.map((h,i)=>{const dd=i?h.res-H[i-1].res:0;return `<tr><td>${h.w}</td><td class="n">${fmt(h.wk)}</td><td class="n">${fmt(h.wsub)}</td><td class="n">${fmt(h.skew)}</td><td class="n">${pct(h.fm)}</td><td class="n"><b>${fmt(-h.res)}</b></td><td>${i?`<span class="pill ${dd<-2e5?"bad":dd<0?"warn":"ok"}">${dd<0?"хуже на "+fmtM(-dd):"лучше на "+fmtM(dd)}</span>`:""}</td></tr>`}).join("");
+  whatIf(); digest();
+}
+function whatIf(){
+  const B=eac(), N=eac(WI);
+  const P=Math.round(WI.p*100), G=Math.round(WI.g*100), S=Math.round(WI.s*100);
+  const lab={d:WI.d?"+"+WI.d+" мес.":"0 мес.",p:P?(P>0?"+":"−")+Math.abs(P)+" %":"как сейчас",g:G+" %",s:S+" %"};
+  ["d","p","g","s"].forEach(k=>document.getElementById("wi"+k.toUpperCase()+"v").textContent=lab[k]);
+  const r=(l,a,b,good)=>{const dlt=b-a;return `<tr><td>${l}</td><td class="n">${fmt(a)}</td><td class="n">${fmt(b)}</td><td class="n" style="color:${Math.abs(dlt)<1?"var(--muted)":(good?dlt>0:dlt<0)?"var(--ok)":"var(--bad)"};font-weight:600">${Math.abs(dlt)<1?"—":(dlt>0?"+":"−")+fmt(Math.abs(dlt))}</td></tr>`};
+  document.getElementById("wiTable").innerHTML=`<tr><th></th><th class="n">Сейчас</th><th class="n">Если</th><th class="n">Разница</th></tr>`+
+   r("Маржа СМР на конец",B.m,N.m,true)+r("Свой ФОТ на конец",B.fot,N.fot,false)+
+   `<tr class="tot"><td>Должны покрыть поставка и ПНР</td><td class="n">${fmt(-B.res)}</td><td class="n">${fmt(-N.res)}</td><td class="n" style="color:${N.res<B.res-1?"var(--bad)":N.res>B.res+1?"var(--ok)":"var(--muted)"}">${Math.abs(N.res-B.res)<1?"—":(N.res<B.res?"+":"−")+fmt(Math.abs(N.res-B.res))}</td></tr>`+
+   `<tr><td>Окончание</td><td class="n">${B.end.toLocaleDateString("ru-RU")}</td><td class="n">${N.end.toLocaleDateString("ru-RU")}</td><td class="n">${N.end>OBJ.end?'<span class="pill bad">позже договора</span>':'<span class="pill ok">в срок</span>'}</td></tr>`;
+  const parts=[];
+  if(WI.d)parts.push(`задержка на ${WI.d} мес. — это ${fmtM(FOT_MON_FULL*WI.d)} своего ФОТ без выручки`);
+  if(P)parts.push(`темп ${P>0?"выше":"ниже"} на ${Math.abs(P)} % ${P>0?"приближает":"отодвигает"} окончание: свой ФОТ ${N.fot<B.fot?"меньше":"больше"} на ${fmtM(Math.abs(eac({p:WI.p}).fot-B.fot))}`);
+  if(G)parts.push(`рост цен субподрядчиков на ${G} % съедает ${fmtM(B.leftSub*(1-WI.s)*(1-factMargin)*WI.g)} маржи остатка`);
+  if(S)parts.push(`перевод ${S} % остатка на свои бригады по сделке даёт ${fmtM(B.leftSub*WI.s*((1-OWN_RATIO)-(1-(1-factMargin)*(1+WI.g))))} — если хватит людей`);
+  document.getElementById("wiNote").innerHTML=parts.length?"Что даёт разницу: "+parts.join("; ")+".":"Сдвиньте любой рычаг — программа пересчитает маржу, ФОТ и срок. Формулы те же, что в прогнозе.";
+}
+function whatIfInit(){["d","p","g","s"].forEach(k=>{const el=document.getElementById("wi"+k.toUpperCase());el.addEventListener("input",()=>{WI[k]=k==="d"?+el.value:+el.value/100;whatIf()})})}
+function setWI(o){Object.assign(WI,o);["d","p","g","s"].forEach(k=>{document.getElementById("wi"+k.toUpperCase()).value=k==="d"?WI[k]:Math.round(WI[k]*100)});whatIf()}
+function digestData(){
+  const H=weekHistory(), l=H[H.length-1], p=H[H.length-2], B=eac();
+  const top=SYS.filter(x=>x.sub>x.client).sort((a,b)=>(b.sub-b.client)-(a.sub-a.client)).slice(0,3);
+  return [
+   ["Главное",`Прогноз ${l.res<p.res?"ухудшился":"улучшился"} на ${fmtM(Math.abs(l.res-p.res))}: поставка и ПНР должны покрыть ${fmtM(-B.res)}. Окончание при нынешнем темпе — ${B.end.toLocaleDateString("ru-RU")}.`],
+   ["Сдано и принято за неделю",`Заказчику сдано ${fmtM(l.wk)}, у субподрядчиков принято ${fmtM(l.wsub)}. Принимаем быстрее, чем сдаём.`],
+   ["Где перекос",top.map(x=>`${x.s} (${x.who}) — ${fmtM(x.sub-x.client)}`).join("; ")+". Оплату сверх сданного — придержать."],
+   ["Допработы",`${noDec().length} без решения на ${fmtM(sum(noDec(),x=>x.sum))}. Без решения они не попадут в акт заказчику.`],
+   ["Свои люди",`ФОТ октября ${fmtM(S_FOT)} + ${fmtM(S_CASH)} наличными, часы без системы — весь табель. На сделке свои дешевле субподрядчика: ${pct(OWN_VS_SUB)} от его цены.`],
+   ["Решить на этой неделе","1) придержать оплату по ККСС до сдачи заказчику; 2) решение по допработам; 3) отметка системы в часах прораба."],
+  ];
+}
+function digest(){document.getElementById("pDigest").innerHTML=`<p class="dhead">Публицист 11 · неделя с 02.11.2026 · для Берга М. С.</p>`+digestData().map(([h,t])=>`<p><b>${h}.</b> ${t}</p>`).join("")}
+function digestDocx(){
+  if(!window.docx){toast("Нет библиотеки Word","Проверьте интернет и нажмите ещё раз.");return}
+  const D=window.docx,F="Times New Roman",P=(t,o={})=>new D.Paragraph({spacing:{after:o.a||120},alignment:o.c?D.AlignmentType.CENTER:D.AlignmentType.JUSTIFIED,children:[].concat(t).map(x=>typeof x==="string"?new D.TextRun({text:x,font:F,size:o.sz||24,bold:!!o.b}):x)});
+  const T=(t,b)=>new D.TextRun({text:t,font:F,size:24,bold:b});
+  const doc=new D.Document({sections:[{properties:{page:{margin:{top:1134,bottom:1134,left:1701,right:567}}},children:[
+    P("Сводка недели по объекту «Публицист 11»",{c:1,b:1,sz:28,a:60}),P("неделя с 02.11.2026 · сформировано системой СМР-Контроль",{c:1,sz:22,a:240}),
+    ...digestData().map(([h,t])=>P([T(h+". ",true),T(t)]))]}]});
+  D.Packer.toBlob(doc).then(b=>saveFile("Сводка_недели_Публицист11_02.11.2026.docx",b));
+}
+
+// ───── ИИ-агент ─────
+const AI_SRC={sys:["сводка по системам","system_progress"],skew:["перекос по позициям","overclosed_positions"],subs:["расценки субподрядчиков","subcontractor_rates"],
+ fot:["табель и ФОТ","labor_cost"],work:["выработка монтажников","crew_output"],eac:["прогноз на конец","forecast_eac"],wi:["расчёт «что если»","what_if"],extra:["реестр допработ","extra_works"],acts:["реестр актов","acts_register"]};
+const AI_LOG=[];
+let AI_N=0;
+function aiProp(text,who,act){return {id:"P"+(++AI_N),text,who,act}}
+const INTENTS=[
+ {q:"Где мы теряем деньги?",r:"D",k:["теря","перерасход","минус","дыр","убыт"],f:()=>{const B=eac();const top=SYS.filter(x=>x.sub>x.client).sort((a,b)=>(b.sub-b.client)-(a.sub-a.client)).slice(0,3);
+   return {t:`Три места. <b>1. Перекос закрытия</b> — субподрядчикам принято на ${fmtM(T_SKEW)} больше, чем сдано заказчику: деньги ушли раньше, чем пришли. <b>2. Маржа субподряда</b> ${pct(factMargin)} вместо ${pct(planMargin)}. <b>3. Свой ФОТ</b> ${fmtM(FOT_MON_FULL)} в месяц не привязан к системам — по прогнозу поставка и ПНР должны покрыть ${fmtM(-B.res)}.`,
+   tb:[["Система","Подрядчик","Принято сверх сданного"],...top.map(x=>[x.s,x.who,fmt(x.sub-x.client)])],src:["sys","skew","eac"],
+   p:[aiProp(`Придержать оплату ${top[0].who} по ${top[0].s} на ${fmt(top[0].sub-top[0].client)} ₽ до сдачи заказчику`,"ПТО",()=>send("pto",`ИИ-агент (подтвердил руководитель): придержать оплату ${top[0].who} по ${top[0].s} на ${fmt(top[0].sub-top[0].client)} ₽ до сдачи КС-2`,"contractors"))]}}},
+ {q:"Какие системы дают наибольшую себестоимость?",r:"D",k:["систем","дорог","себестоим","крупн"],f:()=>{const L=[...SYS].map(x=>({...x,cost:x.b*(1-0)*SUB_RATE[x.who]})).sort((a,b)=>b.cost-a.cost),tot=sum(L,x=>x.cost),t3=L.slice(0,3);
+   return {t:`Больше всего стоят <b>${t3.map(x=>x.s).join(", ")}</b> — вместе ${pct(sum(t3,x=>x.cost)/tot)} себестоимости СМР по договору. Из них только ${t3.filter(x=>x.sub>x.client).map(x=>x.s).join(" и ")||"—"} закрываются у подрядчика быстрее, чем сдаются заказчику — там и смотреть в первую очередь.`,
+   tb:[["Система","Подрядчик","Себестоимость по договору","Доля"],...t3.map(x=>[x.s,x.who,fmt(x.cost),pct(x.cost/tot)])],src:["sys","subs"],p:[]}}},
+ {q:"Почему упала маржа?",r:"D",k:["маржа","почему","вырос","упал","прибыл"],f:()=>{const skewLoss=T_SKEW*(1-factMargin);
+   return {t:`Маржа субподряда ${pct(factMargin)} при плане ${pct(planMargin)}. Причины по весу: <b>подрядчик Б</b> берёт ${Math.round(SUB_RATE["Подрядчик Б"]*100)} % от сметы на АПС, АПВ и ККСС — самые дорогие системы; <b>перекос</b> ${fmtM(T_SKEW)} — за эти объёмы уже заплачено, а выручки ещё нет; <b>свой ФОТ</b> не разнесён по системам, поэтому маржа систем на бумаге выше, чем на деле.`,
+   tb:[["Причина","Деньги"],["Цена подрядчика Б выше средней",fmt(sum(SYS.filter(x=>x.who==="Подрядчик Б"),x=>x.sub)*(SUB_RATE["Подрядчик Б"]-sum(SYS.filter(x=>x.who!=="Подрядчик Б"),x=>x.sub*SUB_RATE[x.who])/sum(SYS.filter(x=>x.who!=="Подрядчик Б"),x=>x.sub)))],["Оплачено вперёд (перекос)",fmt(skewLoss)],["Свой ФОТ май–октябрь с налогами",fmt(FOT_FULL)]],src:["subs","skew","fot"],
+   p:[aiProp("Запросить у подрядчика Б расценки на остаток ККСС — сравнить со своими бригадами по сделке","руководитель",()=>{location.hash="#staff";toast("Открыл «Свой персонал»","Сравнение сделки и цены субподрядчика — в блоке «Монтажники: сделка и почасовка».")})]}}},
+ {q:"Что будет, если срок сдвинется на 2 месяца?",r:"D",k:["срок","сдвин","задерж","месяц","перенос"],f:()=>{const B=eac(),N=eac({d:2});
+   return {t:`Объект закончится ${N.end.toLocaleDateString("ru-RU")} вместо ${B.end.toLocaleDateString("ru-RU")}. Выручка не изменится, а свой ФОТ будет идти ещё два месяца: <b>минус ${fmtM(N.fot-B.fot)}</b>. Покрыть поставкой и ПНР придётся ${fmtM(-N.res)} вместо ${fmtM(-B.res)}.`,
+   tb:[["","Сейчас","Срок +2 мес."],["Свой ФОТ на конец",fmt(B.fot),fmt(N.fot)],["Должны покрыть поставка и ПНР",fmt(-B.res),fmt(-N.res)]],src:["eac","wi","fot"],
+   p:[aiProp("Открыть «Что если» с этим сценарием","руководитель",()=>{location.hash="#forecast";setWI({d:2,p:0,g:0,s:0})})]}}},
+ {q:"Какой подрядчик дороже остальных?",r:"DP",k:["подрядчик","дороже","субподряд","кто дорог"],f:()=>{const L=Object.entries(SUB_RATE).filter(([k])=>k!=="Штатные сотрудники").sort((a,b)=>b[1]-a[1]);
+   const w=workRows().find(x=>x.code==="32.1");
+   return {t:`<b>${L[0][0]}</b> — ${Math.round(L[0][1]*100)} % от сметной расценки, самый дорогой. Самый дешёвый — ${L[L.length-1][0]} (${Math.round(L[L.length-1][1]*100)} %). Для сравнения: лоток 300×50 своими на сделке — ${fmt(w.unit)} ₽ за метр с налогами, у ${w.subWho} — ${fmt(w.sub)} ₽.`,
+   tb:[["Подрядчик","От сметы","Системы"],...L.map(([k,v])=>[k,Math.round(v*100)+" %",Object.keys(SYS_SUB).filter(s=>SYS_SUB[s]===k).join(", ")])],src:["subs","work"],p:[]}}},
+ {q:"Какие позиции требуют проверки?",r:"DP",k:["позиц","провер","ошиб","сверх"],f:()=>{const L=rows.filter(r=>r.sub>r.client*1.1&&r.sub>0).sort((a,b)=>(b.sub-b.client)*b.ps-(a.sub-a.client)*a.ps).slice(0,5);
+   return {t:`${L.length} позиций, где принято у подрядчика заметно больше, чем сдано заказчику. Самая крупная — <b>${L[0].code} ${L[0].name.slice(0,40)}</b>: принято ${L[0].sub} ${L[0].unit}, сдано ${L[0].client}. КС-2 по ним заказчик подпишет только после 100 % — до этого заплаченное подрядчику — деньги вперёд. Проверьте на месте, что принятое у подрядчика не больше сделанного.`,
+   tb:[["Шифр","Позиция","Принято","Сдано","Разница, ₽"],...L.map(r=>[r.code,r.name.slice(0,34),r.sub+" "+r.unit,r.client+" "+r.unit,fmt((r.sub-r.client)*r.ps)])],src:["skew"],
+   p:[aiProp(`Поручить прорабу пересчитать на месте ${L.length} позиций (${L.map(r=>r.code).join(", ")})`,"прораб",()=>send("foreman",`ИИ-агент (подтвердил руководитель): пересчитать на месте позиции ${L.map(r=>r.code).join(", ")} — принято больше, чем сдано заказчику`,"foreman"))]}}},
+ {q:"Что с допработами?",r:"DP",k:["допработ","доп","дс","743"],f:()=>{const L=noDec();const late=EXTRA.filter(x=>t743(x)[0]==="bad");
+   return {t:`${L.length} допработ без решения на ${fmtM(sum(L,x=>x.sum))} по цене субподрядчика. По ${late.length} — проблема с уведомлением заказчика по ст. 743 ГК: без него доплату не получить.`,
+   tb:[["Допработа","Подрядчик","Сумма","Уведомление"],...EXTRA.slice(0,6).map(x=>[x.t.slice(0,40),x.who,fmt(x.sum),t743(x)[1].slice(0,40)])],src:["extra"],
+   p:late.length?[aiProp(`Отправить заказчику уведомление по ${late.length} допработам`,"ПТО",()=>send("client",`Уведомление о дополнительных работах (ст. 743 ГК РФ): ${late.length} поз. — просим согласовать`,"client"))]:[]}}},
+ {q:"Сколько объектов потянем одновременно?",r:"DP",k:["объект","потян","одновремен","нагруз"],f:()=>{const multi=STAFF.filter(s=>s[9]>0);
+   return {t:`По одному «Публицисту 11» точно не скажу — нужны табели остальных 14 объектов. Что видно уже сейчас: ${multi.length} человек в октябре работали и на других объектах, у троих больше 8 часов в день суммарно. Когда все объекты будут в одной базе, ИИ-агент посчитает загрузку бригад по неделям и скажет, где появится дыра.`,
+   tb:[["Кто","Часов на других объектах"],...multi.map(s=>[s[0],s[9]])],src:["fot"],p:[]}}},
+ {q:"Кому можно платить на этой неделе?",r:"DP",k:["платить","оплат","кому можно","стоп-кран"],f:()=>{const Q=payQueue(),T=sum(Q,x=>x.pay),H=sum(Q,x=>x.hold+x.blocked);
+   return {t:`Из ${Q.length} актов на ${fmtM(sum(Q,x=>x.S))} платить можно <b>${fmtM(T)}</b>. Стоп-кран остановил ${fmtM(H)}: это объёмы, не сданные заказчику, не оплаченные им или без документов. ${Q.filter(x=>x.state==="bad").length} акта оплачивать нельзя совсем.`,
+   tb:[["Акт","Подрядчик","К оплате","Остановлено","Почему"],...Q.map(x=>[x.no,x.who,fmt(x.pay),x.hold+x.blocked?fmt(x.hold+x.blocked):"—",(x.c.find(k=>k[0]!=="ok")||["","нет замечаний"])[1].slice(0,46)])],src:["acts","skew"],
+   p:[aiProp("Открыть «Оплаты» и согласовать платежи, прошедшие проверки","руководитель",()=>{location.hash="#pay"})]}}},
+ {q:"Сводка недели",r:"D",k:["сводк","недел","итог","кратко"],f:()=>({t:digestData().map(([h,t])=>`<b>${h}.</b> ${t}`).join("<br>"),tb:null,src:["eac","sys","extra","fot"],p:[aiProp("Отправить сводку в Telegram руководителю","руководитель",()=>send("director","Сводка недели по «Публицисту 11» — в Telegram и на почту","forecast"))]})},
+];
+const aiCan=it=>it.r.includes(ROLE==="director"?"D":"P");
+function aiMatch(q){const s=q.toLowerCase();let best=null,bs=0;INTENTS.filter(aiCan).forEach(it=>{const sc=it.k.filter(k=>s.includes(k)).length;if(sc>bs){bs=sc;best=it}});return best}
+function aiAsk(q){
+  const log=document.getElementById("aiLog");
+  log.insertAdjacentHTML("beforeend",`<div class="msg me"><span>${ROLES[ROLE].name}</span>${q.replace(/</g,"&lt;")}</div>`);
+  const exact=INTENTS.find(x=>x.q===q), denied=exact&&!aiCan(exact)||(!exact&&!aiMatch(q)&&INTENTS.some(it=>!aiCan(it)&&it.k.some(k=>q.toLowerCase().includes(k))));
+  const it=denied?null:(exact||aiMatch(q));
+  const id="m"+Date.now();
+  log.insertAdjacentHTML("beforeend",`<div class="msg ai" id="${id}"><span>ИИ-агент</span><div class="think">Беру данные · считаю · проверяю…</div></div>`);
+  log.scrollTop=log.scrollHeight;
+  setTimeout(()=>{const el=document.getElementById(id);
+    if(denied){el.innerHTML=`<span>ИИ-агент</span>Эти данные доступны только руководителю: маржа, прогноз и свой ФОТ в роль «${ROLES[ROLE].role}» не входят. Спросите про позиции, допработы или расценки субподрядчиков.`;return}
+    if(!it){el.innerHTML=`<span>ИИ-агент</span>Этого пока не умею. Могу ответить на вопросы ниже — нажмите любой. В платформе вопрос понимает языковая модель, но отвечать она будет только по посчитанным данным.`;return}
+    const a=it.f();
+    let h=`<span>ИИ-агент</span><div>${a.t}</div>`;
+    if(a.tb)h+=`<div class="wrap"><table class="aitb"><tr>${a.tb[0].map(c=>`<th>${c}</th>`).join("")}</tr>${a.tb.slice(1).map(r=>`<tr>${r.map((c,i)=>`<td class="${i&&/^[−\d]/.test(String(c))?"n":""}">${c}</td>`).join("")}</tr>`).join("")}</table></div>`;
+    h+=`<div class="src">Откуда цифры: ${a.src.map(k=>`<i title="${AI_SRC[k][1]}">${AI_SRC[k][0]}</i>`).join(" · ")}</div>`;
+    a.p.forEach(p=>{AI_LOG.unshift({id:p.id,t:p.text,who:p.who,st:"ждёт решения"});h+=`<div class="prop" data-id="${p.id}"><b>Предлагаю:</b> ${p.text}<div class="pb"><button class="pri" type="button" data-ok="${p.id}">Подтвердить</button><button class="sec" type="button" data-no="${p.id}">Отклонить</button></div></div>`});
+    el.innerHTML=h; el.querySelectorAll("[data-ok],[data-no]").forEach(b=>b.addEventListener("click",()=>{const pid=b.dataset.ok||b.dataset.no, p=a.p.find(x=>x.id===pid), rec=AI_LOG.find(x=>x.id===pid), ok=!!b.dataset.ok;
+      rec.st=(ok?"подтверждено":"отклонено")+" · "+ROLES[ROLE].name; b.closest(".prop").querySelector(".pb").innerHTML=`<span class="pill ${ok?"ok":"mut"}">${ok?"подтверждено":"отклонено"}</span>`; aiJournal(); if(ok)p.act()}));
+    aiJournal(); log.scrollTop=log.scrollHeight;
+  },700);
+}
+function aiJournal(){document.getElementById("aiJournal").innerHTML=`<tr><th>№</th><th>Предложение</th><th>Кому</th><th>Решение</th></tr>`+(AI_LOG.length?AI_LOG.map(x=>`<tr><td>${x.id}</td><td>${x.t}</td><td>${x.who}</td><td><span class="pill ${x.st.startsWith("подтв")?"ok":x.st.startsWith("откл")?"mut":"warn"}">${x.st}</span></td></tr>`).join(""):`<tr><td colspan="4" style="color:var(--muted)">Пока пусто — задайте вопрос.</td></tr>`)}
+function aiChips(){
+  document.getElementById("aiChips").innerHTML=INTENTS.filter(aiCan).map(it=>`<button type="button" class="chip">${it.q}</button>`).join("");
+  document.querySelectorAll("#aiChips .chip").forEach(b=>b.addEventListener("click",()=>aiAsk(b.textContent)));
+}
+function aiInit(){
+  aiChips();
+  document.getElementById("aiForm").addEventListener("submit",e=>{e.preventDefault();const v=document.getElementById("aiIn").value.trim();if(v){aiAsk(v);document.getElementById("aiIn").value=""}});
+  aiHello();
+  aiJournal();
+  document.getElementById("pDigestPdf").addEventListener("click",digestDocx);
+  document.getElementById("pDigestAsk").addEventListener("click",()=>{location.hash="#ai";aiAsk("Сводка недели")});
+}
+
+// ───── предсметы ─────
+const E_OFF=["СОУЭ","СКЗ"]; // в примере «забыты» — ИИ-агент это ловит
+function estimate(){
+  const area=+document.getElementById("eArea").value||0, ref=+document.getElementById("eRef").value||1, mon=+document.getElementById("eMon").value||1;
+  const on=[...document.querySelectorAll("#eSys input:checked")].map(i=>i.value);
+  const k=area/ref, L=on.map(s=>{const smr=SYS_BUDGET[s]*k, who=SYS_SUB[s];return {s,smr,who,sub:smr*SUB_RATE[who]}});
+  const smr=sum(L,x=>x.smr), sub=sum(L,x=>x.sub), fot=FOT_MON_FULL*Math.min(1.6,k)*mon*.85; // бригады растут медленнее площади
+  const t=[["СМР по аналогу",fmtM(smr),on.length+" систем · "+fmt(smr/area)+" ₽/м²",""],["К оплате субподрядчикам",fmtM(sub),"по расценкам «Публициста 11»",""],["Маржа СМР",fmtM(smr-sub),pct((smr-sub)/smr),""],
+   ["Свой ФОТ за срок",fmtM(fot),mon+" мес. · бригады в масштабе объекта","warn"],["Должны покрыть поставка и ПНР",fmtM(fot-(smr-sub)),"заложить в цену поставки или ПНР отдельной строкой","bad"]];
+  document.getElementById("eTiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  document.getElementById("eTable").innerHTML=`<tr><th>Система</th><th>Кому отдать</th><th class="n">СМР</th><th class="n">Субподрядчику</th><th class="n">Маржа</th><th class="n">₽/м²</th></tr>`+L.map(x=>`<tr><td>${x.s}</td><td>${x.who}</td><td class="n">${fmt(x.smr)}</td><td class="n">${fmt(x.sub)}</td><td class="n">${fmt(x.smr-x.sub)}</td><td class="n">${fmt(x.smr/area)}</td></tr>`).join("")+`<tr class="tot"><td colspan="2">Итого</td><td class="n">${fmt(smr)}</td><td class="n">${fmt(sub)}</td><td class="n">${fmt(smr-sub)}</td><td class="n">${fmt(smr/area)}</td></tr>`;
+  const C=[];
+  if(on.includes("АПС")&&!on.includes("СОУЭ"))C.push(["bad","<b>Есть пожарная сигнализация, нет СОУЭ.</b> В жилом доме оповещение при пожаре почти всегда обязательно (СП 3.13130) — похоже, забыли. На аналоге СОУЭ — "+fmtM(SYS_BUDGET["СОУЭ"]*k)+"."]);
+  Object.keys(SYS_BUDGET).filter(s=>!on.includes(s)&&!(s==="СОУЭ"&&on.includes("АПС"))).forEach(s=>C.push(["warn",`<b>Нет системы ${s}.</b> На «Публицисте 11» она была (${fmtM(SYS_BUDGET[s]*k)} в масштабе). Проверьте техзадание заказчика.`]));
+  const pace=area/mon, refPace=ref/13;
+  if(pace>refPace*1.2)C.push(["warn",`<b>Темп ${fmt(pace)} м² в месяц</b> — в ${(pace/refPace).toLocaleString("ru-RU",{maximumFractionDigits:1})} раза выше, чем на аналоге. Понадобится больше бригад — ФОТ и субподряд заложены с запасом?`]);
+  C.push(["warn","<b>ПНР отдельной строкой.</b> На «Публицисте 11» её нет — свой ФОТ оказалось некуда отнести. Заложите ПНР в предсмету сразу."]);
+  C.push(["ok",`<b>Расценки субподрядчиков</b> взяты по факту «Публициста 11»: от ${Math.round(Math.min(...Object.values(SUB_RATE))*100)} до ${Math.round(Math.max(...Object.values(SUB_RATE))*100)} % сметы.`]);
+  document.getElementById("eChecks").innerHTML=C.map(([c,t])=>`<li class="${c}">${t}</li>`).join("");
+}
+function eFind(){const q=document.getElementById("eQ").value.trim().toLowerCase();const L=(q?rows.filter(r=>(r.name+" "+r.code+" "+r.sys).toLowerCase().includes(q)):rows).slice(0,12);
+  document.getElementById("eFind").innerHTML=`<tr><th>Шифр</th><th>Система</th><th>Позиция</th><th>Ед.</th><th class="n">Материал за ед.</th><th class="n">СМР по смете</th><th class="n">Субподрядчику</th></tr>`+(L.length?L.map(r=>`<tr><td>${r.code}</td><td>${r.sys}</td><td>${r.name.slice(0,60)}</td><td>${r.unit}</td><td class="n">${fmt(r.pm)}</td><td class="n">${fmt(r.ps)}</td><td class="n">${fmt(r.rate)}</td></tr>`).join(""):`<tr><td colspan="7" style="color:var(--muted)">Не нашёл. В платформе поиск идёт по всей базе всех объектов и понимает синонимы.</td></tr>`)}
+function estimateInit(){
+  document.getElementById("eSys").innerHTML=Object.keys(SYS_BUDGET).map(s=>`<label class="ck"><input type="checkbox" value="${s}" ${E_OFF.includes(s)?"":"checked"}>${s}</label>`).join("");
+  document.querySelectorAll("#v-estimate input").forEach(i=>i.addEventListener("input",i.id==="eQ"?eFind:estimate));
+  estimate();eFind();
+}
+function aiHello(){document.getElementById("aiLog").innerHTML=`<div class="msg ai"><span>ИИ-агент</span>${ROLE==="director"?"Доброе утро. За неделю прогноз по «Публицисту 11» ухудшился — главное в перекосе по ККСС. Спросите, что важно, или нажмите вопрос выше.":"Здравствуйте. Отвечаю в пределах вашей роли: позиции, допработы, расценки субподрядчиков, загрузка людей."}</div>`}
+function plusInit(){work();forecast2();whatIfInit();payInit();aiInit();estimateInit();
+  let _view=null; window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(h!==_view&&VIEWS.includes(h)){_view=h;scrollTo(0,0)}});
+  const _setRole=setRole; setRole=function(r){_setRole(r);aiChips();aiHello()}}
+// ═════════ СТОП-КРАН ОПЛАТЫ (пилот, 11.11): перед оплатой субподрядчику — шесть проверок и решение ═════════
+// Кто из заказчика ещё не заплатил за сданное по системам подрядчика (доля акта) — в платформе придёт из 1С
+const CLIENT_UNPAID={"Подрядчик Д":[1,"КС-3 за октябрь по СОУЭ не оплачен, срок 15.11"],"Подрядчик В":[.3,"КС-3 за октябрь по СВН оплачен частично"]};
+const PAY={afterClient:true,ret:.05};
+const PAY_LOG=[]; const PAY_DONE={};
+const PAY_CHECKS=["Сделано","Договор","КС-2","Деньги заказчика","Документы","Удержание"];
+function payQueue(){
+  // запас «вперёд» на каждого подрядчика считается один раз и гасится актами от старых к новым
+  const ahead={}, over={};
+  SUBS.forEach(w=>{const ss=SYS.filter(x=>x.who===w);
+    ahead[w]=RULE.mode==="free"?0:sum(ss,x=>Math.max(0,x.sub-x.client-RULE.tol*x.b))*SUB_RATE[w];
+    over[w]=sum(rows.filter(r=>r.who===w),r=>Math.max(0,r.sub-r.qty)*r.rate)});
+  return ACTS.filter(a=>!a[5].includes("оплачен")).slice().reverse().map(a=>{
+    const [no,who,mon,sys,S,st]=a, docs=(CHK[who]||CHK.default), badDocs=docs.filter(x=>x[1]!=="ok"), signed=st.startsWith("подписан");
+    const c=[]; let hold=0, block=false;
+    // 1. сделано и принято прорабом
+    c.push(docs[0][1]==="ok"?["ok","Объёмы приняты прорабом "+(docs[0][2]||""),0]:["bad","Объёмы не подтверждены прорабом",0]); if(docs[0][1]!=="ok")block=true;
+    // 2. не больше договора
+    const o=Math.min(S-hold,over[who]); over[who]-=o; hold+=o;
+    c.push(o>0?["warn","Сверх объёма по договору — это допработа, в оплату не идёт",o]:["ok","Все объёмы в пределах договора",0]);
+    // 3. сдано заказчику
+    const h3=Math.min(S-hold,ahead[who]); ahead[who]-=h3; hold+=h3;
+    c.push(h3>0?["warn",`Закрыто больше, чем сдано заказчику, сверх допуска ${Math.round(RULE.tol*100)} %`,h3]:["ok",RULE.mode==="free"?"Правило закрытия выключено — не проверяется":"В пределах допуска к сданному заказчику",0]);
+    // 4. деньги от заказчика
+    const u=CLIENT_UNPAID[who], h4=PAY.afterClient&&u?Math.round((S-hold)*u[0]):0; hold+=h4;
+    c.push(h4>0?["warn",u[1],h4]:["ok",PAY.afterClient?"Заказчик оплатил сданное по этим системам":"Правило «после оплаты заказчика» выключено",0]);
+    // 5. документы и подпись акта
+    const dl=badDocs.slice(docs[0][1]!=="ok"?1:0).map(x=>x[0]+(x[2]?" — "+x[2]:""));
+    if(!signed)dl.unshift("Акт не подписан: «"+st+"»");
+    c.push(dl.length?["bad",dl.join("; "),0]:["ok","Акт подписан, документы в порядке",0]); if(dl.length)block=true;
+    // 6. удержание
+    const base=block?0:S-hold, ret=Math.round(base*PAY.ret), pay=base-ret;
+    c.push(["ok",`Гарантийное удержание ${Math.round(PAY.ret*100)} % по договору`,ret]);
+    const state=block?"bad":hold>0?"warn":"ok";
+    return {no,who,mon,sys,S,st,c,hold:block?0:hold,blocked:block?S:0,ret,pay,state};
+  }).reverse();
+}
+let PAY_SEL=null;
+const money=v=>v>=1e6?fmtM(v):fmt(v)+" ₽";
+function payView(){
+  const Q=payQueue(), el=document.getElementById("payTable"); if(!el)return;
+  const T={S:sum(Q,x=>x.S),pay:sum(Q,x=>x.pay),hold:sum(Q,x=>x.hold),blocked:sum(Q,x=>x.blocked),ret:sum(Q,x=>x.ret)};
+  const t=[["Предъявлено по актам",money(T.S),Q.length+" актов ждут оплаты",""],["Можно платить",money(T.pay),Q.filter(x=>x.pay>0).length+" акта прошли проверки","ok"],
+   ["Придержать",money(T.hold),"оплатим, когда сдадим заказчику и получим деньги","warn"],["Нельзя платить",money(T.blocked),"нет подписи или документов","bad"],
+   ["Удержание",money(T.ret),"по договору, вернём после сдачи",""],["Стоп-кран остановил",money(T.hold+T.blocked),pct((T.hold+T.blocked)/T.S)+" предъявленного не уйдёт раньше времени","ok"]];
+  document.getElementById("payTiles").innerHTML=t.map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("");
+  const L={ok:"платить",warn:"платить частично",bad:"нельзя"};
+  el.innerHTML=`<tr><th>Акт</th><th>Субподрядчик</th><th class="n">Сумма акта</th>${PAY_CHECKS.map(x=>`<th class="pc">${x}</th>`).join("")}<th class="n">К оплате</th><th class="n">Остановлено</th><th>Решение</th><th></th></tr>`+
+   Q.map(x=>{const done=PAY_DONE[x.no];
+    return `<tr data-no="${x.no}" class="${PAY_SEL===x.no?"sel":""}"><td><b>${x.no}</b><br><span class="mut">${x.mon}</span></td><td>${x.who}<br><span class="mut">${x.sys}</span></td><td class="n">${fmt(x.S)}</td>${x.c.map((k,i)=>`<td class="pc"><span class="pdot ${k[0]}" title="${PAY_CHECKS[i]}: ${k[1]}"></span></td>`).join("")}
+     <td class="n"><b>${fmt(x.pay)}</b></td><td class="n">${x.hold+x.blocked?fmt(x.hold+x.blocked):"—"}</td><td><span class="pill ${x.state}">${L[x.state]}</span></td>
+     <td class="pa">${done?`<span class="pill mut">${done}</span>`:(x.pay>0?`<button class="pri" type="button" data-pay="${x.no}">Согласовать ${fmt(x.pay)} ₽</button>`:`<button class="sec" type="button" data-why="${x.no}">Сообщить причину</button>`)}</td></tr>`}).join("")+
+   `<tr class="tot"><td colspan="2">Итого</td><td class="n">${fmt(T.S)}</td><td colspan="6"></td><td class="n">${fmt(T.pay)}</td><td class="n">${fmt(T.hold+T.blocked)}</td><td colspan="2"></td></tr>`;
+  if(!PAY_SEL||!Q.some(x=>x.no===PAY_SEL))PAY_SEL=(Q.find(x=>x.state==="warn")||Q[0]).no;
+  el.querySelectorAll("tr[data-no]").forEach(r=>{r.classList.toggle("sel",r.dataset.no===PAY_SEL);r.addEventListener("click",e=>{if(e.target.closest("button"))return;PAY_SEL=r.dataset.no;payView()})});
+  el.querySelectorAll("[data-pay]").forEach(b=>b.addEventListener("click",()=>{const x=Q.find(q=>q.no===b.dataset.pay);payDecide(x,"согласовано к оплате")}));
+  el.querySelectorAll("[data-why]").forEach(b=>b.addEventListener("click",()=>{const x=Q.find(q=>q.no===b.dataset.why);payDecide(x,"причина отправлена")}));
+  payDetail(Q.find(x=>x.no===PAY_SEL)); payJournal();
+  document.getElementById("payRule").innerHTML=`Допуск по закрытию: <b>${RULE_L[RULE.mode].toLowerCase()}${RULE.mode==="free"?"":", "+Math.round(RULE.tol*100)+" % от договора системы"}</b> — меняется на экране «Акты».`;
+}
+function payDetail(x){
+  document.getElementById("payDetailT").innerHTML=`Разбор по акту ${x.no} <span>${x.who} · ${x.mon} · ${fmt(x.S)} ₽</span>`;
+  const why=x.c.filter(k=>k[0]!=="ok").map(k=>k[1]);
+  document.getElementById("payDetail").innerHTML=x.c.map((k,i)=>`<div class="chki ${k[0]}"><span class="dot"></span><span><b>${i+1}. ${PAY_CHECKS[i]}.</b> ${k[1]}</span><span class="who">${k[2]?(i===5?"− ":"придержать ")+fmt(k[2])+" ₽":""}</span></div>`).join("")+
+   `<div class="chki ${x.state}" style="border-bottom:0"><span class="dot"></span><b>${x.state==="bad"?"Платить нельзя: "+fmt(x.blocked)+" ₽ ждут, пока не закрыты замечания.":x.state==="warn"?"Платить "+fmt(x.pay)+" ₽, придержать "+fmt(x.hold)+" ₽.":"Платить "+fmt(x.pay)+" ₽ — замечаний нет."}</b></div>`;
+  document.getElementById("payMsg").textContent=x.state==="ok"?"":`Текст субподрядчику: «По акту ${x.no} ${x.state==="bad"?"оплата приостановлена":"к оплате "+fmt(x.pay)+" ₽, "+fmt(x.hold)+" ₽ придержано"}. Причина: ${why.join("; ")}. Оплатим, как только это будет закрыто».`;
+}
+function payDecide(x,what){
+  const now=new Date(), t=String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+  PAY_DONE[x.no]=what; PAY_LOG.unshift({t,no:x.no,who:x.who,what,sum:x.pay,by:ROLES[ROLE].name});
+  if(what.startsWith("согласовано"))send("pto",`Оплата по акту ${x.no} (${x.who}) согласована: ${fmt(x.pay)} ₽${x.hold?", придержано "+fmt(x.hold)+" ₽":""}, удержание ${fmt(x.ret)} ₽ — в реестр платежей`,"pay");
+  else sendSub(x.who,`По акту ${x.no}: ${x.state==="bad"?"оплата приостановлена":"придержано "+fmt(x.hold)+" ₽"} — ${x.c.filter(k=>k[0]!=="ok").map(k=>k[1]).join("; ")}`);
+  payView();
+}
+function payJournal(){document.getElementById("payLog").innerHTML=`<tr><th>Время</th><th>Акт</th><th>Субподрядчик</th><th>Решение</th><th class="n">К оплате</th><th>Кто</th></tr>`+(PAY_LOG.length?PAY_LOG.map(l=>`<tr><td>${l.t}</td><td>${l.no}</td><td>${l.who}</td><td>${l.what}</td><td class="n">${fmt(l.sum)}</td><td>${l.by}</td></tr>`).join(""):`<tr><td colspan="6" style="color:var(--muted)">Решений пока нет.</td></tr>`)}
+function payInit(){
+  const c=document.getElementById("payAfter");c.checked=PAY.afterClient;c.addEventListener("change",()=>{PAY.afterClient=c.checked;payView()});
+  payView();
+  // если правило закрытия поменяли на экране «Акты» — пересчитать
+  window.addEventListener("hashchange",()=>{if(location.hash==="#pay")payView()});
+}
+/*/PLUS-JS*/
 
 // init
 tiles();sysTable();balChart();alerts();monthChart();forecast();layers();
@@ -1592,6 +2134,6 @@ document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<opti
 ["fSys","fState","fQ"].forEach(id=>document.getElementById(id).addEventListener("input",jTable));jTable();phone();
 document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="Подрядчик Б";
 document.getElementById("cSel").addEventListener("change",contractor);contractor();
-staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();ksInit();document.getElementById("xlsAll").addEventListener("click",exportAll);setRole("director");uxInit();
+staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();ksInit();document.getElementById("xlsAll").addEventListener("click",exportAll);plusInit();setRole("director");uxInit();
 </script>
 </body></html>
