@@ -490,7 +490,7 @@ th{font-weight:600}
 .aisteps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 .eform{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:12px}
 .eform label{display:flex;flex-direction:column;gap:4px;font-weight:600;color:var(--fg2)}
-.eform input{height:36px;min-width:0}
+.eform input{height:36px;min-width:0;margin-top:auto}
 .esys{display:flex;flex-wrap:wrap;gap:6px}
 .ck{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:var(--r);padding:4px 8px;cursor:pointer}
 @media (max-width:900px){.aigrid{grid-template-columns:1fr}.aichat{min-height:0}.ailog{max-height:none}}
@@ -576,7 +576,11 @@ th{font-weight:600}
 .rolemenu.pinned .me{display:flex;flex-direction:column;padding:7px 14px 9px;font-weight:600;border-bottom:1px solid var(--line2);margin-bottom:4px}
 .rolemenu.pinned .me small{font-weight:400;color:var(--muted);font-size:12px;line-height:16px}
 /* предбюджет из ведомости */
-.bgfile{display:inline-flex;align-items:center;height:32px;padding:0 14px;border-radius:var(--r);background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+.bgmode{display:inline-flex;align-items:center;gap:8px;min-height:36px;cursor:pointer}
+.bgmode input[type=checkbox],.ck input[type=checkbox]{flex:none;width:16px;height:16px;margin:0;padding:0}
+.bgfile{position:relative;display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:var(--r);background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+.bgfile input[type=file]{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;opacity:0;cursor:pointer}
+.bgfile:focus-within{outline:2px solid var(--accent);outline-offset:2px}
 .bgfile:hover{filter:brightness(.95)}
 .bgact{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 #bgTable td.bgn{min-width:260px;max-width:460px;white-space:normal}
@@ -589,6 +593,7 @@ th{font-weight:600}
 .bglog li{margin-bottom:4px}
 h2.bgh{font-size:20px;line-height:28px;font-weight:600;margin:24px 0 12px}
 @media (max-width:900px){.bgfile{height:36px} #bgTable input.bgp{height:36px;font-size:16px;width:104px} #bgTable select.bgg{height:36px;font-size:16px} .bgact button{flex:1 1 auto}}
+@media (min-width:901px){#pTiles{grid-template-columns:repeat(auto-fit,minmax(205px,1fr))}#pTiles .tile .v{white-space:normal;overflow-wrap:break-word}}
 /*/PLUS-CSS*/
 </style></head><body>
 
@@ -818,7 +823,7 @@ h2.bgh{font-size:20px;line-height:28px;font-weight:600;margin:24px 0 12px}
   <p class="tz"><b>Новое · автоматизация предбюджета тендера</b> — сделано: перенос готовой ведомости с защитой от задвоения, группы по справочнику, цены из своей базы с указанием источника и даты, проверка крупных позиций, выгрузка в Excel с формулами. На сервере (в демо нет): спецификация из чертежей и PDF, поиск цен на 12 сайтах поставщиков, заполнение вашего файла-шаблона с сохранением оформления.</p>
   <div class="panel" id="bgBox" style="margin-bottom:14px">
     <h2>Предбюджет из ведомости заказчика <span>загрузите таблицу — файл остаётся в вашем браузере, никуда не отправляется</span></h2>
-    <div class="toolbar"><label><input type="checkbox" id="bgAstex"> Смета АСТЭКС (группа в столбце B)</label><label class="bgfile">Загрузить ведомость (Excel)<input type="file" id="bgFile" accept=".xlsx,.xls,.csv" hidden></label><button type="button" id="bgDemo">Показать на примере</button><button type="button" id="bgPdf">Чертежи и PDF</button><span class="who" id="bgSrc"></span></div>
+    <div class="toolbar"><label class="bgmode"><input type="checkbox" id="bgAstex"> Смета АСТЭКС (группа в столбце B)</label><label class="bgfile">Загрузить ведомость (Excel)<input type="file" id="bgFile" accept=".xlsx,.xls,.csv"></label><button type="button" id="bgDemo">Показать на примере</button><button type="button" id="bgPdf">Чертежи и PDF</button><span class="who" id="bgSrc"></span></div>
     <ul class="alerts" id="bgRead"><li>Подойдёт и ведомость заказчика, и ваш готовый предбюджет (лист «материалы»). Программа сама найдёт шапку и поймёт, в какой колонке наименование, марка, количество и цена.</li></ul>
   </div>
   <div id="bgWork" hidden>
@@ -841,7 +846,7 @@ h2.bgh{font-size:20px;line-height:28px;font-weight:600;margin:24px 0 12px}
         <label>Название<input id="eName" value="ЖК «Новый», корпус 1"></label>
         <label>Площадь, м²<input id="eArea" type="number" value="52000" step="1000"></label>
         <label>Срок СМР, мес.<input id="eMon" type="number" value="14" min="3" max="36"></label>
-        <label>Площадь «Публициста 11», м² <span class="pill warn">допущение</span><input id="eRef" type="number" value="38000" step="1000"></label>
+        <label><span>Площадь «Публициста 11», м² <span class="pill warn">допущение</span></span><input id="eRef" type="number" value="38000" step="1000"></label>
       </div>
       <div class="esys" id="eSys"></div>
     </div>
