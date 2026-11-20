@@ -2463,11 +2463,16 @@ document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).j
 document.getElementById("cSel").addEventListener("change",contractor);contractor();
 staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();ksInit();document.getElementById("xlsAll").addEventListener("click",exportAll);plusInit();setRole("director");uxInit();
 
+// Подтверждённый состав октябрьской ведомости. Для остальных листов и периодов сохраняется прежний порядок.
+function tbSharedSheet(T){
+  return T.month==="2026-10" && /^публицист\s*11(?:\s*·\s*демо)?$/i.test(String(T.sheet).trim());
+}
+const tbSharedNote="Табель объединяет К11, К12 и ВЗУ. В рассматриваемом периоде работ на ВЗУ не было. В разбивке К11/К12 штатные монтажники указаны одной суммой, ИТР учитываются отдельно.";
 function tbZupBook(T){
   const data=[["Объект (лист табеля)","Месяц","Сотрудник","Дни по табелю","Дни по ЗУП","Разница дней (ЗУП − табель)","Премия по табелю, ₽","Сопоставимая премия по ЗУП, ₽","Разница премий (ЗУП − табель), ₽","Документ отклонения / пояснение"]];
   for(const p of T.people){
     const n=data.length+1;
-    data.push([T.sheet,T.month,p.fio,p.dcount,null,{t:"str",v:"",f:`IF(ISNUMBER(E${n}),E${n}-D${n},"")`},p.prem,null,{t:"str",v:"",f:`IF(ISNUMBER(H${n}),ROUND(H${n}-G${n},2),"")`},null]);
+    data.push([tbSharedSheet(T)?T.sheet+" (К11, К12, ВЗУ)":T.sheet,T.month,p.fio,p.dcount,null,{t:"str",v:"",f:`IF(ISNUMBER(E${n}),E${n}-D${n},"")`},p.prem,null,{t:"str",v:"",f:`IF(ISNUMBER(H${n}),ROUND(H${n}-G${n},2),"")`},null]);
   }
   const sheet=XLSX.utils.aoa_to_sheet(data);
   sheet["!cols"]=[26,12,32,18,18,24,25,30,30,44].map(wch=>({wch}));
@@ -2522,6 +2527,11 @@ function demoForemanFilters() {
 function demoPayroll() {
   const people = STAFF.map(([fio,,,,dcount,zp,prem,,cash]) => ({fio,dcount,zp,prem,cash}));
   const bookData = {sheet:"Публицист 11 · демо",month:"2026-10",people};
+  const scope=document.createElement("p");
+  scope.className="hint";
+  scope.id="demoTabelScope";
+  scope.textContent=tbSharedNote+" Показатели и персональные расчёты ниже показаны на учебном примере. Для фактического ФОТ К11 нужна отдельная разбивка.";
+  document.getElementById("sTiles").before(scope);
   const sums = new Map();
   for (const [fio,,code,qty] of WORK) sums.set(fio,(sums.get(fio)||0)+qty*PIECE_RATE[code]);
   const panel = document.createElement("div");
