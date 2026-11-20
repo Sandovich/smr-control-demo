@@ -818,7 +818,7 @@ h2.bgh{font-size:20px;line-height:28px;font-weight:600;margin:24px 0 12px}
   <p class="tz"><b>Новое · автоматизация предбюджета тендера</b> — сделано: перенос готовой ведомости с защитой от задвоения, группы по справочнику, цены из своей базы с указанием источника и даты, проверка крупных позиций, выгрузка в Excel с формулами. На сервере (в демо нет): спецификация из чертежей и PDF, поиск цен на 12 сайтах поставщиков, заполнение вашего файла-шаблона с сохранением оформления.</p>
   <div class="panel" id="bgBox" style="margin-bottom:14px">
     <h2>Предбюджет из ведомости заказчика <span>загрузите таблицу — файл остаётся в вашем браузере, никуда не отправляется</span></h2>
-    <div class="toolbar"><label class="bgfile">Загрузить ведомость (Excel)<input type="file" id="bgFile" accept=".xlsx,.xls,.csv" hidden></label><button type="button" id="bgDemo">Показать на примере</button><button type="button" id="bgPdf">Чертежи и PDF</button><span class="who" id="bgSrc"></span></div>
+    <div class="toolbar"><label><input type="checkbox" id="bgAstex"> Смета АСТЭКС (группа в столбце B)</label><label class="bgfile">Загрузить ведомость (Excel)<input type="file" id="bgFile" accept=".xlsx,.xls,.csv" hidden></label><button type="button" id="bgDemo">Показать на примере</button><button type="button" id="bgPdf">Чертежи и PDF</button><span class="who" id="bgSrc"></span></div>
     <ul class="alerts" id="bgRead"><li>Подойдёт и ведомость заказчика, и ваш готовый предбюджет (лист «материалы»). Программа сама найдёт шапку и поймёт, в какой колонке наименование, марка, количество и цена.</li></ul>
   </div>
   <div id="bgWork" hidden>
@@ -1582,18 +1582,19 @@ const TODAY=[
 function foreman(){
   const sel=document.getElementById("fPos");sel.innerHTML=rows.map((r,i)=>`<option value="${i}">${r.code} · ${r.name.slice(0,44)}</option>`).join("");sel.value=rows.findIndex(r=>r.sys==="ККСС");
   const ss=document.getElementById("fSysSel");ss.innerHTML=Object.keys(SYS_BUDGET).map(s=>`<option>${s}</option>`).join("");
-  const upd=()=>{const r=rows[+sel.value];ss.value=r.sys;const rest=r.qty-r.sub;document.getElementById("fRest").textContent=`По смете ${r.qty} ${r.unit} · принято ${r.sub} · остаток ${Math.max(0,rest).toFixed(rest%1?1:0)} ${r.unit}`;
+  const upd=()=>{if(!sel.value)return;const r=rows[+sel.value];ss.value=r.sys;const rest=r.qty-r.sub;document.getElementById("fRest").textContent=`По смете ${r.qty} ${r.unit} · принято ${r.sub} · остаток ${Math.max(0,rest).toFixed(rest%1?1:0)} ${r.unit}`;
     const q=+document.getElementById("fQty").value||0;document.getElementById("fMoney").textContent=`${r.who} · × ${fmt(r.rate)} ₽ = ${fmt(q*r.rate)} ₽`;
     const w=document.getElementById("fWarn"),c=capCheck(r,q);w.hidden=c.lvl==="ok";w.textContent=c.msg;w.className="warnbox"+(c.lvl==="warn"?" soft":"");document.getElementById("fOk").hidden=true};
   sel.addEventListener("change",upd);document.getElementById("fQty").addEventListener("input",upd);upd();
-  const table=()=>{document.getElementById("fToday").innerHTML=`<tr><th>Время</th><th>Позиция</th><th>Система</th><th class="n">Объём</th><th>Исполнитель</th><th>Статус</th></tr>`+TODAY.map(x=>`<tr><td class="n" style="text-align:left">${x.t}</td><td>${x.code!=="—"?x.code+" · ":""}${x.name}</td><td>${x.sys}</td><td class="n">${x.qty}</td><td>${x.who}</td><td>${x.st==="sent"?'<span class="pill ok">в журнале</span>':x.st==="queue"?'<span class="pill queue">ожидает сети</span>':x.st==="adv"?'<span class="pill warn">аванс под контроль</span>':'<span class="pill warn">допработа · на решении</span>'}</td></tr>`).join("");
+  const table=()=>{document.getElementById("fToday").innerHTML=`<tr><th>Время</th><th>Позиция</th><th>Система</th><th class="n">Объём</th><th>Исполнитель</th><th>Статус</th></tr>`+TODAY.map(x=>`<tr><td class="n" style="text-align:left">${x.t}</td><td>${x.code!=="—"?x.code+" · ":""}${x.name}</td><td>${x.sys}</td><td class="n">${x.qty}</td><td>${x.who}${x.worker?" · "+bgEsc(x.worker):""}</td><td>${x.st==="sent"?'<span class="pill ok">в журнале</span>':x.st==="queue"?'<span class="pill queue">ожидает сети</span>':x.st==="adv"?'<span class="pill warn">аванс под контроль</span>':'<span class="pill warn">допработа · на решении</span>'}</td></tr>`).join("");
     const q=TODAY.filter(x=>x.st==="queue").length;
     document.getElementById("fTiles").innerHTML=[["Записей сегодня",TODAY.length,"по журналу и допработам",""],["Ожидают сети",q,q?"отправятся сами":"всё отправлено",q?"warn":"ok"],["Допработ на решении",TODAY.filter(x=>x.st==="extra").length,"с фото","warn"],["Мои системы","15","объект «Публицист 11»",""]].map(([l,v,d,c])=>`<div class="tile ${c}"><div class="l">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`).join("")};
   table();
   document.getElementById("fRestBtn").addEventListener("click",()=>{const r=rows[+sel.value];document.getElementById("fQty").value=Math.max(0,Math.round((r.qty-r.sub)*100)/100);upd()});
   document.getElementById("fSave").addEventListener("click",()=>{const r=rows[+sel.value];const q=+document.getElementById("fQty").value||0;const now=new Date();const c=capCheck(r,q);const o=document.getElementById("fOk");o.hidden=false;
+    if(!(q>0)){o.className="warnbox";o.textContent="Введите положительный объём.";return}
     if(c.lvl==="block"){o.className="warnbox";o.textContent="Не записано: правило объекта «Запрещать». Попросите руководителя открыть с причиной.";return}
-    TODAY.push({t:now.getHours()+":"+String(now.getMinutes()).padStart(2,"0"),code:r.code,name:r.name.slice(0,40),sys:ss.value,qty:q+" "+r.unit,who:r.who,st:c.lvl==="extra"?"extra":c.lvl==="warn"?"adv":"sent"});table();
+    TODAY.push({t:now.getHours()+":"+String(now.getMinutes()).padStart(2,"0"),code:r.code,name:r.name.slice(0,40),sys:ss.value,qty:q+" "+r.unit,who:r.who,worker:document.querySelector("#demoWorker:enabled")?.value||"",st:c.lvl==="extra"?"extra":c.lvl==="warn"?"adv":"sent"});table();
     if(c.lvl==="extra")addExtraFrom(r,Math.round((q-Math.max(0,r.qty-r.sub))*100)/100,ss.value);
     else{send("pto",`Прораб записал: ${r.code} · ${r.name.slice(0,40)} — ${q} ${r.unit}, ${r.who}, система ${ss.value}`,"journal");if(c.lvl==="warn")send("director",`Аванс под контроль: ${r.code}, ${q} ${r.unit} сверх сданного заказчику — нужна ваша отметка`,"journal")}
     o.className="ok";o.textContent=`Записано · ${r.code} · ${q} ${r.unit} · система ${ss.value}`+(c.lvl==="warn"?" · аванс под контроль":"");});
@@ -2296,9 +2297,9 @@ function bgBase(){ // база цен: прошлые объекты + счет�
   BG_HIST.forEach(h=>B.push({name:h[0],pm:h[1],pj:h[2],src:h[3],kind:"счёт",date:h[4]}));
   BG_STORE.forEach(h=>B.push({name:h[0],pm:h[1],pj:h[2],src:h[3],kind:"объект",date:h[4]}));
   B.forEach(b=>b.tok=bgTok(b.name));return B}
-function bgMap(row){ // по шапке понимаем, в какой колонке что лежит
-  const m={sysC:[]};
-  row.forEach((c,i)=>{const t=bgStr(c).toLowerCase();if(!t||t.length>60)return;const set=k=>{if(m[k]==null)m[k]=i};
+function bgMap(row,astex){ // по шапке понимаем, в какой колонке что лежит
+  const m=astex?{sysC:[],grp:1}:{sysC:[]};
+  row.forEach((c,i)=>{if(astex&&i===1)return;const t=bgStr(c).toLowerCase();if(!t||t.length>60)return;const set=k=>{if(m[k]==null)m[k]=i};
     if(/итого|сумма|всего|наш/.test(t))return;
     if(/цена.*(смр|работ|монтаж)|смр за ед/.test(t))return set("pj");
     if(/цена|стоимость (за )?ед/.test(t))return set("pm");
@@ -2317,10 +2318,12 @@ function bgGroup(r){ // группа: из файла, если она там е
   if(hit)return [hit,"из файла"+(hit!==bgStr(r.grpIn)?" (написание приведено к справочнику)":""),false];
   const t=(r.name+" "+r.mark).toLowerCase().replace(/ё/g,"е"), f=BG_GROUPS.find(([,re])=>re.test(t));
   return f?[f[0],"по слову в названии",false]:["Материалы","группа не определена — поставлена общая",true]}
-function bgRead(wb,fname){
+function bgRead(wb,fname,astex=false){
   let best=null;
-  wb.SheetNames.forEach(sn=>{const A=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:"",blankrows:true});
-    for(let i=0;i<Math.min(A.length,40);i++){const m=bgMap(A[i]||[]);if(m.name==null||m.qty==null)continue;const sc=Object.keys(m).length;if(!best||sc>best.sc)best={sn,A,hr:i,m,sc}}});
+  wb.SheetNames.forEach(sn=>{const sheet=wb.Sheets[sn];if(!sheet["!ref"])return;
+    const range=XLSX.utils.decode_range(sheet["!ref"]);range.s.c=0;
+    const A=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",blankrows:true,range});
+    for(let i=0;i<Math.min(A.length,40);i++){const m=bgMap(A[i]||[],astex);if(m.name==null||m.qty==null)continue;const sc=Object.keys(m).length;if(!best||sc>best.sc)best={sn,A,hr:i,m,sc}}});
   if(!best)return null;
   const {A,hr,m}=best, body=A.slice(hr+1), col=i=>body.map(r=>bgStr(r[i]));
   // «Система» и «Проект»: шифр системы — там, где текст; где числа вида 1.1 — это номер позиции
@@ -2334,10 +2337,11 @@ function bgRead(wb,fname){
       pm:m.pm!=null?bgNum(r[m.pm]):0,pj:m.pj!=null?bgNum(r[m.pj]):0,grpIn:m.grp!=null?r[m.grp]:"",off:false})});
   const L=n=>n==null?"не найдена":"колонка "+XLSX.utils.encode_col(n);
   const bg={name:fname,sheet:best.sn,hr:hr+1,map:{"Наименование":L(m.name),"Марка":L(m.mark),"Завод":L(m.maker),"Количество":L(m.qty),"Единица":L(m.unit),"Цена материала":L(m.pm),"Цена работ":L(m.pj),"Система":sysI!=null?L(sysI):"по заголовкам разделов","Группа":m.grp!=null?L(m.grp):"определяет программа"},rows,dups:[],log:[]};
-  rows.forEach(r=>{const g=bgGroup(r);r.grp=g[0];r.gWhy=g[1];r.gQ=g[2];r.sm=r.pm>0?{t:"cust",txt:"цена из файла"}:null;r.sj=r.pj>0?{t:"cust",txt:"цена из файла"}:null});
+  rows.forEach(r=>{const sourceGroup=bgStr(r.grpIn);
+    const g=astex?(sourceGroup?[sourceGroup,"из столбца B",false]:["Без группы","столбец B пуст",true]):bgGroup(r);r.grp=g[0];r.gWhy=g[1];r.gQ=g[2];r.sm=r.pm>0?{t:"cust",txt:"цена из файла"}:null;r.sj=r.pj>0?{t:"cust",txt:"цена из файла"}:null});
   bgDups(bg);
   bg.log.push(`Прочитан файл «${fname}», лист «${best.sn}», шапка в строке ${hr+1}: ${rows.length} позиций, ${new Set(rows.map(r=>r.sys)).size} систем.`);
-  const gq=rows.filter(r=>r.gQ).length;bg.log.push(`Группы присвоены всем позициям по справочнику (${BG_GNAMES.length} групп)`+(gq?`; у ${gq} группа не определена однозначно.`:"."));
+  const gq=rows.filter(r=>r.gQ).length;bg.log.push(astex?`Группы взяты из столбца B. Строк без группы: ${gq}.`:`Группы присвоены всем позициям по справочнику (${BG_GNAMES.length} групп)`+(gq?`; у ${gq} группа не определена однозначно.`:"."));
   return bg}
 function bgDups(bg){ // задвоение: материал и его монтаж отдельными строками — иначе материал посчитается дважды; и повторы одной позиции
   const R=bg.rows;
@@ -2395,7 +2399,7 @@ function bgRender(){
   const od=c.R.filter(r=>(r.sm&&r.sm.old)||(r.sj&&r.sj.old));
   if(od.length)L.push(["warn",`<b>Старая цена у ${od.length} позиций</b> — источнику больше ${Math.round(BG_AGE/30)} месяцев. Например, «${bgEsc(od[0].name)}»: ${bgEsc((od[0].sm&&od[0].sm.old?od[0].sm:od[0].sj).txt)}.`]);
   const sp=c.R.filter(r=>r.sm&&r.sm.spread);if(sp.length)L.push(["warn",`<b>Цены в базе сильно расходятся у ${sp.length} позиций.</b> Например, «${bgEsc(sp[0].name)}»: взята самая низкая ${sp[0].pm.toLocaleString("ru-RU")} ₽ (${bgEsc(sp[0].sm.txt)}), а есть и ${sp[0].sm.spread.toLocaleString("ru-RU")} ₽. Самая низкая может оказаться ошибкой или старой ценой — проверьте.`]);
-  const gq=c.R.filter(r=>r.gQ);if(gq.length)L.push(["warn",`<b>Группа не определена у ${gq.length} позиций</b> — поставлена общая «Материалы». Поправьте в таблице.`]);
+  const gq=c.R.filter(r=>r.gQ);if(gq.length)L.push(["warn",`<b>Группа не определена у ${gq.length} позиций</b>. Проверьте строки в таблице.`]);
   if(c.noj&&BG.picked)L.push(["warn",`<b>Без цены работ ${c.noj} позиций.</b> Если монтаж у них не оплачивается отдельно (крепёж, программы) — так и оставьте.`]);
   const auto=c.R.length-c.att.length;
   L.push([c.att.length?"ok":"ok",`<b>Сводка перед сдачей.</b> Без замечаний — ${auto} позиций из ${c.R.length} (${fmtM(sum(c.R.filter(r=>!r.fl.length),bgTot))}). Требуют вашего внимания — ${c.att.length}, из них крупных ${bigAtt.length}. Смотреть в первую очередь крупные: ${c.big.length} позиций дают 80 % суммы.`]);
@@ -2417,7 +2421,7 @@ function bgTable(){
   if(f==="att")R=R.filter(r=>r.fl.length);if(f==="big")R=R.filter(r=>r.big);if(f==="nop")R=R.filter(r=>!(r.pm>0)||!(r.pj>0));
   const src=x=>!x?'<span class="who">—</span>':x.t==="cust"?`<span class="who">${bgEsc(x.txt)}</span>`:x.t==="hand"?'<span class="who">вписано вручную</span>':x.t==="mem"?`<span class="who">${bgEsc(x.txt)}</span>`:`<span class="who" title="${bgEsc(x.like)} · совпадение ${x.pct} %">${bgEsc(x.txt)}${x.alt>1?` · самая низкая из ${x.alt}`:""}${x.maybe?" · неточно":""}</span>`;
   const show=R.slice(0,BG_SHOW);
-  $("bgTable").innerHTML=`<tr><th class="n">Стр.</th><th>Система</th><th>Группа</th><th>Наименование</th><th class="n">Кол-во</th><th>Ед.</th><th class="n">Цена материала</th><th class="n">Цена работ</th><th class="n">Итого</th><th>Откуда цена</th></tr>`+show.map(r=>`<tr${r.big?' class="bgbig"':""}><td class="n">${r.n}</td><td>${bgEsc(r.sys)}</td><td><select class="bgg" data-id="${r.id}" title="${bgEsc(r.gWhy)}">${BG_GNAMES.map(g=>`<option${g===r.grp?" selected":""}>${g}</option>`).join("")}</select></td>
+  $("bgTable").innerHTML=`<tr><th class="n">Стр.</th><th>Система</th><th>Группа</th><th>Наименование</th><th class="n">Кол-во</th><th>Ед.</th><th class="n">Цена материала</th><th class="n">Цена работ</th><th class="n">Итого</th><th>Откуда цена</th></tr>`+show.map(r=>`<tr${r.big?' class="bgbig"':""}><td class="n">${r.n}</td><td>${bgEsc(r.sys)}</td><td><select class="bgg" data-id="${r.id}" title="${bgEsc(r.gWhy)}">${[...new Set([r.grp,...BG_GNAMES])].map(g=>`<option${g===r.grp?" selected":""}>${bgEsc(g)}</option>`).join("")}</select></td>
    <td class="bgn"><b>${bgEsc(r.name)}</b>${r.mark||r.maker?`<div class="who">${bgEsc([r.mark,r.maker].filter(Boolean).join(" · "))}</div>`:""}${r.big||r.fl.length?`<div class="bgf">${r.big?'<span class="pill queue">крупная</span>':""}${r.fl.map(([k,t])=>`<span class="pill ${k}">${t}</span>`).join("")}</div>`:""}</td>
    <td class="n">${r.qty.toLocaleString("ru-RU")}</td><td>${bgEsc(r.unit)}</td><td class="n"><input class="bgp" data-id="${r.id}" data-k="pm" inputmode="decimal" value="${r.pm||""}" aria-label="Цена материала"></td><td class="n"><input class="bgp" data-id="${r.id}" data-k="pj" inputmode="decimal" value="${r.pj||""}" aria-label="Цена работ"></td><td class="n"><b>${fmt(bgTot(r))}</b></td><td class="bgs">${src(r.sm)}${r.sj&&r.sj.t!=="cust"&&(!r.sm||r.sj.txt!==r.sm.txt)?`<div>работы: ${src(r.sj)}</div>`:""}</td></tr>`).join("");
   $("bgNote").innerHTML=R.length>show.length?`Показано ${show.length} из ${R.length}. <button type="button" id="bgAll">Показать все</button>`:`Показано ${R.length} из ${BG.rows.filter(r=>!r.off).length}.`;
@@ -2438,11 +2442,11 @@ function bgBook(){ // выгрузка в виде рабочего шаблон
   XLSX.utils.book_append_sheet(wb,ws2,"Сводный расчет");XLSX.utils.book_append_sheet(wb,ws,"материалы");
   const P=[["Что проверить лично"],["Строка файла","Система","Позиция","Сумма","Крупная","Замечание"],...c.att.sort((a,b)=>bgTot(b)-bgTot(a)).map(r=>[r.n,r.sys,r.name,Math.round(bgTot(r)),r.big?"да":"",r.fl.map(x=>x[1]).join("; ")]),[],["Журнал: что программа сделала и почему"],...BG.log.map(t=>[t])];
   const ws3=XLSX.utils.aoa_to_sheet(P);ws3["!cols"]=[12,10,60,14,9,40].map(w=>({wch:w}));XLSX.utils.book_append_sheet(wb,ws3,"Проверка");return wb}
-function bgLoad(wb,name){const b=bgRead(wb,name);const $=id=>document.getElementById(id);
+function bgLoad(wb,name,astex=false){const b=bgRead(wb,name,astex);const $=id=>document.getElementById(id);
   if(!b||!b.rows.length){BG=null;$("bgWork").hidden=true;$("bgRead").innerHTML='<li class="bad"><b>Таблица материалов в файле не найдена.</b> Нужны как минимум колонки «Наименование» и «Количество». Программа ничего не придумала и не перенесла — проверьте файл.</li>';return}
   BG=b;BG_SHOW=150;$("bgF").value="";$("bgQ").value="";bgRender()}
 function bgInit(){const $=id=>document.getElementById(id);if(!$("bgFile"))return;
-  $("bgFile").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{bgLoad(XLSX.read(rd.result,{type:"array"}),f.name)}catch(err){$("bgRead").innerHTML='<li class="bad"><b>Файл не открылся.</b> Нужен Excel (.xlsx, .xls) или CSV.</li>'}e.target.value=""};rd.readAsArrayBuffer(f)});
+  $("bgFile").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const astex=$("bgAstex").checked;const rd=new FileReader();rd.onload=()=>{try{bgLoad(XLSX.read(rd.result,{type:"array"}),f.name,astex)}catch(err){$("bgRead").innerHTML='<li class="bad"><b>Файл не открылся.</b> Нужен Excel (.xlsx, .xls) или CSV.</li>'}e.target.value=""};rd.readAsArrayBuffer(f)});
   $("bgDemo").addEventListener("click",()=>{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(BG_SAMPLE),"Ведомость");bgLoad(wb,"Пример: ведомость заказчика, ЖК «Пример», корпус 2")});
   $("bgPdf").addEventListener("click",()=>{$("bgRead").innerHTML='<li><b>Чертежи и PDF.</b> Найти в рабочей документации раздел «Спецификация» и вытащить из него таблицу умеет ИИ-агент на сервере (распознаёт и текст, и изображение страницы). В этой демо-версии сервера нет — загрузите таблицу Excel. Дальше обработка одна и та же, откуда бы таблица ни пришла.</li>'});
   $("bgPrice").addEventListener("click",bgPick);
@@ -2458,5 +2462,86 @@ document.getElementById("fSys").innerHTML+=Object.keys(SYS_BUDGET).map(s=>`<opti
 document.getElementById("cSel").innerHTML=SUBS.map(s=>`<option>${s}</option>`).join("");document.getElementById("cSel").value="Подрядчик Б";
 document.getElementById("cSel").addEventListener("change",contractor);contractor();
 staff();extra();acts();roleMenu();foreman();subcab();clientcab();cash();piece();ksInit();document.getElementById("xlsAll").addEventListener("click",exportAll);plusInit();setRole("director");uxInit();
+
+function tbZupBook(T){
+  const data=[["Объект (лист табеля)","Месяц","Сотрудник","Дни по табелю","Дни по ЗУП","Разница дней (ЗУП − табель)","Премия по табелю, ₽","Сопоставимая премия по ЗУП, ₽","Разница премий (ЗУП − табель), ₽","Документ отклонения / пояснение"]];
+  for(const p of T.people){
+    const n=data.length+1;
+    data.push([T.sheet,T.month,p.fio,p.dcount,null,{t:"str",v:"",f:`IF(ISNUMBER(E${n}),E${n}-D${n},"")`},p.prem,null,{t:"str",v:"",f:`IF(ISNUMBER(H${n}),ROUND(H${n}-G${n},2),"")`},null]);
+  }
+  const sheet=XLSX.utils.aoa_to_sheet(data);
+  sheet["!cols"]=[26,12,32,18,18,24,25,30,30,44].map(wch=>({wch}));
+  const book=XLSX.utils.book_new();XLSX.utils.book_append_sheet(book,sheet,"Сверка");
+  return book;
+}
+
+// Публичный пример. Используются только данные, уже включённые в демо.
+function demoForemanFilters() {
+  const pos = document.getElementById("fPos"), sys = document.getElementById("fSysSel");
+  const label = document.querySelector('label[for="fPos"]');
+  label.before(document.querySelector('label[for="fSysSel"]'), sys);
+  sys.insertAdjacentHTML("afterend", '<label for="demoQuery">Найти позицию</label><input type="search" id="demoQuery" placeholder="Название или шифр">');
+  const query = document.getElementById("demoQuery");
+  sys.previousElementSibling.insertAdjacentHTML("beforebegin", '<label for="demoFirm">Исполнитель</label><select id="demoFirm"></select>');
+  const firm = document.getElementById("demoFirm");
+  firm.add(new Option("Все исполнители", ""));
+  SUBS.forEach(name => firm.add(new Option(name, name)));
+  pos.insertAdjacentHTML("afterend", '<label for="demoWorker">Монтажник</label><select id="demoWorker"></select>');
+  const worker = document.getElementById("demoWorker");
+  worker.add(new Option("Без привязки к сотруднику", ""));
+  STAFF.filter(p => p[0].startsWith("Монтажник")).forEach(p => worker.add(new Option(p[0], p[0])));
+  function refresh() {
+    const selected = pos.value, search = query.value.toLowerCase().trim();
+    pos.replaceChildren();
+    rows.forEach((r,i) => {
+      if (r.sys === sys.value && (r.code+" "+r.name).toLowerCase().includes(search))
+        pos.add(new Option(r.code+" · "+r.name, String(i)));
+    });
+    if ([...pos.options].some(o => o.value === selected)) pos.value = selected;
+    const empty = !pos.options.length;
+    for (const id of ["fSave","fExtra","fRestBtn","fQty"]) document.getElementById(id).disabled = empty;
+    worker.disabled = empty || SYS_SUB[sys.value] !== "Штатные сотрудники";
+    worker.hidden = worker.previousElementSibling.hidden = worker.disabled;
+    if (worker.disabled) worker.value = "";
+    if (!empty) pos.dispatchEvent(new Event("change"));
+    else {
+      document.getElementById("fRest").textContent = "По запросу нет позиций.";
+      document.getElementById("fMoney").textContent = "";
+      document.getElementById("fWarn").hidden = document.getElementById("fOk").hidden = true;
+    }
+  }
+  firm.onchange = () => {
+    const old = sys.value;
+    sys.replaceChildren(...Object.keys(SYS_BUDGET).filter(s => !firm.value || SYS_SUB[s] === firm.value).map(s => new Option(s,s)));
+    if ([...sys.options].some(o => o.value === old)) sys.value = old;
+    refresh();
+  };
+  query.oninput = sys.onchange = refresh;
+  refresh();
+}
+function demoPayroll() {
+  const people = STAFF.map(([fio,,,,dcount,zp,prem,,cash]) => ({fio,dcount,zp,prem,cash}));
+  const bookData = {sheet:"Публицист 11 · демо",month:"2026-10",people};
+  const sums = new Map();
+  for (const [fio,,code,qty] of WORK) sums.set(fio,(sums.get(fio)||0)+qty*PIECE_RATE[code]);
+  const panel = document.createElement("div");
+  panel.className = "panel";
+  panel.innerHTML = '<h2>Сверка по сотрудникам <span>октябрь 2026 · учебный пример</span></h2><div class="wrap"><table><thead><tr><th>Сотрудник</th><th>Дни</th><th>Итого по табелю, ₽</th><th>Объём по расценке наряда, ₽</th></tr></thead><tbody></tbody></table></div><p class="note">Стоимость объёма рассчитана по работам и единичным расценкам примера. Для сверки с ЗУП внесите в ведомость дни и сопоставимые премии. Оклад и начисления по среднему бухгалтер проверяет в ЗУП.</p><button type="button" id="demoZup">Скачать пример сверки с ЗУП (.xlsx)</button>';
+  const tbody = panel.querySelector("tbody");
+  function add(values) {
+    const row = tbody.insertRow();
+    for (const value of values) row.insertCell().textContent = value;
+  }
+  for (const p of people) add([p.fio,p.dcount,fmt(p.zp+p.prem+p.cash),fmt(sums.get(p.fio)||0)]);
+  add(["Итого",people.reduce((n,p)=>n+p.dcount,0),fmt(people.reduce((n,p)=>n+p.zp+p.prem+p.cash,0)),fmt([...sums.values()].reduce((a,b)=>a+b,0))]);
+  panel.querySelector("button").onclick = () => {
+    if (!window.XLSX) {toast("Excel пока недоступен","Проверьте соединение и обновите страницу.");return}
+    XLSX.writeFile(tbZupBook(bookData),"Демо — сверка ЗУП 2026-10.xlsx");
+  };
+  document.getElementById("sTable").closest(".panel").before(panel);
+}
+demoForemanFilters();
+demoPayroll();
+
 </script>
 </body></html>
